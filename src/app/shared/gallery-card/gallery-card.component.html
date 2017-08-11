@@ -1,0 +1,9 @@
+<app-gallery-preview
+  [galleryId]="gallery?.id"
+  [numberOfRandomImages]="1"
+  [showTitles]="false"
+  [numberPerRow]="1">
+</app-gallery-preview>
+<div class="content">
+  <div class="header">{{gallery.title || gallery.path}}</div>
+</div>

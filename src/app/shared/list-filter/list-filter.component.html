@@ -1,0 +1,74 @@
+<div class="ui text menu">
+  <div class="ui massive category search item" style="width: 33vw;">
+    <div class="ui transparent icon input" style="width: 100%; border-bottom: 1px rgba(0,0,0,0.1) solid;">
+      <input [(ngModel)]="filter.searchTerm" [formControl]="searchFormControl" (ngModelChange)="onChange($event)" placeholder="Search..." type="text">
+      <i class="search link icon"></i>
+    </div>
+  </div>
+  <div class="right menu">
+    <div class="ui item">
+      <sui-select class="ui fluid selection"
+        [(ngModel)]="filter.itemsPerPage"
+        [options]="itemsPerPageOptions"
+        (selectedOptionChange)="onPerPageChange($event)"
+        placeholder="Items per page"
+        #itemsPerPageSelect>
+        <sui-select-option *ngFor="let option of itemsPerPageSelect.availableOptions" [value]="option"></sui-select-option>
+      </sui-select>
+    </div>
+    <div class="ui item">
+      <div class="ui buttons">
+        <button (click)="onSortChange()" class="ui icon button"><i [class.up]="filter.sortDirection == 'asc'" [class.down]="filter.sortDirection == 'desc'" class="arrow icon"></i></button>
+        <div class="ui dropdown button" suiDropdown>
+          <span class="text">{{filter.sortBy | capitalize}}</span>
+          <i class="dropdown icon"></i>
+          <div class="menu" suiDropdownMenu>
+            <div *ngFor="let item of filter.sortByOptions" class="item" (click)="onSortByChange(item)">{{item | capitalize}}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="ui item">
+      <button (click)="filter.criteriaFilterOpen = !filter.criteriaFilterOpen" class="ui icon button" [class.active]="filter.criteriaFilterOpen"><i class="filter icon"></i></button>
+    </div>
+    <div class="ui item">
+      <div class="ui icon buttons">
+        <button (click)="onModeChange(DisplayMode.Grid)" class="ui button" [class.active]="filter.displayMode == DisplayMode.Grid"><i class="grid layout icon"></i></button>
+        <button (click)="onModeChange(DisplayMode.List)" class="ui button" [class.active]="filter.displayMode == DisplayMode.List"><i class="list layout icon"></i></button>
+      </div>
+    </div>
+  </div>
+</div>
+<div [suiCollapse]="!filter.criteriaFilterOpen">
+  <div class="ui basic segment">
+    <div class="ui form">
+      <div class="fields">
+        <div class="four wide field">
+          <sui-select
+            class="selection"
+            [(ngModel)]="filter.criteria.type"
+            [options]="filter.criterions"
+            (selectedOptionChange)="onCriteriaTypeChange($event)"
+            labelField="name"
+            valueField="value"
+            placeholder="Criteria"
+            #criteriaSelect>
+            <sui-select-option *ngFor="let option of criteriaSelect.availableOptions" [value]="option"></sui-select-option>
+          </sui-select>
+        </div>
+        <div class="twelve wide field">
+          <sui-select
+            class="selection"
+            [(ngModel)]="filter.criteria.value"
+            [options]="filter.criteria.options"
+            (selectedOptionChange)="onCriteriaValueChange($event)"
+            [isDisabled]="filter.criteria?.type == CriteriaType.None"
+            placeholder="Criteria"
+            #criteriaValueSelect>
+            <sui-select-option *ngFor="let option of criteriaValueSelect.availableOptions" [value]="option"></sui-select-option>
+          </sui-select>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

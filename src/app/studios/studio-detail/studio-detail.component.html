@@ -1,0 +1,48 @@
+<div [style.background-image]="'url(' + imagePath() + ')'" style=" background-size: cover; background-position: center center; width: 100%; height: 100%; position: fixed; left: 0; top: 0; filter: blur(35px); z-index: -1; transform: translateZ(0);"></div>
+
+<div style="background-color: rgba(255, 255, 255, 0.7); margin-top: -1.8em;">
+  <div class="ui basic segment">
+    <div class="ui two column divided middle aligned very relaxed stackable grid" style="position: relative;">
+      <div class="column">
+        <img [src]="imagePath()" class="ui centered image" />
+      </div>
+      <div class="center aligned column">
+        <div class="ui huge very relaxed list items">
+          <div class="item">
+            <div class="content">
+              <div class="header">
+                {{studio?.name}}
+                <button (click)="onClickEdit()" class="ui right floated button">Edit</button>
+              </div>
+            </div>
+          </div>
+          <div class="item">
+            <div class="content">
+              <div class="header">Details</div>
+              <div class="description">
+                No Details
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="ui fluid container" style="
+    left: 0;
+    right: 0;
+    position: absolute;
+    background-color: white;
+    padding: 2rem;
+    box-shadow: 0px 0px 5px 0px rgba(34, 36, 38, 0.40);
+">
+  <div class="ui container">
+    <h1 class="header">
+      {{studio?.name}}'s Scenes
+    </h1>
+
+    <app-list [state]="sceneListState"></app-list>
+  </div>
+</div>

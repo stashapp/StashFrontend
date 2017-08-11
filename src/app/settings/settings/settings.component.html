@@ -1,0 +1,10 @@
+<div class="ui text menu">
+  <div class="right menu">
+    <button (click)="onClickScan()" class="ui button">Scan</button>
+  </div>
+</div>
+<sui-progress class="indicating" [value]="progress">{{message}}</sui-progress>
+
+<ul>
+  <li *ngFor="let log of logs">{{log}}</li>
+</ul>

@@ -1,0 +1,25 @@
+<video (click)="onSelect()" class="image preview" loop [poster]="screenshotPath()" #videoTag>
+  <source [src]="previewPath()" type="video/webm" />
+</video>
+<div class="content">
+  <div class="header">{{scene.title || scene.path}}</div>
+  <div *ngIf="scene.rating || scene.date" class="meta">
+    <span *ngIf="scene.date" class="date">{{scene.date}}</span>
+    <sui-rating *ngIf="scene.rating" class="ui tiny rating" [(ngModel)]="scene.rating" [maximum]="5" [isReadonly]="true"></sui-rating>
+  </div>
+  <div *ngIf="scene.details; else descriptionEmptyBlock" class="description">
+    <p class="pre">{{scene.details | truncate : 1000 : '... (continued)'}}</p>
+  </div>
+  <ng-template #descriptionEmptyBlock>No details</ng-template>
+  <div class="extra">
+    <a *ngIf="scene.fetchedStudio" [style.background-image]="'url(' + studioImagePath() + ')'" style="width: 100%; height: 75px; background-size: contain; display: inline-block; background-position: right; background-repeat: no-repeat;">
+    </a>
+    <span *ngIf="!scene.fetchedStudio">No Studio</span>
+  </div>
+  <div class="extra content">
+    <div class="ui tag labels">
+      <a *ngFor="let tag of scene.fetchedTags" class="ui label">{{tag.name}}</a>
+      <span *ngIf="!scene.tag_ids || scene.tag_ids.length == 0">No Tags</span>
+    </div>
+  </div>
+</div>

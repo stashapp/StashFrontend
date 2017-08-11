@@ -1,0 +1,23 @@
+<div class="ui text menu">
+  <div class="right menu">
+    <button (click)="onClickNew()" class="ui button">New</button>
+  </div>
+</div>
+
+<div style="text-align: center;" class="ui blue labels">
+  <a
+    *ngFor="let tag of tags"
+    (click)="onClickTag(tag)"
+    class="ui label"
+    [class.tiny]="tag.scene_ids.length <= 5"
+    [class.large]="tag.scene_ids.length > 5 && tag.scene_ids.length <= 50"
+    [class.big]="tag.scene_ids.length > 50 && tag.scene_ids.length <= 100"
+    [class.huge]="tag.scene_ids.length > 100 && tag.scene_ids.length <= 200"
+    [class.massive]="tag.scene_ids.length > 200">
+    {{tag.name}}
+    <div class="detail">
+      <i class="video play icon"></i>
+      {{tag.scene_ids.length}}
+    </div>
+  </a>
+</div>

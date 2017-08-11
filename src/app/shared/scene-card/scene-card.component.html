@@ -1,0 +1,59 @@
+<a (click)="onSelect()" class="image previewable">
+  <video class="preview" loop [poster]="screenshotPath()" #videoTag>
+    <source *ngIf="previewPath" [src]="previewPath" type="video/webm" />
+  </video>
+  <!--<div class="glass">
+    <h3 style="margin: 10px;">{{scene.title || scene.path}}</h3>
+  </div>-->
+</a>
+<div class="content">
+  <div class="header">{{scene.title || scene.path}}</div>
+  <div *ngIf="!!scene.rating || !!scene.date" class="meta">
+    <span *ngIf="scene?.date" class="date">{{scene.date}}</span>
+    <sui-rating *ngIf="scene?.rating" class="ui tiny rating" [(ngModel)]="scene.rating" [maximum]="5" [isReadonly]="true"></sui-rating>
+  </div>
+  <div *ngIf="scene.details; else descriptionEmptyBlock" class="description">
+    {{scene.details | truncate : 100 : '... (continued)'}}
+  </div>
+  <ng-template #descriptionEmptyBlock>No details</ng-template>
+</div>
+<div class="extra content">
+  <ng-template let-tags #tagsTemplate>
+    <div class="ui labels">
+      <a *ngFor="let tag of scene.fetchedTags" class="ui label">{{tag.name}}</a>
+      <span *ngIf="!scene.tag_ids || scene.tag_ids.length == 0">No Tags</span>
+    </div>
+  </ng-template>
+  <ng-template let-performers #performersTemplate>
+    <div class="ui labels">
+      <a *ngFor="let performer of scene.fetchedPerformers" class="ui label">{{performer.name}}</a>
+      <span *ngIf="!scene.performer_ids || scene.performer_ids.length == 0">No Performers</span>
+    </div>
+  </ng-template>
+
+  <button
+    *ngIf="!!scene.tag_ids && scene.tag_ids.length > 0"
+    class="ui mini basic icon button"
+    suiPopup
+    [popupTemplate]="tagsTemplate"
+    popupTrigger="outsideClick">
+    <i class="tag icon"></i> {{scene.tag_ids.length}}
+  </button>
+  <button
+    *ngIf="!!scene.performer_ids && scene.performer_ids.length > 0"
+    class="ui mini basic icon button"
+    suiPopup
+    [popupTemplate]="performersTemplate"
+    popupTrigger="outsideClick">
+    <i class="user icon"></i> {{scene.performer_ids.length}}
+  </button>
+  <div class="right floated">
+    <span>{{scene.file.width}} x {{scene.file.height}}</span>
+  </div>
+</div>
+<div class="extra content" style="background-color: rgba(0,0,0,0.1);">
+  <a *ngIf="scene.fetchedStudio" [style.background-image]="'url(' + studioImagePath() + ')'" style="width: 100%; line-height: 5; background-size: contain; display: inline-block; background-position: right; background-repeat: no-repeat;">
+    <i class="huge record icon"></i>
+  </a>
+  <span *ngIf="!scene.fetchedStudio">No Studio</span>
+</div>

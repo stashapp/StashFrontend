@@ -1,0 +1,21 @@
+<div (window:keydown)="onKey($event)" *ngIf="!!displayedImage" style="overflow: scroll;position: fixed;left: 0;right: 0;top: 45px;bottom: 0;z-index:100;background-color: rgba(0,0,0,0.5)">
+  <button (click)="onClickClose()" class="ui button" style="position: fixed; z-index: 1000; margin: 10px;">Close</button>
+  <div style="display: flex; justify-content: center;">
+    <div style="display: flex; flex-direction: column; justify-content: center;">
+      <img style="z-index: 1;" [src]="imagePath()" />
+    </div>
+  </div>
+</div>
+
+<div class="ui text menu">
+  <h3 class="header item">{{gallery?.title || 'No Title'}} - {{gallery?.files.length}} files</h3>
+  <div class="right menu">
+    <button (click)="onClickEdit()" class="ui button">Edit</button>
+  </div>
+</div>
+
+<app-gallery-preview
+  [gallery]="gallery"
+  [type]="'full'"
+  (onClick)="onClickCard($event)">
+</app-gallery-preview>

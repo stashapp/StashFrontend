@@ -1,0 +1,127 @@
+/* You can add global styles to this file, and also import other style files */
+
+body {
+  background-color: #FFFFFF;
+}
+
+.bold {
+  font-weight: bold;
+}
+
+.main.container {
+  margin-top: 5em;
+  margin-bottom: 2em;
+}
+
+#main-pagination pagination-template {
+  margin: 2em 0 1em 0;
+}
+
+.pre {
+  white-space: pre-line;
+}
+
+.previewable {
+  line-height: 0;
+  overflow: hidden;
+}
+
+video.preview {
+  width: 100%;
+  /*height: 200px;*/
+  object-fit: cover;
+}
+
+video.wall.item {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.wall.column {
+  padding: 0 !important;
+  line-height: 0;
+}
+
+.wall.grid {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 45px;
+  bottom: 0;
+}
+
+.wall .grid {
+  margin: 0;
+}
+
+.performer.image {
+  height: 450px;
+  background-size: cover !important;
+  background-position: center !important;
+  background-repeat: no-repeat !important;
+}
+
+@media only screen and (min-width: 1920px) {
+  .performer.image {
+    height: 650px;
+  }
+}
+
+.studio.image {
+  height: 100px;
+  background-size: contain !important;
+  background-position: center !important;
+  background-repeat: no-repeat !important;
+}
+
+.gallery.image {
+  height: 450px;
+  background-size: cover !important;
+  background-position: center !important;
+  background-repeat: no-repeat !important;
+}
+
+.gallery.small.image {
+  height: 200px;
+  background-size: cover !important;
+  background-position: center !important;
+  background-repeat: no-repeat !important;
+}
+
+.glass {
+  position: absolute;
+  left: -5px;
+  right: -5px;
+  bottom: -5px;
+  background-color: white;
+  filter: blur(1px);
+  opacity: 0.95;
+}
+
+app-scene-list-item .image {
+  width: 475px !important;
+}
+
+app-scene-list-item video.preview {
+  width: 100%;
+  height: 267px;
+  object-fit: cover;
+  margin: auto 0 !important; /* to center vertically */
+  cursor: pointer;
+}
+
+app-gallery-preview {
+  width: 100%;
+  cursor: pointer;
+}
+
+[hidden] { display: none !important; }
+
+.marginless {
+  margin: 0 !important;
+}
+
+app-list-filter .segment {
+  margin-top: -14px !important;
+}
