@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { PlatformLocation } from '@angular/common';
 import { Http, Response } from '@angular/http';
 import { Headers, RequestOptions } from '@angular/http';
 
@@ -37,11 +38,16 @@ import * as stringify from 'json-stringify-safe';
 @Injectable()
 export class StashService {
   url = 'http://localhost:4000';
-  // url = 'http://192.168.1.200:4000';
-  // url = 'https://192.168.1.200:4001';
   private observableCache: { [key: string]: Observable<any> } = {};
 
-  constructor(private http: Http, private cache: CacheService) {}
+  constructor(private http: Http,
+              private cache: CacheService,
+              private platformLocation: PlatformLocation) {
+    const platform: any = this.platformLocation;
+    const url = new URL(platform.location.origin)
+    url.port = '4000'
+    this.url = url.toString().slice(0, -1);
+  }
 
   getScenes(page?: number, filter?: ListFilter): Observable<ApiResult<Scene>> {
     const params = new URLSearchParams();
