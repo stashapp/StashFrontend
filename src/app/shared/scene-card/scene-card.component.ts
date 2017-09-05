@@ -11,6 +11,7 @@ import { Scene } from '../../shared/models/scene.model';
 })
 export class SceneCardComponent implements OnInit {
   private isPlaying = false;
+  private isHovering = false;
   private video: any
   previewPath: string = null;
   @Input() scene: Scene;
@@ -39,12 +40,19 @@ export class SceneCardComponent implements OnInit {
     }
 
     this.video = this.videoTag.nativeElement;
-    this.video.onplaying = () => this.isPlaying = true;
+    this.video.onplaying = () => {
+      if (this.isHovering == true) {
+        this.isPlaying = true;
+      } else {
+        this.video.pause();
+      }
+    }
     this.video.onpause = () => this.isPlaying = false;
   }
 
   @HostListener('mouseenter')
   onMouseEnter() {
+    this.isHovering = true;
     if (!this.previewPath) {
       this.previewPath = `${this.stashService.url}${this.scene.paths.preview}`
     }
@@ -55,6 +63,7 @@ export class SceneCardComponent implements OnInit {
 
   @HostListener('mouseleave')
   onMouseLeave() {
+    this.isHovering = false;
     if (!this.video.paused && this.isPlaying) {
       this.video.pause();
     }
