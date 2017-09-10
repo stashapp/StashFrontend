@@ -23,6 +23,9 @@
               <input [(ngModel)]="markerTitle" type="text" placeholder="New Marker" />
             </div>
             <button (click)="onClickAddMarker()" class="ui button">Create</button>
+            <button (click)="isDeleteMarkerEnabled = !isDeleteMarkerEnabled"
+                    class="ui basic button"
+                    [class.red]="isDeleteMarkerEnabled">Delete</button>
           </div>
 
           <div class="ui large labels">
@@ -30,7 +33,7 @@
               <a (click)="onClickMarker(marker)">
                 {{marker.title}} - {{marker.seconds | seconds}}
               </a>
-              <i (click)="onClickDeleteMarker(marker)" class="icon close"></i>
+              <i *ngIf="isDeleteMarkerEnabled" (click)="onClickDeleteMarker(marker)" class="icon close"></i>
             </div>
           </div>
         </div>
