@@ -28,7 +28,8 @@ export enum CriteriaType {
   None,
   Rating,
   Resolution,
-  Favorite
+  Favorite,
+  HasMarkers
 }
 
 export class CriteriaOption {
@@ -69,7 +70,8 @@ export class ListFilter {
         this.criterions = [
           new CriteriaOption(CriteriaType.None),
           new CriteriaOption(CriteriaType.Rating),
-          new CriteriaOption(CriteriaType.Resolution)
+          new CriteriaOption(CriteriaType.Resolution),
+          new CriteriaOption(CriteriaType.HasMarkers)
         ];
         break;
       case FilterMode.Performers:
@@ -123,6 +125,12 @@ export class ListFilter {
       case CriteriaType.Favorite: {
         this.criteria.type = CriteriaType.Favorite;
         this.criteria.parameterName = 'filter_favorites'
+        this.criteria.options = ['true', 'false'];
+        break;
+      }
+      case CriteriaType.HasMarkers: {
+        this.criteria.type = CriteriaType.HasMarkers;
+        this.criteria.parameterName = 'has_markers'
         this.criteria.options = ['true', 'false'];
         break;
       }
