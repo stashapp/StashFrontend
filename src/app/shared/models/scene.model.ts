@@ -3,6 +3,13 @@ import { Gallery } from './gallery.model';
 import { Performer } from './performer.model';
 import { Tag } from './tag.model';
 
+export class SceneMarker {
+    id: number;
+    scene_id: number;
+    title: string;
+    seconds: number;
+}
+
 export class Scene {
   id: number;
   checksum: string;
@@ -27,8 +34,11 @@ export class Scene {
     preview?: string;
     stream?: string;
     vtt?: string;
+    chapters_vtt?: string;
   }
   is_streamable?: boolean;
+
+  scene_markers: SceneMarker[];
 
   studio_id?: number;
   gallery_id?: number;

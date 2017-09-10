@@ -3,7 +3,7 @@ import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 
 import { StashService } from '../../core/stash.service';
 
-import { Scene } from '../../shared/models/scene.model';
+import { Scene, SceneMarker } from '../../shared/models/scene.model';
 
 @Component({
   selector: 'app-scene-detail',
@@ -12,6 +12,7 @@ import { Scene } from '../../shared/models/scene.model';
 })
 export class SceneDetailComponent implements OnInit, AfterViewInit {
   scene: Scene;
+  markerTitle: string;
 
   @ViewChild('jwplayer') jwplayer: any;
 
@@ -31,7 +32,7 @@ export class SceneDetailComponent implements OnInit, AfterViewInit {
     this.stashService.getScene(id).subscribe(scene => {
       this.scene = scene;
       this.scene.paths.stream += '.mp4';
-      this.jwplayer.setupPlayer(this.streamPath(), this.imagePath(), this.vttPath());
+      this.jwplayer.setupPlayer(this.streamPath(), this.imagePath(), this.vttPath(), this.chaptersVttPath());
 
       this.stashService.getPerformersWithIds(this.scene.performer_ids).subscribe(performers => {
         this.scene.fetchedPerformers = performers;
@@ -62,11 +63,52 @@ export class SceneDetailComponent implements OnInit, AfterViewInit {
     return !!this.scene ? `${this.stashService.url}${this.scene.paths.vtt}` : '';
   }
 
+  chaptersVttPath(): string {
+    return !!this.scene ? `${this.stashService.url}${this.scene.paths.chapters_vtt}` : '';
+  }
+
   onClickEdit() {
     this.router.navigate(['edit'], { relativeTo: this.route });
   }
 
   onTime(time) {
     console.log('on time', time);
+  }
+
+  onClickAddMarker() {
+    let sceneMarker = new SceneMarker();
+    sceneMarker.title = this.markerTitle;
+    sceneMarker.seconds = Math.round(this.jwplayer.player.getPosition());
+    sceneMarker.scene_id = this.scene.id;
+    console.log(sceneMarker);
+    this.markerTitle = null;
+
+    this.stashService.createSceneMarker(sceneMarker).subscribe(response => {
+      if (!!response.errors) {
+        console.log(response.errors);
+      } else {
+        console.log(response);
+        let marker = new SceneMarker();
+        marker.id = response.id;
+        marker.seconds = response.seconds;
+        marker.title = response.title;
+        this.scene.scene_markers.push(marker);
+      }
+    });
+  }
+
+  onClickMarker(marker: SceneMarker) {
+    this.jwplayer.player.seek(marker.seconds)
+  }
+
+  onClickDeleteMarker(marker: SceneMarker) {
+    marker.scene_id = this.scene.id;
+    this.stashService.deleteSceneMarker(marker).subscribe(response => {
+      if (!!response.errors) {
+        console.log(response.errors);
+      } else {
+        this.scene.scene_markers = this.scene.scene_markers.filter(item => item.id !== marker.id);
+      }
+    });
   }
 }

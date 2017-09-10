@@ -10,6 +10,32 @@
         <%= image_tag screenshot_path(@scene) %>
       <% end %>
     <% end %>-->
+
+    <sui-accordion class="styled fluid">
+      <sui-accordion-panel [isOpen]="true">
+        <div title>
+          <i class="dropdown icon"></i>
+          Markers
+        </div>
+        <div content>
+          <div class="ui form" style="margin-bottom: 30px;">
+            <div class="field">
+              <input [(ngModel)]="markerTitle" type="text" placeholder="New Marker" />
+            </div>
+            <button (click)="onClickAddMarker()" class="ui button">Create</button>
+          </div>
+
+          <div class="ui large labels">
+            <div *ngFor="let marker of scene?.scene_markers" class="ui basic label">
+              <a (click)="onClickMarker(marker)">
+                {{marker.title}} - {{marker.seconds | seconds}}
+              </a>
+              <i (click)="onClickDeleteMarker(marker)" class="icon close"></i>
+            </div>
+          </div>
+        </div>
+      </sui-accordion-panel>
+    </sui-accordion>
   </div>
 
   <div class="ui attached clearing segment">

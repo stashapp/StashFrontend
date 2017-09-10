@@ -20,6 +20,7 @@ import { GalleryPreviewComponent } from './gallery-preview/gallery-preview.compo
 import { GalleryCardComponent } from './gallery-card/gallery-card.component';
 import { ListComponent } from './list/list.component';
 import { SceneListItemComponent } from './scene-list-item/scene-list-item.component';
+import { SecondsPipe } from './seconds.pipe';
 
 // Import blah.  Include in dec and exports (https://angular.io/guide/ngmodule#shared-modules)
 
@@ -46,7 +47,8 @@ import { SceneListItemComponent } from './scene-list-item/scene-list-item.compon
     GalleryPreviewComponent,
     GalleryCardComponent,
     ListComponent,
-    SceneListItemComponent
+    SceneListItemComponent,
+    SecondsPipe
   ],
   exports: [
     CommonModule,
@@ -67,7 +69,8 @@ import { SceneListItemComponent } from './scene-list-item/scene-list-item.compon
     GalleryPreviewComponent,
     GalleryCardComponent,
     ListComponent,
-    SceneListItemComponent
+    SceneListItemComponent,
+    SecondsPipe
   ]
 })
 export class SharedModule { }

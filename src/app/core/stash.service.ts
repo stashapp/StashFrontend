@@ -25,7 +25,7 @@ import 'rxjs/add/observable/throw';
 
 import { CacheService } from './cache.service';
 
-import { Scene } from '../shared/models/scene.model'
+import { Scene, SceneMarker } from '../shared/models/scene.model'
 import { Performer } from '../shared/models/performer.model'
 import { Tag } from '../shared/models/tag.model'
 import { Studio } from '../shared/models/studio.model'
@@ -135,6 +135,25 @@ export class StashService {
 
     return this.http.patch(this.url + `/scenes/${scene.id}.json`, body, options)
                     .map(this.extractData);
+  }
+
+  createSceneMarker(sceneMarker: SceneMarker): Observable<any> {
+    const headers = new Headers({ 'Content-Type': 'application/json' });
+    const options = new RequestOptions({ headers: headers });
+    const body = JSON.stringify(sceneMarker);
+
+    return this.http.post(this.url + `/scenes/${sceneMarker.scene_id}/scene_markers.json`, body, options)
+                    .map(this.extractData)
+                    .catch(this.handleError);
+  }
+
+  deleteSceneMarker(sceneMarker: SceneMarker): Observable<any> {
+    const headers = new Headers({ 'Content-Type': 'application/json' });
+    const options = new RequestOptions({ headers: headers });
+
+    return this.http.delete(this.url + `/scenes/${sceneMarker.scene_id}/scene_markers/${sceneMarker.id}.json`, options)
+                    .map(this.extractData)
+                    .catch(this.handleError);
   }
 
   getPerformersWithIds(performerIds?: number[]): Observable<Performer[]> {

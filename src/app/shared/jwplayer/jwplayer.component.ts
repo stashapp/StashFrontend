@@ -30,16 +30,21 @@ export class JwplayerComponent {
     return this._player;
   }
 
-  public setupPlayer(file: string, image?: string, vtt?: string) {
-    console.log('uhhh', file, image, this.player)
+  public setupPlayer(file: string, image?: string, vtt?: string, chaptersVtt?: string) {
     this.player.remove();
     this.player.setup({
       file: file,
       image: image,
-      tracks: [{
-        file: vtt,
-        kind: "thumbnails"
-      }],
+      tracks: [
+        {
+          file: vtt,
+          kind: 'thumbnails'
+        },
+        {
+          file: chaptersVtt,
+          kind: 'chapters'
+        }
+      ],
       primary: 'html5',
       autostart: false
     });
