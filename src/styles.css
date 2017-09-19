@@ -4,6 +4,10 @@ body {
   background-color: #FFFFFF;
 }
 
+.ui.popup {
+  max-width: 350px !important;
+}
+
 .bold {
   font-weight: bold;
 }

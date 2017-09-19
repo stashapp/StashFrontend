@@ -34,6 +34,8 @@ export class SceneListItemComponent implements OnInit {
         this.scene.fetchedStudio = studio;
       });
     }
+
+    this.videoTag.nativeElement.volume = 0.05;
   }
 
   @HostListener('mouseenter')

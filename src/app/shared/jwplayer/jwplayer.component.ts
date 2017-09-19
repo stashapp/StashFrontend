@@ -46,7 +46,8 @@ export class JwplayerComponent {
         }
       ],
       primary: 'html5',
-      autostart: false
+      autostart: false,
+      playbackRateControls: [0.75, 1, 1.5, 2, 3, 4]
     });
     this.handleEventsFor(this.player);
   }

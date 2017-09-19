@@ -9,7 +9,12 @@ import 'rxjs/add/operator/distinctUntilChanged';
 
 import { StashService } from '../../core/stash.service';
 
-import { Scene } from '../../shared/models/scene.model';
+import { Scene, SceneMarker } from '../../shared/models/scene.model';
+
+export enum WallMode {
+  Scenes,
+  Markers
+}
 
 @Component({
   selector: 'app-scene-wall',
@@ -17,9 +22,11 @@ import { Scene } from '../../shared/models/scene.model';
   styleUrls: ['./scene-wall.component.css']
 })
 export class SceneWallComponent implements OnInit {
-  scenes: Scene[];
+  WallMode = WallMode;
+  items: any[]; // scenes or scene markers
   searchTerm: string = '';
   searchFormControl = new FormControl();
+  mode: WallMode = WallMode.Markers;
 
   constructor(
     private router: Router,
@@ -38,17 +45,46 @@ export class SceneWallComponent implements OnInit {
   }
 
   getScenes(q: string) {
-    this.stashService.getScenesForWall(q).subscribe(scenes => {
-      this.scenes = scenes;
-    });
+    if (this.mode == WallMode.Scenes) {
+      this.stashService.getScenesForWall(q).subscribe(scenes => {
+        this.items = scenes;
+      });
+    } else {
+      this.stashService.getSceneMarkersForWall(q).subscribe(markers => {
+        this.items = markers;
+      })
+    }
   }
 
-  onClick(scene): void {
-    this.router.navigate(['/scenes', scene.id]);
+  onMouseEnter(video: any) {
+    video.volume = 0.05;
+    video.muted = false;
   }
 
-  previewPath(scene): string {
-    return `${this.stashService.url}${scene.paths.preview}`
+  onMouseLeave(video: any) {
+    video.muted = true;
+  }
+
+  onClick(item): void {
+    const id = item.scene_id != undefined ? item.scene_id : item.id
+    this.router.navigate(['/scenes', id]);
+  }
+
+  previewPath(item): string {
+    if (this.mode == WallMode.Scenes) {
+      return `${this.stashService.url}${item.paths.preview}`
+    } else {
+      return `${this.stashService.url}${item.stream}`
+    }
+  }
+
+  toggleMode() {
+    if (this.mode == WallMode.Scenes) {
+      this.mode = WallMode.Markers;
+    } else {
+      this.mode = WallMode.Scenes;
+    }
+    this.getScenes(this.searchTerm);
   }
 
 }

@@ -8,6 +8,7 @@ export class SceneMarker {
     scene_id: number;
     title: string;
     seconds: number;
+    stream: string;
 }
 
 export class Scene {

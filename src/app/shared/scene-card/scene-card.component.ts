@@ -40,6 +40,7 @@ export class SceneCardComponent implements OnInit {
     }
 
     this.video = this.videoTag.nativeElement;
+    this.video.volume = 0.05;
     this.video.onplaying = () => {
       if (this.isHovering == true) {
         this.isPlaying = true;

@@ -105,6 +105,13 @@ export class StashService {
                     .map(this.extractData)
   }
 
+  getSceneMarkersForWall(q: string): Observable<SceneMarker[]> {
+    const params = new URLSearchParams();
+    if (q) { params.set('q', q); }
+    return this.http.get(this.url + '/markers/wall.json' + '?' + params.toString())
+                    .map(this.extractData)
+  }
+
   fetchScene(sceneId: number): Observable<Scene> {
     return this.http.get(this.url + `/scenes/${sceneId}.json`)
                     .map(this.extractData)

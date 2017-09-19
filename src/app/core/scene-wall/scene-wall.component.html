@@ -3,13 +3,20 @@
     <div class="ui massive fluid transparent icon input">
       <input [(ngModel)]="searchTerm" [formControl]="searchFormControl" name="q" placeholder="Search..." type="text">
       <i class="search icon"></i>
+      <button (click)="toggleMode()" class="ui basic button" style="margin: 5px 50px;">{{mode == WallMode.Scenes ? 'Scenes' : 'Markers'}}</button>
     </div>
   </form>
 
   <div class="ui four column grid" style="margin: 0;">
-    <a *ngFor="let scene of scenes" (click)="onClick(scene)" class="wall column">
-      <video class="wall item" loop autoplay="true">
-        <source [src]="previewPath(scene)" type="video/webm" />
+    <a *ngFor="let item of items" (click)="onClick(item)" class="wall column">
+      <video #videoTag
+        (mouseenter)="onMouseEnter(videoTag)"
+        (mouseleave)="onMouseLeave(videoTag)"
+        class="wall item"
+        loop
+        autoplay="true"
+        muted="true">
+        <source [src]="previewPath(item)" />
       </video>
     </a>
   </div>

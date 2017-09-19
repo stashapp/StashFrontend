@@ -1,5 +1,5 @@
 <video (click)="onSelect()" class="image preview" loop [poster]="screenshotPath()" #videoTag>
-  <source [src]="previewPath()" type="video/webm" />
+  <source [src]="previewPath()" />
 </video>
 <div class="content">
   <div class="header">{{scene.title || scene.path}}</div>
