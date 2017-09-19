@@ -31,8 +31,18 @@ export class ArtooService {
       return this.scrapeFreeones(url);
     } else if (url.includes('fakehub')) {
       return this.scrapeFakeHub(url, studios, tags);
-    } else if (url.includes('gloryhole.com')) {
+    } else if (url.includes('gloryhole.com') || url.includes('gloryhole-initiations.com')) {
       return this.scrapeDogfart(url, studios, tags);
+    } else if (url.includes('pornfidelity.com') || url.includes('teenfidelity.com')) {
+      return this.scrapePornfidelity(url, studios, tags);
+    } else if (url.includes('blackambush.com')) {
+      return this.scrapeBlackAmbush(url, studios, tags);
+    } else if (url.includes('backroomcastingcouch.com')) {
+      return this.scrapeBackroomcastingcouch(url, studios, tags);
+    } else if (url.includes('exploitedcollegegirls.com')) {
+      return this.scrapeExploitedCollegeGirls(url, studios, tags);
+    } else if (url.includes('mofos.com') || url.includes('publicpickups.com')) {
+      return this.scrapeMofos(url, studios, tags);
     } else {
       console.log('no scrapper');
     }
@@ -351,7 +361,216 @@ export class ArtooService {
         response.title = json.title;
         response.date = json.date;
         response.studio_id = studios.find((value: Studio, index: number, obj: Studio[]) => {
-          return value.name.toUpperCase() == remote.find('a.home').text().trim().toUpperCase();
+          const title = remote.find('a.home').text().trim().toUpperCase();
+          return value.name.toUpperCase() == title || value.name.toUpperCase() == title.replace('.COM', '').replace('-', ' ');
+        }).id
+        response.tag_ids = tags.filter((value: Tag, index: number, array: Tag[]) => {
+          return remoteTags.find((v: any, index: number, obj: any[]) => { return v == value.name }) != undefined
+        }).map(tag => { return tag.id });
+        response.details = json.description;
+
+        resolve(response);
+      });
+    });
+  }
+
+  scrapePornfidelity(url: string, studios: Studio[], tags: Tag[]): Promise<ArtooResponse> {
+    return new Promise((resolve, reject) => {
+      const w = window as any
+      w.capitalize = function capitalize(name) {
+        return name.replace(/\b(\w)/g, s => s.toUpperCase());
+      }
+      const that = this;
+
+      w.artoo.ajaxSpider([url], {jquerify: true}, function(data) {
+        var $ = w.artoo.$;
+        var remote = $(data[0]);
+        var json: any = {};
+
+        json.title = remote.find('.episodeStats').text().split('-')[1].trim().replace('Episode Number: ', '') + ' - ' + remote.find('.boxTop').text().replace('Download Videos', '').trim();
+        json.date = remote.find('td .matte.spaced').text().trim().replace(/.+ - /g, '');
+
+        json.description = "Starring:\n\n"
+        json.description += remote.find('a[href*="/girl/"]').map(function() { return $.trim($(this).text()); }).get().join(', ');
+        json.description += "\n\nDescription:\n\n";
+        json.description += remote.find('.spaced.just').text().trim();
+
+        const response = new ArtooResponse();
+        response.title = json.title;
+        response.date = json.date;
+        response.studio_id = studios.find((value: Studio, index: number, obj: Studio[]) => {
+          if (url.includes('pornfidelity.com') && value.name == "Porn Fidelity") {
+            return true;
+          }
+          if (url.includes('teenfidelity.com') && value.name == "Teen Fidelity") {
+            return true;
+          }
+          return false;
+        }).id
+        response.details = json.description;
+
+        resolve(response);
+      });
+    });
+  }
+
+  scrapeBlackAmbush(url: string, studios: Studio[], tags: Tag[]): Promise<ArtooResponse> {
+    return new Promise((resolve, reject) => {
+      const w = window as any
+      w.capitalize = function capitalize(name) {
+        return name.replace(/\b(\w)/g, s => s.toUpperCase());
+      }
+      const that = this;
+
+      w.artoo.ajaxSpider([url], {jquerify: true}, function(data) {
+        var $ = w.artoo.$;
+        var remote = $(data[0]);
+        var json: any = {};
+
+        var remoteTags = remote.find('p:contains(Keywords:) a').map(function() { return w.capitalize($.trim($(this).text())); }).get();
+
+        json.title = remote.find('h3.red').text().trim();
+        json.description = "Categories:\n\n";
+        json.description += remoteTags.join(', ');
+        json.description += "\n\nDescription:\n\n";
+        json.description += remote.find('.rating-text1').text().trim();
+        json.description += "\n\n";
+        json.description += remote.find('p#descrip').text().trim();
+
+        const response = new ArtooResponse();
+        response.title = json.title;
+        response.date = '2017-00-00';
+        response.studio_id = studios.find((value: Studio, index: number, obj: Studio[]) => {
+          return value.name == 'Black Ambush';
+        }).id
+        response.tag_ids = tags.filter((value: Tag, index: number, array: Tag[]) => {
+          return remoteTags.find((v: any, index: number, obj: any[]) => { return v == value.name }) != undefined
+        }).map(tag => { return tag.id });
+        response.details = json.description;
+
+        resolve(response);
+      });
+    });
+  }
+
+  scrapeBackroomcastingcouch(url: string, studios: Studio[], tags: Tag[]): Promise<ArtooResponse> {
+    return new Promise((resolve, reject) => {
+      const w = window as any
+      w.capitalize = function capitalize(name) {
+        return name.replace(/\b(\w)/g, s => s.toUpperCase());
+      }
+      const that = this;
+
+      w.artoo.ajaxSpider([url], {jquerify: true}, function(data) {
+        var $ = w.artoo.$;
+        var remote = $(data[0]);
+        var json: any = {};
+
+        var remoteTags = remote.find('.keywords a').map(function() { return w.capitalize($.trim($(this).text())); }).get();
+
+        json.title = remote.find('p.h2').text().split('\n')[0].trim();
+        var dateStr = remote.find('p:contains(Date Added: ) span').text().split(': ')[1];
+        if (dateStr != "Unknown" && dateStr != undefined && dateStr != "") {
+          var date = new Date(dateStr);
+          json.date = date.toISOString().slice(0, 10);
+        }
+        json.description = "Categories:\n\n";
+        json.description += remoteTags.join(', ');
+        json.description += "\n\nDescription:\n\n";
+        json.description += remote.find('.rating-text1').text().trim() + ' / 10';
+        json.description += "\n\n";
+        json.description += remote.find('p.copy').text().split('\n\n\n')[0].trim().split('\n').join('\n\n');
+
+        const response = new ArtooResponse();
+        response.title = json.title;
+        response.date = json.date;
+        response.studio_id = studios.find((value: Studio, index: number, obj: Studio[]) => {
+          return value.name == 'Backroom Casting Couch';
+        }).id
+        response.tag_ids = tags.filter((value: Tag, index: number, array: Tag[]) => {
+          return remoteTags.find((v: any, index: number, obj: any[]) => { return v == value.name }) != undefined
+        }).map(tag => { return tag.id });
+        response.details = json.description;
+
+        resolve(response);
+      });
+    });
+  }
+
+  scrapeExploitedCollegeGirls(url: string, studios: Studio[], tags: Tag[]): Promise<ArtooResponse> {
+    return new Promise((resolve, reject) => {
+      const w = window as any
+      w.capitalize = function capitalize(name) {
+        return name.replace(/\b(\w)/g, s => s.toUpperCase());
+      }
+      const that = this;
+
+      w.artoo.ajaxSpider([url], {jquerify: true}, function(data) {
+        var $ = w.artoo.$;
+        var remote = $(data[0]);
+        var json: any = {};
+
+        var remoteTags = remote.find('p:contains(Keywords:) a').map(function() { return w.capitalize($.trim($(this).text())); }).get();
+
+        json.title = remote.find('.info h4').text().trim();
+        json.description = "Categories:\n\n";
+        json.description += remoteTags.join(', ');
+        json.description += "\n\nDescription:\n\n";
+        json.description += remote.find('.rating-text1').text().trim() + ' / 10';
+        json.description += "\n\n";
+        json.description += remote.find('p#descrip').text().split('\n\n\n')[0].trim().split('\n').join('\n\n');
+
+        const response = new ArtooResponse();
+        response.title = json.title;
+        response.date = '2017-00-00';
+        response.studio_id = studios.find((value: Studio, index: number, obj: Studio[]) => {
+          return value.name == 'Exploited College Girls';
+        }).id
+        response.tag_ids = tags.filter((value: Tag, index: number, array: Tag[]) => {
+          return remoteTags.find((v: any, index: number, obj: any[]) => { return v == value.name }) != undefined
+        }).map(tag => { return tag.id });
+        response.details = json.description;
+
+        resolve(response);
+      });
+    });
+  }
+
+  scrapeMofos(url: string, studios: Studio[], tags: Tag[]): Promise<ArtooResponse> {
+    return new Promise((resolve, reject) => {
+      const w = window as any
+      w.capitalize = function capitalize(name) {
+        return name.replace(/\b(\w)/g, s => s.toUpperCase());
+      }
+      const that = this;
+
+      w.artoo.ajaxSpider([url], {jquerify: true}, function(data) {
+        var $ = w.artoo.$;
+        var remote = $(data[0]);
+        var json: any = {};
+
+        var remoteTags = remote.find('.video-tags-container .tag-link').map(function() { return w.capitalize($.trim($(this).text())); }).get();
+
+        json.title = remote.find('.release-header-title').text().trim();
+        var dateStr = remote.find('.release-header-date').text().replace('|', '').trim();
+        if (dateStr != "Unknown" && dateStr != undefined && dateStr != "") {
+          var date = new Date(dateStr);
+          json.date = date.toISOString().slice(0, 10);
+        }
+        json.description = "Starring:\n\n"
+        json.description += remote.find('.model-name').map(function() { return $.trim($(this).text()); }).get().join(', ');
+        json.description += "\n\nCategories:\n\n";
+        json.description += remoteTags.join(', ');
+        json.description += "\n\nDescription:\n\n";
+        json.description += remote.find('.likes-amount .rating').text().trim();
+        json.description += "\n\n";
+        json.description += remote.find('.video-description').text().trim();
+
+        const response = new ArtooResponse();
+        response.title = json.title;
+        response.date = json.date;
+        response.studio_id = studios.find((value: Studio, index: number, obj: Studio[]) => {
+          return value.name == remote.find('.site-name').text().trim();
         }).id
         response.tag_ids = tags.filter((value: Tag, index: number, array: Tag[]) => {
           return remoteTags.find((v: any, index: number, obj: any[]) => { return v == value.name }) != undefined
