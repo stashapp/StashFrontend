@@ -129,3 +129,13 @@ app-gallery-preview {
 app-list-filter .segment {
   margin-top: -14px !important;
 }
+
+/* TODO: Hack to hide no results on sui-search */
+sui-search div.message.empty {
+  display: none;
+}
+
+sui-search .results {
+  bottom: 100%;
+  top: unset !important;
+}

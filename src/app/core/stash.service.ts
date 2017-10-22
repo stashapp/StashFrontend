@@ -144,6 +144,11 @@ export class StashService {
                     .map(this.extractData);
   }
 
+  getAllMarkerStrings(): Observable<string[]> {
+    return this.http.get(this.url + '/markers.json')
+                    .map(this.extractData);
+  }
+
   createSceneMarker(sceneMarker: SceneMarker): Observable<any> {
     const headers = new Headers({ 'Content-Type': 'application/json' });
     const options = new RequestOptions({ headers: headers });

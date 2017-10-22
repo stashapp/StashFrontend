@@ -1,3 +1,20 @@
+<div *ngIf="isMarkerOverlayOpen" style="position: fixed; background: #000; top: 45px; left: 0; right: 0; bottom: 0; z-index: 1;">
+  <div class="ui six column grid" style="margin: 0;">
+    <a *ngFor="let marker of scene?.scene_markers" (click)="onClickMarker(marker)" class="wall column">
+      <video #videoTag
+        (mouseenter)="onMouseEnter(videoTag)"
+        (mouseleave)="onMouseLeave(videoTag)"
+        class="wall item"
+        loop
+        autoplay="true"
+        muted="true">
+        <source [src]="markerStreamPath(marker)" />
+      </video>
+      <div style="position: absolute; bottom: 1em; left: 1em; font-weight: 900; font-size: small; text-shadow: black 1px 1px;">{{marker.title}} - {{marker.seconds | seconds}}</div>
+    </a>
+  </div>
+</div>
+
 <div class="ui container segments">
   <div class="ui top attached segment">
     <!--[hidden]="!scene?.is_streamable"-->
@@ -20,7 +37,14 @@
         <div content>
           <div class="ui form" style="margin-bottom: 30px;">
             <div class="field">
-              <input [(ngModel)]="markerTitle" type="text" placeholder="New Marker" />
+              <sui-search
+                style="width: 100%;"
+                [hasIcon]="false"
+                maxResults="15"
+                placeholder="Marker Title"
+                [options]="markerOptions"
+                #markerInput>
+              </sui-search>
             </div>
             <button (click)="onClickAddMarker()" class="ui button">Create</button>
             <button (click)="isDeleteMarkerEnabled = !isDeleteMarkerEnabled"
@@ -28,14 +52,24 @@
                     [class.red]="isDeleteMarkerEnabled">Delete</button>
           </div>
 
+          <!--style="overflow-y: auto; white-space: nowrap;"-->
           <div class="ui large labels">
             <div *ngFor="let marker of scene?.scene_markers" class="ui basic label">
+              <!--<video #videoTag
+                (mouseenter)="onMouseEnter(videoTag)"
+                (mouseleave)="onMouseLeave(videoTag)"
+                loop
+                autoplay="true"
+                muted="true">
+                <source [src]="markerStreamPath(marker)" type="video/mp4" />
+              </video>-->
               <a (click)="onClickMarker(marker)">
                 {{marker.title}} - {{marker.seconds | seconds}}
               </a>
               <i *ngIf="isDeleteMarkerEnabled" (click)="onClickDeleteMarker(marker)" class="icon close"></i>
             </div>
           </div>
+          <button (click)="isMarkerOverlayOpen = !isMarkerOverlayOpen" class="ui button">Preview Markers</button>
         </div>
       </sui-accordion-panel>
     </sui-accordion>

@@ -12,10 +12,12 @@ import { Scene, SceneMarker } from '../../shared/models/scene.model';
 })
 export class SceneDetailComponent implements OnInit, AfterViewInit {
   scene: Scene;
-  markerTitle: string;
   isDeleteMarkerEnabled: boolean = false;
+  markerOptions: string[];
+  isMarkerOverlayOpen: boolean = false;
 
   @ViewChild('jwplayer') jwplayer: any;
+  @ViewChild('markerInput') markerInput: any;
 
   constructor(private route: ActivatedRoute, private stashService: StashService, private router: Router) { }
 
@@ -49,6 +51,10 @@ export class SceneDetailComponent implements OnInit, AfterViewInit {
     }, error => {
       console.log(error);
     });
+
+    this.stashService.getAllMarkerStrings().subscribe(markers => {
+      this.markerOptions = markers
+    });
   }
 
   streamPath(): string {
@@ -76,13 +82,17 @@ export class SceneDetailComponent implements OnInit, AfterViewInit {
     console.log('on time', time);
   }
 
+  markerStreamPath(marker: SceneMarker): string {
+    return !!marker ? `${this.stashService.url}${marker.stream}` : '';
+  }
+
   onClickAddMarker() {
     let sceneMarker = new SceneMarker();
-    sceneMarker.title = this.markerTitle;
+    sceneMarker.title = this.markerInput.query;
     sceneMarker.seconds = Math.round(this.jwplayer.player.getPosition());
     sceneMarker.scene_id = this.scene.id;
     console.log(sceneMarker);
-    this.markerTitle = null;
+    this.markerInput.query = null;
 
     this.stashService.createSceneMarker(sceneMarker).subscribe(response => {
       if (!!response.errors) {
@@ -99,6 +109,9 @@ export class SceneDetailComponent implements OnInit, AfterViewInit {
   }
 
   onClickMarker(marker: SceneMarker) {
+    if (this.isMarkerOverlayOpen) {
+      this.isMarkerOverlayOpen = false;
+    }
     this.jwplayer.player.seek(marker.seconds)
   }
 
