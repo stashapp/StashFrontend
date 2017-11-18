@@ -29,7 +29,8 @@ export enum CriteriaType {
   Rating,
   Resolution,
   Favorite,
-  HasMarkers
+  HasMarkers,
+  IsMissing
 }
 
 export class CriteriaOption {
@@ -51,7 +52,7 @@ export class Criteria {
 export class ListFilter {
   searchTerm?: string;
   performers?: number[];
-  itemsPerPage = 20;
+  itemsPerPage = 40;
   sortDirection = 'asc';
   sortBy: string;
   displayMode = DisplayMode.Grid;
@@ -71,7 +72,8 @@ export class ListFilter {
           new CriteriaOption(CriteriaType.None),
           new CriteriaOption(CriteriaType.Rating),
           new CriteriaOption(CriteriaType.Resolution),
-          new CriteriaOption(CriteriaType.HasMarkers)
+          new CriteriaOption(CriteriaType.HasMarkers),
+          new CriteriaOption(CriteriaType.IsMissing)
         ];
         break;
       case FilterMode.Performers:
@@ -84,7 +86,7 @@ export class ListFilter {
         break;
       case FilterMode.Studios:
         if (!!this.sortBy === false) { this.sortBy = 'name'; }
-        this.sortByOptions = ['name'];
+        this.sortByOptions = ['name', 'scenes_count'];
         this.criterions = [
           new CriteriaOption(CriteriaType.None)
         ];
@@ -132,6 +134,12 @@ export class ListFilter {
         this.criteria.type = CriteriaType.HasMarkers;
         this.criteria.parameterName = 'has_markers'
         this.criteria.options = ['true', 'false'];
+        break;
+      }
+      case CriteriaType.IsMissing: {
+        this.criteria.type = CriteriaType.IsMissing;
+        this.criteria.parameterName = 'is_missing'
+        this.criteria.options = ['title', 'url', 'date', 'gallery'];
         break;
       }
       default: {
