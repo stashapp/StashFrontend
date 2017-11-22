@@ -13,7 +13,7 @@ import { Scene, SceneMarker } from '../../shared/models/scene.model';
 export class SceneDetailComponent implements OnInit, AfterViewInit {
   scene: Scene;
   isDeleteMarkerEnabled: boolean = false;
-  markerOptions: string[];
+  markerOptions: any[];
   isMarkerOverlayOpen: boolean = false;
 
   @ViewChild('jwplayer') jwplayer: any;

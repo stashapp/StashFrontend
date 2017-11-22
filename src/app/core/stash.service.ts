@@ -144,7 +144,7 @@ export class StashService {
                     .map(this.extractData);
   }
 
-  getAllMarkerStrings(): Observable<string[]> {
+  getAllMarkerStrings(): Observable<any[]> {
     return this.http.get(this.url + '/markers.json')
                     .map(this.extractData);
   }

@@ -1,9 +1,29 @@
+<div class="simple-modal-container" [style.display]="showingMarkerList ? 'block' : 'none'">
+  <div class="simple-modal-content">
+    <table class="ui very basic celled table">
+      <thead>
+        <tr>
+          <th (click)="sortMarkers('title')">Title</th>
+          <th (click)="sortMarkers('count')">Scene Count</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let marker of markerOptions">
+          <td><a (click)="onClickMarker(marker)">{{marker.title}}</a></td>
+          <td>{{marker.count}}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
 <div class="wall grid">
   <form id="scene-filter" class="ui massive form">
     <div class="ui massive fluid transparent icon input">
       <input [(ngModel)]="searchTerm" [formControl]="searchFormControl" name="q" placeholder="Search..." type="text">
       <i class="search icon"></i>
-      <button (click)="toggleMode()" class="ui basic button" style="margin: 5px 50px;">{{mode == WallMode.Scenes ? 'Scenes' : 'Markers'}}</button>
+      <button *ngIf="mode == WallMode.Markers" (click)="toggleMarkerList()" class="ui basic button" style="margin: 5px 5px;">List Markers</button>
+      <button (click)="toggleMode()" class="ui basic button" style="margin: 5px 50px 5px 5px;">{{mode == WallMode.Scenes ? 'Scenes' : 'Markers'}}</button>
     </div>
   </form>
 

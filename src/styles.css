@@ -4,6 +4,28 @@ body {
   background-color: #FFFFFF;
 }
 
+.simple-modal-container {
+  position: absolute;
+  top: 15%;
+  bottom: 10%;
+  left: 10%;
+  right: 10%;
+  z-index: 1000;
+  background: white;
+  border-radius: 10px;
+  box-shadow: 1px 1px 10px #333;
+}
+
+.simple-modal-content {
+  overflow-y: scroll;
+  margin: 20px;
+  position: absolute;
+  bottom: 0;
+  top: 0;
+  left: 0;
+  right: 0;
+}
+
 .ui.popup {
   max-width: 350px !important;
 }

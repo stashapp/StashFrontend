@@ -24,6 +24,8 @@ export enum WallMode {
 export class SceneWallComponent implements OnInit {
   WallMode = WallMode;
   items: any[]; // scenes or scene markers
+  markerOptions: any[];
+  showingMarkerList: boolean = false;
   searchTerm: string = '';
   searchFormControl = new FormControl();
   mode: WallMode = WallMode.Markers;
@@ -41,7 +43,9 @@ export class SceneWallComponent implements OnInit {
                       .subscribe(term => {
                         this.getScenes(term);
                       });
-
+    this.stashService.getAllMarkerStrings().subscribe(markers => {
+      this.markerOptions = markers
+    });
   }
 
   getScenes(q: string) {
@@ -85,6 +89,27 @@ export class SceneWallComponent implements OnInit {
       this.mode = WallMode.Scenes;
     }
     this.getScenes(this.searchTerm);
+  }
+
+  toggleMarkerList() {
+    this.showingMarkerList = !this.showingMarkerList;
+  }
+
+  onClickMarker(marker) {
+    this.searchTerm = `"${marker.title}"`;
+    this.showingMarkerList = false;
+  }
+
+  sortMarkers(by) {
+    this.markerOptions = this.markerOptions.sort((a, b) => {
+      if (by == 'count') {
+        return b.count - a.count;
+      } else {
+        if (a.title > b.title) { return 1; }
+        if (a.title < b.title) { return -1; }
+        return 0;
+      }
+    });
   }
 
 }
