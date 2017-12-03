@@ -133,7 +133,7 @@ export class StashService {
   updateScene(scene: Scene): Observable<ApiResult<Scene>> {
     const headers = { 'Content-Type': 'application/json' };
     const options = { headers };
-    const body = JSON.stringify(scene);
+    const body = stringify(scene);
 
     return this.http.patch<ApiResult<Scene>>(this.url + `/scenes/${scene.id}.json`, body, options);
   }
@@ -145,7 +145,7 @@ export class StashService {
   createSceneMarker(sceneMarker: SceneMarker): Observable<any> {
     const headers = { 'Content-Type': 'application/json' };
     const options = { headers };
-    const body = JSON.stringify(sceneMarker);
+    const body = stringify(sceneMarker);
 
     return this.http.post(this.url + `/scenes/${sceneMarker.scene_id}/scene_markers.json`, body, options)
                     .catch(this.handleError);
@@ -213,7 +213,7 @@ export class StashService {
   createPerformer(performer: Performer): Observable<any> {
     const headers = { 'Content-Type': 'application/json' };
     const options = { headers };
-    const body = JSON.stringify(performer);
+    const body = stringify(performer);
 
     return this.http.post(this.url + `/performers.json`, body, options)
                     .catch(this.handleError);
@@ -266,7 +266,7 @@ export class StashService {
   createTag(tag: Tag): Observable<any> {
     const headers = { 'Content-Type': 'application/json' };
     const options = { headers };
-    const body = JSON.stringify(tag);
+    const body = stringify(tag);
 
     return this.http.post(this.url + `/tags.json`, body, options)
                     .catch(this.handleError);
@@ -316,7 +316,7 @@ export class StashService {
   createStudio(studio: Studio): Observable<any> {
     const headers = { 'Content-Type': 'application/json' };
     const options = { headers };
-    const body = JSON.stringify(studio);
+    const body = stringify(studio);
 
     return this.http.post(this.url + `/studios.json`, body, options)
                     .catch(this.handleError);
@@ -325,7 +325,7 @@ export class StashService {
   updateStudio(studio: Studio): Observable<any> {
     const headers = { 'Content-Type': 'application/json' };
     const options = { headers };
-    const body = JSON.stringify(studio);
+    const body = stringify(studio);
 
     return this.http.patch(this.url + `/studios/${studio.id}.json`, body, options)
                     .catch(this.handleError);
