@@ -164,7 +164,7 @@ export class ListFilter {
       case CriteriaType.IsMissing: {
         this.criteria.type = CriteriaType.IsMissing;
         this.criteria.parameterName = 'is_missing';
-        this.criteria.options = ['title', 'url', 'date', 'gallery'];
+        this.criteria.options = ['title', 'url', 'date', 'gallery', 'studio'];
         break;
       }
       default: {
