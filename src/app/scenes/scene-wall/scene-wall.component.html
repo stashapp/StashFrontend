@@ -22,6 +22,7 @@
     <div class="ui massive fluid transparent icon input">
       <input [(ngModel)]="searchTerm" [formControl]="searchFormControl" name="q" placeholder="Search..." type="text">
       <i class="search icon"></i>
+      <button  (click)="refresh()" class="ui basic button" style="margin: 5px 5px;">Refresh</button>
       <button *ngIf="mode == WallMode.Markers" (click)="toggleMarkerList()" class="ui basic button" style="margin: 5px 5px;">List Markers</button>
       <button (click)="toggleMode()" class="ui basic button" style="margin: 5px 50px 5px 5px;">{{mode == WallMode.Scenes ? 'Scenes' : 'Markers'}}</button>
     </div>
@@ -32,6 +33,8 @@
       <video #videoTag
         (mouseenter)="onMouseEnter(videoTag)"
         (mouseleave)="onMouseLeave(videoTag)"
+        visible
+        (visibleEvent)="onVisible($event, videoTag)"
         class="wall item"
         loop
         autoplay="true"

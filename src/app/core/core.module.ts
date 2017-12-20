@@ -6,7 +6,6 @@ import { HttpModule } from '@angular/http';
 
 import { NavigationBarComponent } from './navigation-bar/navigation-bar.component';
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
-import { SceneWallComponent } from './scene-wall/scene-wall.component';
 
 import { StashService } from './stash.service';
 import { CacheService } from './cache.service';
@@ -22,13 +21,11 @@ import { ArtooService } from './artoo.service';
   ],
   declarations: [
     NavigationBarComponent,
-    PageNotFoundComponent,
-    SceneWallComponent
+    PageNotFoundComponent
   ],
   exports: [
     NavigationBarComponent,
-    PageNotFoundComponent,
-    SceneWallComponent
+    PageNotFoundComponent
   ],
   providers: [
     StashService,

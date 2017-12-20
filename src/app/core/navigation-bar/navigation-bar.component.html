@@ -1,9 +1,9 @@
 <div class="ui top fixed menu">
   <div class="ui container">
     <div class="header item">
-      <a>S</a>
+      <a>Stash</a>
     </div>
-    <a routerLink="/scenes" routerLinkActive="active" class="item">
+    <a routerLink="/scenes" routerLinkActive #rla="routerLinkActive" [class.active]="isScenesActiveHack(rla)" class="item">
       <i class="video play icon"></i>Scenes
     </a>
     <a routerLink="/galleries" routerLinkActive="active" class="item">
@@ -22,7 +22,7 @@
       <i class="tags icon"></i>
       Tags
     </a>
-    <a routerLink="/wall" routerLinkActive="active" class="item">
+    <a routerLink="/scenes/wall" routerLinkActive="active" class="item">
       <i class="video icon"></i>
       Scene Wall
     </a>

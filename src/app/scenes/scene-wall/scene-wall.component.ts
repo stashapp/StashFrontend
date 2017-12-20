@@ -69,6 +69,10 @@ export class SceneWallComponent implements OnInit {
     video.muted = true;
   }
 
+  onVisible(isVisible: boolean, video: any) {
+    isVisible ? video.play() : video.pause();
+  }
+
   onClick(item): void {
     const id = item.scene_id != undefined ? item.scene_id : item.id
     this.router.navigate(['/scenes', id]);
@@ -93,6 +97,10 @@ export class SceneWallComponent implements OnInit {
 
   toggleMarkerList() {
     this.showingMarkerList = !this.showingMarkerList;
+  }
+
+  refresh() {
+    this.getScenes(this.searchTerm);
   }
 
   onClickMarker(marker) {

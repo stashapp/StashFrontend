@@ -8,6 +8,7 @@ import { ScenesComponent } from './scenes/scenes.component';
 import { SceneListComponent } from './scene-list/scene-list.component';
 import { SceneDetailComponent } from './scene-detail/scene-detail.component';
 import { SceneFormComponent } from './scene-form/scene-form.component';
+import { SceneWallComponent } from './scene-wall/scene-wall.component';
 
 @NgModule({
   imports: [
@@ -18,7 +19,8 @@ import { SceneFormComponent } from './scene-form/scene-form.component';
     ScenesComponent,
     SceneListComponent,
     SceneDetailComponent,
-    SceneFormComponent
+    SceneFormComponent,
+    SceneWallComponent
   ],
   providers: [
     ScenesService

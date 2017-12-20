@@ -2,7 +2,6 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
 import { PageNotFoundComponent } from './core/page-not-found/page-not-found.component';
-import { SceneWallComponent } from './core/scene-wall/scene-wall.component';
 
 const appRoutes: Routes = [
 //   {
@@ -25,7 +24,6 @@ const appRoutes: Routes = [
   { path: 'performers', loadChildren: 'app/performers/performers.module#PerformersModule' },
   { path: 'studios', loadChildren: 'app/studios/studios.module#StudiosModule' },
   { path: 'tags', loadChildren: 'app/tags/tags.module#TagsModule' },
-  { path: 'wall', component: SceneWallComponent },
   { path: 'settings', loadChildren: 'app/settings/settings.module#SettingsModule' },
   { path: '**', component: PageNotFoundComponent }
 ];
