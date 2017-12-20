@@ -95,7 +95,7 @@ export class SceneDetailComponent implements OnInit, AfterViewInit {
     this.markerInput.query = null;
 
     this.stashService.createSceneMarker(sceneMarker).subscribe(response => {
-      if (!!response.errors) {
+      if (!!response && !!response.errors) {
         console.log(response.errors);
       } else {
         console.log(response);
@@ -118,7 +118,7 @@ export class SceneDetailComponent implements OnInit, AfterViewInit {
   onClickDeleteMarker(marker: SceneMarker) {
     marker.scene_id = this.scene.id;
     this.stashService.deleteSceneMarker(marker).subscribe(response => {
-      if (!!response.errors) {
+      if (!!response && !!response.errors) {
         console.log(response.errors);
       } else {
         this.scene.scene_markers = this.scene.scene_markers.filter(item => item.id !== marker.id);

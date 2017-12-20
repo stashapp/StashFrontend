@@ -77,7 +77,7 @@ export class SceneFormComponent implements OnInit {
     console.log(this.scene);
 
     this.stashService.updateScene(this.scene).subscribe(response => {
-      if (!!response.errors) {
+      if (!!response && !!response.errors) {
         console.log(response.errors);
       } else {
         this.router.navigate(['/scenes', this.scene.id]);

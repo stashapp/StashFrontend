@@ -2,7 +2,8 @@ import { NgModule, ModuleWithProviders, Optional, SkipSelf } from '@angular/core
 import { CommonModule } from '@angular/common';
 import { RouterModule, RouteReuseStrategy } from '@angular/router';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { HttpModule } from '@angular/http';
+import { HttpModule } from '@angular/http'; // TODO remove later when angular updates
+import { HttpClientModule } from '@angular/common/http';
 
 import { NavigationBarComponent } from './navigation-bar/navigation-bar.component';
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
@@ -16,6 +17,7 @@ import { ArtooService } from './artoo.service';
     CommonModule,
     RouterModule,
     HttpModule,
+    HttpClientModule,
     FormsModule,
     ReactiveFormsModule
   ],

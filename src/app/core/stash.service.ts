@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { PlatformLocation } from '@angular/common';
-import { Http, Response } from '@angular/http';
-import { Headers, RequestOptions } from '@angular/http';
+import { HttpClient, HttpResponse, HttpHeaders, HttpParams } from '@angular/common/http';
 
 import { Observable } from 'rxjs/Observable';
 import { ReplaySubject } from 'rxjs/ReplaySubject';
@@ -40,7 +39,7 @@ export class StashService {
   url = 'http://localhost:4000';
   private observableCache: { [key: string]: Observable<any> } = {};
 
-  constructor(private http: Http,
+  constructor(private http: HttpClient,
               private cache: CacheService,
               private platformLocation: PlatformLocation) {
     const platform: any = this.platformLocation;
@@ -67,8 +66,7 @@ export class StashService {
       }
     }
     
-    return this.http.get(this.url + '/scenes.json' + '?' + params.toString())
-                    .map(this.extractData)
+    return this.http.get<ApiResult<Scene>>(this.url + '/scenes.json' + '?' + params.toString())
                     // .flatMap((scenes: Scene[]) => {
                     //   if (scenes.length > 0) {
                     //     const sceneObservables = scenes.map(scene => this.getScene(scene.id));
@@ -101,20 +99,17 @@ export class StashService {
   getScenesForWall(q: string): Observable<Scene[]> {
     const params = new URLSearchParams();
     if (q) { params.set('q', q); }
-    return this.http.get(this.url + '/scenes/wall.json' + '?' + params.toString())
-                    .map(this.extractData)
+    return this.http.get<Scene[]>(this.url + '/scenes/wall.json' + '?' + params.toString())
   }
 
   getSceneMarkersForWall(q: string): Observable<SceneMarker[]> {
     const params = new URLSearchParams();
     if (q) { params.set('q', q); }
-    return this.http.get(this.url + '/markers/wall.json' + '?' + params.toString())
-                    .map(this.extractData)
+    return this.http.get<SceneMarker[]>(this.url + '/markers/wall.json' + '?' + params.toString())
   }
 
   fetchScene(sceneId: number): Observable<Scene> {
     return this.http.get(this.url + `/scenes/${sceneId}.json`)
-                    .map(this.extractData)
                     .flatMap((scene: Scene) => {
                       return Observable.forkJoin(
                         Observable.of(scene),
@@ -136,35 +131,31 @@ export class StashService {
   }
 
   updateScene(scene: Scene): Observable<ApiResult<Scene>> {
-    const headers = new Headers({ 'Content-Type': 'application/json' });
-    const options = new RequestOptions({ headers: headers });
+    const headers = { 'Content-Type': 'application/json' };
+    const options = { headers };
     const body = JSON.stringify(scene);
 
-    return this.http.patch(this.url + `/scenes/${scene.id}.json`, body, options)
-                    .map(this.extractData);
+    return this.http.patch<ApiResult<Scene>>(this.url + `/scenes/${scene.id}.json`, body, options);
   }
 
   getAllMarkerStrings(): Observable<any[]> {
-    return this.http.get(this.url + '/markers.json')
-                    .map(this.extractData);
+    return this.http.get<any[]>(this.url + '/markers.json');
   }
 
   createSceneMarker(sceneMarker: SceneMarker): Observable<any> {
-    const headers = new Headers({ 'Content-Type': 'application/json' });
-    const options = new RequestOptions({ headers: headers });
+    const headers = { 'Content-Type': 'application/json' };
+    const options = { headers };
     const body = JSON.stringify(sceneMarker);
 
     return this.http.post(this.url + `/scenes/${sceneMarker.scene_id}/scene_markers.json`, body, options)
-                    .map(this.extractData)
                     .catch(this.handleError);
   }
 
   deleteSceneMarker(sceneMarker: SceneMarker): Observable<any> {
-    const headers = new Headers({ 'Content-Type': 'application/json' });
-    const options = new RequestOptions({ headers: headers });
+    const headers = { 'Content-Type': 'application/json' };
+    const options = { headers };
 
     return this.http.delete(this.url + `/scenes/${sceneMarker.scene_id}/scene_markers/${sceneMarker.id}.json`, options)
-                    .map(this.extractData)
                     .catch(this.handleError);
   }
 
@@ -177,8 +168,7 @@ export class StashService {
       }
       return Observable.forkJoin(performerObservables);
     } else {
-      return this.http.get(this.url + '/performers.json')
-                      .map(this.extractData)
+      return this.http.get<Performer[]> (this.url + '/performers.json');
     }
   }
 
@@ -194,15 +184,13 @@ export class StashService {
         params.set(filter.criteria.parameterName, filter.criteria.value);
       }
     }
-    return this.http.get(this.url + '/performers.json' + '?' + params.toString())
-                    .map(this.extractData);
+    return this.http.get<ApiResult<Performer>>(this.url + '/performers.json' + '?' + params.toString());
   }
 
   getAllPerformers(): Observable<ApiResult<Performer>> {
     const params = new URLSearchParams();
     params.set('all', 'true');
-    return this.http.get(this.url + '/performers.json' + '?' + params.toString())
-                    .map(this.extractData);
+    return this.http.get<ApiResult<Performer>>(this.url + '/performers.json' + '?' + params.toString());
   }
 
   getPerformer(performerId: number): Observable<Performer> {
@@ -218,28 +206,25 @@ export class StashService {
   fetchPerformer(performerId: number): Observable<Performer> {
     const url = this.url + `/performers/${performerId}.json`;
     return this.cacheable(url, this.http.get(url)
-                                        .map(this.extractData)
                                         // .map(performer => this.cache.setItem('performer-' + performerId, performer))
                                         .catch(this.handleError))
   }
 
   createPerformer(performer: Performer): Observable<any> {
-    const headers = new Headers({ 'Content-Type': 'application/json' });
-    const options = new RequestOptions({ headers: headers });
+    const headers = { 'Content-Type': 'application/json' };
+    const options = { headers };
     const body = JSON.stringify(performer);
 
     return this.http.post(this.url + `/performers.json`, body, options)
-                    .map(this.extractData)
                     .catch(this.handleError);
   }
 
   updatePerformer(performer: Performer): Observable<any> {
-    const headers = new Headers({ 'Content-Type': 'application/json' });
-    const options = new RequestOptions({ headers: headers });
+    const headers = { 'Content-Type': 'application/json' };
+    const options = { headers };
     const body = stringify(performer);
 
     return this.http.patch(this.url + `/performers/${performer.id}.json`, body, options)
-                    .map(this.extractData)
                     .catch(this.handleError);
   }
 
@@ -258,15 +243,13 @@ export class StashService {
     if (q) { params.set('q', q); }
     if (page) { params.set('page', page.toString()) }
     if (perPage) { params.set('per_page', perPage.toString()) }
-    return this.http.get(this.url + '/tags.json' + '?' + params.toString())
-                    .map(this.extractData);
+    return this.http.get<ApiResult<Tag>>(this.url + '/tags.json' + '?' + params.toString());
   }
 
   getAllTags(): Observable<ApiResult<Tag>> {
     const params = new URLSearchParams();
     params.set('all', 'true');
-    return this.http.get(this.url + '/tags.json' + '?' + params.toString())
-                    .map(this.extractData);
+    return this.http.get<ApiResult<Tag>>(this.url + '/tags.json' + '?' + params.toString());
   }
 
   getTag(tagId: number): Observable<Tag> {
@@ -276,36 +259,32 @@ export class StashService {
   fetchTag(tagId: number): Observable<Tag> {
     const url = this.url + `/tags/${tagId}.json`;
     return this.cacheable(url, this.http.get(url)
-                                        .map(this.extractData)
                                         // .map(performer => this.cache.setItem('performer-' + performerId, performer))
                                         .catch(this.handleError))
   }
 
   createTag(tag: Tag): Observable<any> {
-    const headers = new Headers({ 'Content-Type': 'application/json' });
-    const options = new RequestOptions({ headers: headers });
+    const headers = { 'Content-Type': 'application/json' };
+    const options = { headers };
     const body = JSON.stringify(tag);
 
     return this.http.post(this.url + `/tags.json`, body, options)
-                    .map(this.extractData)
                     .catch(this.handleError);
   }
 
   updateTag(tag: Tag): Observable<any> {
-    const headers = new Headers({ 'Content-Type': 'application/json' });
-    const options = new RequestOptions({ headers: headers });
+    const headers = { 'Content-Type': 'application/json' };
+    const options = { headers };
     const body = stringify(tag);
 
     return this.http.patch(this.url + `/tags/${tag.id}.json`, body, options)
-                    .map(this.extractData)
                     .catch(this.handleError);
   }
 
   getAllStudios(): Observable<ApiResult<Studio>> {
     const params = new URLSearchParams();
     params.set('all', 'true');
-    return this.http.get(this.url + '/studios.json' + '?' + params.toString())
-                    .map(this.extractData);
+    return this.http.get<ApiResult<Studio>>(this.url + '/studios.json' + '?' + params.toString());
   }
 
   getStudios(page?: number, filter?: ListFilter): Observable<ApiResult<Studio>> {
@@ -320,8 +299,7 @@ export class StashService {
         params.set(filter.criteria.parameterName, filter.criteria.value);
       }
     }
-    return this.http.get(this.url + '/studios.json' + '?' + params.toString())
-                    .map(this.extractData);
+    return this.http.get<ApiResult<Studio>>(this.url + '/studios.json' + '?' + params.toString());
   }
 
   getStudio(studioId: number): Observable<Studio> {
@@ -332,41 +310,36 @@ export class StashService {
   fetchStudio(studioId: number): Observable<Studio> {
     const url = this.url + `/studios/${studioId}.json`;
     return this.cacheable(url, this.http.get(url)
-                                        .map(this.extractData)
                                         .catch(this.handleError))
   }
 
   createStudio(studio: Studio): Observable<any> {
-    const headers = new Headers({ 'Content-Type': 'application/json' });
-    const options = new RequestOptions({ headers: headers });
+    const headers = { 'Content-Type': 'application/json' };
+    const options = { headers };
     const body = JSON.stringify(studio);
 
     return this.http.post(this.url + `/studios.json`, body, options)
-                    .map(this.extractData)
                     .catch(this.handleError);
   }
 
   updateStudio(studio: Studio): Observable<any> {
-    const headers = new Headers({ 'Content-Type': 'application/json' });
-    const options = new RequestOptions({ headers: headers });
+    const headers = { 'Content-Type': 'application/json' };
+    const options = { headers };
     const body = JSON.stringify(studio);
 
     return this.http.patch(this.url + `/studios/${studio.id}.json`, body, options)
-                    .map(this.extractData)
                     .catch(this.handleError);
   }
 
   getValidGalleriesForScene(sceneId: number): Observable<ApiResult<Gallery>> {
     const params = new URLSearchParams();
     params.set('scene_id', sceneId.toString());
-    return this.http.get(this.url + '/galleries.json' + '?' + params.toString())
-                    .map(this.extractData);
+    return this.http.get<ApiResult<Gallery>>(this.url + '/galleries.json' + '?' + params.toString());
   }
 
   fetchGallery(galleryId: number): Observable<Gallery> {
     const url = this.url + `/galleries/${galleryId}.json`;
     return this.cacheable(url, this.http.get(url)
-                                        .map(this.extractData)
                                         .catch(this.handleError))
   }
 
@@ -388,33 +361,25 @@ export class StashService {
         params.set(filter.criteria.parameterName, filter.criteria.value);
       }
     }
-    return this.http.get(this.url + '/galleries.json' + '?' + params.toString())
-                    .map(this.extractData);
+    return this.http.get<ApiResult<Gallery>>(this.url + '/galleries.json' + '?' + params.toString());
   }
 
   getStatus(): Observable<any> {
     const url = this.url + `/status.json`;
     return this.http.get(url)
-                    .map(this.extractData)
                     .catch(this.handleError)
   }
 
   startScan() {
     const url = this.url + `/scan.json`;
     return this.http.get(url)
-                    .map(this.extractData)
                     .catch(this.handleError)
                     .subscribe(data => console.log(''));
   }
 
-  private extractData(res: Response) {
-    const body = res.json();
-    return body || {};
-  }
-
-  private handleError (error: Response | any) {
-    if (error instanceof Response) {
-      const body = !!error.json().errors ? error.json().errors : error.json();
+  private handleError (error: HttpResponse<any> | any) {
+    if (error instanceof HttpResponse) {
+      const body = !!error.body.errors ? error.body.errors : error.body;
       const message: string = !!body.message ? body.message : error.toString();
       console.error(message);
       return Observable.throw(body);
