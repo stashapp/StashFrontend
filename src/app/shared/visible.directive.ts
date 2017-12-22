@@ -29,13 +29,13 @@ export class VisibleDirective {
   subscribe() {
     this.scrollSubscription = Observable.fromEvent(window, 'scroll')
                                         .startWith(null)
-                                        .debounceTime(200)
+                                        .debounceTime(2000)
                                         .subscribe(() => {
       this.visibleEvent.emit(this.isInViewport());
     });
     this.resizeSubscription = Observable.fromEvent(window, 'resize')
                                         .startWith(null)
-                                        .debounceTime(200)
+                                        .debounceTime(2000)
                                         .subscribe(() => {
       this.visibleEvent.emit(this.isInViewport());
     });
@@ -48,9 +48,10 @@ export class VisibleDirective {
   isInViewport(): boolean {
     const rect = this.element.nativeElement.getBoundingClientRect();
     const html = this.document.documentElement;
-    return rect.top >= -(rect.height) &&
+    const bufferSpace = 400;
+    return rect.top >= -(bufferSpace) &&
            rect.left >= 0 &&
-           rect.bottom <= (window.innerHeight + rect.height || html.clientHeight + rect.height) &&
+           rect.bottom <= (window.innerHeight + bufferSpace || html.clientHeight + bufferSpace) &&
            rect.right <= (window.innerWidth || html.clientWidth);
   }
 

@@ -58,7 +58,69 @@ video.preview {
   object-fit: cover;
 }
 
-video.wall.item {
+.wall-overlay {
+  background-color: rgba(0,0,0,.8);
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1;
+  pointer-events: none;
+  transition: transform .5s ease-in-out;
+}
+.visible {
+  opacity: 1;
+  transition: opacity .5s ease-in-out;
+}
+.hidden {
+  opacity: 0;
+  transition: opacity .5s ease-in-out;
+}
+
+.double-scale {
+  position: absolute;
+  z-index: 2;
+  transform: scale(2.5);
+  background-color: black;
+}
+
+.double-scale img {
+  opacity: 0;
+}
+
+.scene-wall-item-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transition: transform .5s;
+}
+
+.scene-wall-item-container video {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+}
+
+/* The first and last rows (except the corners) */
+.wall.column:nth-child(n+2):nth-child(-n+4) app-scene-wall-item div { transform-origin: top; }
+.wall.column:nth-last-child(n+2):nth-last-child(-n+4) app-scene-wall-item div { transform-origin: bottom; }
+/* The middle */
+.wall.column:nth-child(5n+0) app-scene-wall-item div { transform-origin: center right; }
+.wall.column:nth-child(5n+6) app-scene-wall-item div { transform-origin: center left; }
+/* The top left and top right corners */
+.wall.column:nth-child(1) app-scene-wall-item div { transform-origin: top left; }
+.wall.column:nth-child(5) app-scene-wall-item div { transform-origin: top right; }
+/* The bottom left and bottom right corners */
+.wall.column:nth-last-child(1) app-scene-wall-item div { transform-origin: bottom right; }
+.wall.column:nth-last-child(5) app-scene-wall-item div { transform-origin: bottom left; }
+
+video.wall.item, img.wall.item {
   width: 100%;
   height: 100%;
   object-fit: cover;

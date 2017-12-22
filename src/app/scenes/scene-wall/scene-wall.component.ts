@@ -49,6 +49,7 @@ export class SceneWallComponent implements OnInit {
   }
 
   getScenes(q: string) {
+    this.items = null;
     if (this.mode == WallMode.Scenes) {
       this.stashService.getScenesForWall(q).subscribe(scenes => {
         this.items = scenes;
@@ -57,32 +58,6 @@ export class SceneWallComponent implements OnInit {
       this.stashService.getSceneMarkersForWall(q).subscribe(markers => {
         this.items = markers;
       })
-    }
-  }
-
-  onMouseEnter(video: any) {
-    video.volume = 0.05;
-    video.muted = false;
-  }
-
-  onMouseLeave(video: any) {
-    video.muted = true;
-  }
-
-  onVisible(isVisible: boolean, video: any) {
-    isVisible ? video.play() : video.pause();
-  }
-
-  onClick(item): void {
-    const id = item.scene_id != undefined ? item.scene_id : item.id
-    this.router.navigate(['/scenes', id]);
-  }
-
-  previewPath(item): string {
-    if (this.mode == WallMode.Scenes) {
-      return `${this.stashService.url}${item.paths.preview}`
-    } else {
-      return `${this.stashService.url}${item.stream}`
     }
   }
 

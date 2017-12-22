@@ -28,20 +28,10 @@
     </div>
   </form>
 
-  <div class="ui four column grid" style="margin: 0;">
-    <a *ngFor="let item of items" (click)="onClick(item)" class="wall column">
-      <video #videoTag
-        (mouseenter)="onMouseEnter(videoTag)"
-        (mouseleave)="onMouseLeave(videoTag)"
-        visible
-        (visibleEvent)="onVisible($event, videoTag)"
-        class="wall item"
-        loop
-        autoplay="true"
-        muted="true">
-        <source [src]="previewPath(item)" />
-      </video>
-      <div style="position: absolute; bottom: 1em; left: 1em; font-weight: 900; font-size: small; text-shadow: black 1px 1px;">{{item.title}}</div>
-    </a>
+  <div class="ui five column grid" style="margin: 0;">
+    <div *ngFor="let item of items" class="wall column">
+      <app-scene-wall-item *ngIf="mode == WallMode.Markers" [marker]="item"></app-scene-wall-item>
+      <app-scene-wall-item *ngIf="mode == WallMode.Scenes" [scene]="item"></app-scene-wall-item>
+    </div>
   </div>
 </div>

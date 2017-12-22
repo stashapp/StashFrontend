@@ -9,6 +9,7 @@ export class SceneMarker {
     title: string;
     seconds: number;
     stream: string;
+    preview: string;
 }
 
 export class Scene {
@@ -34,6 +35,7 @@ export class Scene {
     screenshot?: string;
     preview?: string;
     stream?: string;
+    webp?: string;
     vtt?: string;
     chapters_vtt?: string;
   }
