@@ -99,6 +99,24 @@
   }
 }
 
+/* Widescreen Monitor */
+@media only screen and (min-width: @widescreenMonitorBreakpoint) {
+  .ui.container {
+    width: @widescreenMonitorWidth;
+    margin-left: @widescreenMonitorGutter !important;
+    margin-right: @widescreenMonitorGutter !important;
+  }
+  .ui.grid.container {
+    width: @widescreenMonitorGridWidth !important;
+  }
+  .ui.relaxed.grid.container {
+    width: @widescreenMonitorRelaxedGridWidth !important;
+  }
+  .ui.very.relaxed.grid.container {
+    width: @widescreenMonitorVeryRelaxedGridWidth !important;
+  }
+}
+
 /*******************************
              Types
 *******************************/
