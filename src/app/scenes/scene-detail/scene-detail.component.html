@@ -110,6 +110,12 @@
     </div>
   </div>
 
+  <div *ngIf="!!scene?.studio_id" class="ui attached segment">
+    <div class="ui four centered stackable link cards">
+      <app-studio-card [studio]="scene?.fetchedStudio"></app-studio-card>
+    </div>
+  </div>
+
   <div *ngIf="!!scene?.gallery_id" class="ui attached segment">
     <h3 class="ui header">
       Gallery
