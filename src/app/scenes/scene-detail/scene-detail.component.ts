@@ -47,7 +47,7 @@ export class SceneDetailComponent implements OnInit, AfterViewInit {
 
       this.stashService.getStudio(this.scene.studio_id).subscribe(studio => {
         this.scene.fetchedStudio = studio;
-      });
+      }, error => {});
 
       this.stashService.getGallery(this.scene.gallery_id).subscribe(gallery => {
         this.scene.fetchedGallery = gallery;

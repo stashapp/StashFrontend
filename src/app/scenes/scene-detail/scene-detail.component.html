@@ -120,7 +120,7 @@
     <h3 class="ui header">
       Gallery
     </h3>
-    <app-gallery-preview [gallery]="scene?.fetchedGallery"></app-gallery-preview>
+    <app-gallery-preview *ngIf="!!scene?.fetchedGallery" [gallery]="scene?.fetchedGallery"></app-gallery-preview>
   </div>
 
   <div class="ui bottom attached segment">
