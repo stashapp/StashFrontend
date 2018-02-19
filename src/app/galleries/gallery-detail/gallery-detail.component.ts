@@ -13,6 +13,7 @@ import { Gallery, GalleryImage } from '../../shared/models/gallery.model';
 export class GalleryDetailComponent implements OnInit {
   gallery: Gallery;
   displayedImage: GalleryImage = null;
+  zoomed: Boolean = false;
 
   constructor(private route: ActivatedRoute,
               private stashService: StashService,
@@ -34,6 +35,14 @@ export class GalleryDetailComponent implements OnInit {
 
   imagePath(): string {
     return `${this.stashService.url}${this.displayedImage.path}`
+  }
+
+  getStyle(): string {
+    if (this.zoomed) {
+      return "z-index: 1; height: 100%;"
+    } else {
+      return "z-index: 1; height: 80vh;"
+    }
   }
 
   onClickEdit() {
@@ -63,6 +72,16 @@ export class GalleryDetailComponent implements OnInit {
 
       case 'ArrowRight': {
         this.displayedImage = this.gallery.files[i + 1];
+        break;
+      }
+
+      case 'ArrowUp': {
+        this.zoomed = true;
+        break;
+      }
+
+      case 'ArrowDown': {
+        this.zoomed = false;
         break;
       }
     
