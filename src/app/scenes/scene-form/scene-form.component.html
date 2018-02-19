@@ -52,6 +52,11 @@
         <sui-select-option *ngFor="let option of studioSelect.availableOptions" [value]="option"></sui-select-option>
       </sui-select>
     </div>
+
+    <ng-template let-option #performerOptionTemplate>
+      <img src="{{ this.stashService.url }}{{ option.image_path }}" height="80"/>&nbsp;{{ option.name }}
+    </ng-template>
+
     <div class="field">
       <label>Performers</label>
       <sui-multi-select
@@ -62,6 +67,7 @@
         labelField="name"
         valueField="id"
         [isSearchable]="true"
+        [optionTemplate]="performerOptionTemplate"
         placeholder="Performers"
         #performerSelect>
         <sui-select-option *ngFor="let option of performerSelect.availableOptions" [value]="option"></sui-select-option>
