@@ -261,3 +261,8 @@ sui-search .results {
   bottom: 100%;
   top: unset !important;
 }
+
+/* TODO: Hack for JWPlayer 8 chapter marker offsets */
+.jw-slider-time .jw-cue {
+  margin-left: -5.5px;
+}

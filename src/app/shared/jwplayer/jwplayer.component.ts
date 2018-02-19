@@ -53,13 +53,13 @@ export class JwplayerComponent {
   }
 
   public handleEventsFor = (player: any) => {
-    this.onBufferChange = player.onBufferChange;
-    this.onBuffer = player.onBuffer;
-    this.onComplete = player.onComplete;
-    this.onError = player.onError;
-    this.onFullScreen = player.onFullScreen;
-    this.onPlay = player.onPlay;
-    this.onStart = player.onStart;
+    player.on('bufferChange', this.onBufferChange);
+    player.on('buffer', this.onBuffer);
+    player.on('complete', this.onComplete);
+    player.on('error', this.onError);
+    player.on('fullscreen', this.onFullScreen);
+    player.on('play', this.onPlay);
+    player.on('start', this.onStart);
   }
 
   public onComplete = (options: {}) => this.complete.emit(options);
