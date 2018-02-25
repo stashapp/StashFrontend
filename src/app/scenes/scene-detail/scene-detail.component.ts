@@ -129,4 +129,8 @@ export class SceneDetailComponent implements OnInit, AfterViewInit {
       }
     });
   }
+
+  scrubberSeek(seconds) {
+    this.jwplayer.player.seek(seconds);
+  }
 }

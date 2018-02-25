@@ -12,6 +12,15 @@ export class SceneMarker {
     preview: string;
 }
 
+export class SceneSpriteItem {
+    start: number;
+    end: number;
+    x: number;
+    y: number;
+    w: number;
+    h: number;
+}
+
 export class Scene {
   id: number;
   checksum: string;

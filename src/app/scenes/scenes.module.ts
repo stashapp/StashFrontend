@@ -10,6 +10,7 @@ import { SceneDetailComponent } from './scene-detail/scene-detail.component';
 import { SceneFormComponent } from './scene-form/scene-form.component';
 import { SceneWallComponent } from './scene-wall/scene-wall.component';
 import { SceneWallItemComponent } from './scene-wall-item/scene-wall-item.component';
+import { SceneDetailScrubberComponent } from './scene-detail-scrubber/scene-detail-scrubber.component';
 
 @NgModule({
   imports: [
@@ -22,7 +23,8 @@ import { SceneWallItemComponent } from './scene-wall-item/scene-wall-item.compon
     SceneDetailComponent,
     SceneFormComponent,
     SceneWallComponent,
-    SceneWallItemComponent
+    SceneWallItemComponent,
+    SceneDetailScrubberComponent
   ],
   providers: [
     ScenesService

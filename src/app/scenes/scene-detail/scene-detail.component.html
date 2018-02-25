@@ -28,8 +28,10 @@
       <% end %>
     <% end %>-->
 
+    <app-scene-detail-scrubber [scene]="scene" (seek)="scrubberSeek($event)"></app-scene-detail-scrubber>
+
     <sui-accordion class="fluid">
-      <sui-accordion-panel [isOpen]="true">
+      <sui-accordion-panel [isOpen]="!scene?.scene_markers.length">
         <div title>
           <i class="dropdown icon"></i>
           Markers
