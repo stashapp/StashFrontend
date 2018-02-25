@@ -20,6 +20,7 @@
     <!--[hidden]="!scene?.is_streamable"-->
     <app-jwplayer
       (seeked)="onSeeked()"
+      (time)="onTime($event)"
       #jwplayer>
     </app-jwplayer>
     <!--<% else %>
@@ -28,7 +29,12 @@
       <% end %>
     <% end %>-->
 
-    <app-scene-detail-scrubber #scrubber [scene]="scene" (seek)="scrubberSeek($event)"></app-scene-detail-scrubber>
+    <app-scene-detail-scrubber
+      #scrubber
+      [scene]="scene"
+      (seek)="scrubberSeek($event)"
+      (scrolled)="scrubberScrolled()">
+    </app-scene-detail-scrubber>
 
     <sui-accordion class="fluid">
       <sui-accordion-panel [isOpen]="false">

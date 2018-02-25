@@ -88,6 +88,11 @@ export class SceneDetailComponent implements OnInit, AfterViewInit {
     this.scrubber.scrollTo(position);
   }
 
+  onTime(data) {
+    let position = this.jwplayer.player.getPosition();
+    this.scrubber.scrollTo(position);
+  }
+
   markerStreamPath(marker: SceneMarker): string {
     return !!marker ? `${this.stashService.url}${marker.stream}` : '';
   }
@@ -138,5 +143,9 @@ export class SceneDetailComponent implements OnInit, AfterViewInit {
 
   scrubberSeek(seconds) {
     this.jwplayer.player.seek(seconds);
+  }
+
+  scrubberScrolled() {
+    this.jwplayer.player.pause();
   }
 }

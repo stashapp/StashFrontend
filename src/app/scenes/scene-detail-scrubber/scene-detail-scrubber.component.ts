@@ -14,6 +14,7 @@ import { Scene, SceneMarker, SceneSpriteItem } from '../../shared/models/scene.m
 export class SceneDetailScrubberComponent implements OnInit, OnChanges {
   @Input() scene: Scene;
   @Output() seek: EventEmitter<number> = new EventEmitter();
+  @Output() scrolled: EventEmitter<any> = new EventEmitter();
 
   slider: HTMLElement;
   @ViewChild('scrubberSlider') sliderTag: any;
@@ -27,7 +28,9 @@ export class SceneDetailScrubberComponent implements OnInit, OnChanges {
 
   private _position: number = 0;
   getPostion(): number { return this._position; }
-  setPosition(newPostion: number) {
+  setPosition(newPostion: number, shouldEmit: boolean = true) {
+    if (shouldEmit) { this.scrolled.emit(); }
+
     let bounds = this.getBounds() * -1
     if (newPostion > 0) {
       newPostion = 0;
@@ -212,7 +215,7 @@ export class SceneDetailScrubberComponent implements OnInit, OnChanges {
     let duration = Number(this.scene.file.duration);
     let percentage = seconds / duration;
     let position = ((this.slider.scrollWidth * percentage) - (this.slider.clientWidth / 2)) * -1;
-    this.setPosition(position);
+    this.setPosition(position, false);
   }
 
 }
