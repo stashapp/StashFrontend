@@ -66,7 +66,7 @@ export class SceneDetailScrubberComponent implements OnInit, OnChanges {
       }
 
       if (!!seekSeconds) { this.seek.emit(seekSeconds); }
-    } else if (delta > 2) {
+    } else if (this.velocity > 0) {
       this.dragInertia(0, this.velocity * 5);
     }
   }

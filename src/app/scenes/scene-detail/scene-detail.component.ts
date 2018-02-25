@@ -16,6 +16,8 @@ export class SceneDetailComponent implements OnInit, AfterViewInit {
   markerOptions: any[];
   isMarkerOverlayOpen: boolean = false;
 
+  private lastTime: number = 0;
+
   @ViewChild('jwplayer') jwplayer: any;
   @ViewChild('markerInput') markerInput: any;
   @ViewChild('scrubber') scrubber: any;
@@ -86,11 +88,16 @@ export class SceneDetailComponent implements OnInit, AfterViewInit {
   onSeeked() {
     let position = this.jwplayer.player.getPosition();
     this.scrubber.scrollTo(position);
+    this.jwplayer.player.play();
   }
 
   onTime(data) {
     let position = this.jwplayer.player.getPosition();
-    this.scrubber.scrollTo(position);
+    let difference = position - this.lastTime;
+    if (difference > 5) {
+      this.lastTime = position;
+      this.scrubber.scrollTo(position);
+    }
   }
 
   markerStreamPath(marker: SceneMarker): string {
