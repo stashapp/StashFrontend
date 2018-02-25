@@ -19,7 +19,7 @@
   <div class="ui top attached segment">
     <!--[hidden]="!scene?.is_streamable"-->
     <app-jwplayer
-      (onTime)="onTime($event)"
+      (seeked)="onSeeked()"
       #jwplayer>
     </app-jwplayer>
     <!--<% else %>
@@ -28,7 +28,7 @@
       <% end %>
     <% end %>-->
 
-    <app-scene-detail-scrubber [scene]="scene" (seek)="scrubberSeek($event)"></app-scene-detail-scrubber>
+    <app-scene-detail-scrubber #scrubber [scene]="scene" (seek)="scrubberSeek($event)"></app-scene-detail-scrubber>
 
     <sui-accordion class="fluid">
       <sui-accordion-panel [isOpen]="false">
@@ -70,6 +70,7 @@
                 muted="true">
                 <source [src]="markerStreamPath(marker)" type="video/mp4" />
               </video>-->
+              <img [src]="markerPreviewPath(marker)" />
               <a (click)="onClickMarker(marker)">
                 {{marker.title}} - {{marker.seconds | seconds}}
               </a>

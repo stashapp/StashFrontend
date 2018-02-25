@@ -20,6 +20,7 @@ export class JwplayerComponent {
   @Output() public play: EventEmitter<any> = new EventEmitter<any>();
   @Output() public start: EventEmitter<any> = new EventEmitter<any>();
   @Output() public fullscreen: EventEmitter<any> = new EventEmitter<any>();
+  @Output() public seeked: EventEmitter<any> = new EventEmitter();
 
   private _player: any = null;
 
@@ -60,6 +61,7 @@ export class JwplayerComponent {
     player.on('fullscreen', this.onFullScreen);
     player.on('play', this.onPlay);
     player.on('start', this.onStart);
+    player.on('seeked', this.onSeeked);
   }
 
   public onComplete = (options: {}) => this.complete.emit(options);
@@ -93,4 +95,7 @@ export class JwplayerComponent {
 
   public onPlay = (options: {
   }) => this.play.emit();
+
+  public onSeeked = (options: {
+  }) => this.seeked.emit();
 }

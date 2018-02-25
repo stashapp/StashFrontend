@@ -18,6 +18,7 @@ export class SceneDetailComponent implements OnInit, AfterViewInit {
 
   @ViewChild('jwplayer') jwplayer: any;
   @ViewChild('markerInput') markerInput: any;
+  @ViewChild('scrubber') scrubber: any;
 
   constructor(private route: ActivatedRoute, private stashService: StashService, private router: Router) { }
 
@@ -82,12 +83,17 @@ export class SceneDetailComponent implements OnInit, AfterViewInit {
     this.router.navigate(['edit'], { relativeTo: this.route });
   }
 
-  onTime(time) {
-    console.log('on time', time);
+  onSeeked() {
+    let position = this.jwplayer.player.getPosition();
+    this.scrubber.scrollTo(position);
   }
 
   markerStreamPath(marker: SceneMarker): string {
     return !!marker ? `${this.stashService.url}${marker.stream}` : '';
+  }
+
+  markerPreviewPath(marker: SceneMarker): string {
+    return !!marker ? `${this.stashService.url}${marker.preview}` : '';
   }
 
   onClickAddMarker() {

@@ -208,4 +208,11 @@ export class SceneDetailScrubberComponent implements OnInit, OnChanges {
     this.setPosition(newPosition);
   }
 
+  public scrollTo(seconds: number) {
+    let duration = Number(this.scene.file.duration);
+    let percentage = seconds / duration;
+    let position = ((this.slider.scrollWidth * percentage) - (this.slider.clientWidth / 2)) * -1;
+    this.setPosition(position);
+  }
+
 }
