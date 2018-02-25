@@ -93,7 +93,7 @@ export class SceneDetailComponent implements OnInit, AfterViewInit {
 
   onTime(data) {
     let position = this.jwplayer.player.getPosition();
-    let difference = position - this.lastTime;
+    let difference = Math.abs(position - this.lastTime);
     if (difference > 5) {
       this.lastTime = position;
       this.scrubber.scrollTo(position);
