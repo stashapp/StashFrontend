@@ -25,6 +25,7 @@ export class StudioCardComponent implements OnInit {
   }
 
   imagePath(): string {
+    if (!this.studio) { return ''; }
     return `${this.stashService.url}${this.studio.image_path}`
   }
 
