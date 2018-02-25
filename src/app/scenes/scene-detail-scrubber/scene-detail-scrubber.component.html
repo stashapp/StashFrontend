@@ -19,6 +19,7 @@
           class="scrubber-item"
           [attr.data-sprite-item-id]="i"
           [ngStyle]="getStyleForSprite(i)">
+          <span>{{spriteItem.start | seconds}} - {{spriteItem.end | seconds}}</span>
         </div>
       </div>
     </div>

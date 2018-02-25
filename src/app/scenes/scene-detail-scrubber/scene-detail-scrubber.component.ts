@@ -40,6 +40,7 @@ export class SceneDetailScrubberComponent implements OnInit, OnChanges {
 
   @HostListener('window:mouseup', ['$event'])
   onMouseup(event: MouseEvent) {
+    if (!this.start) { return }
     this.mouseDown = false;
     let delta = Math.abs(event.clientX - this.start.clientX);
     if (delta < 1 && event.target instanceof HTMLDivElement) {
@@ -77,6 +78,7 @@ export class SceneDetailScrubberComponent implements OnInit, OnChanges {
     } else {
       let newPosition = this.getPostion() + newDelta;
       this.setPosition(newPosition);
+      this.velocity = 0;
     }
   }
 
@@ -185,9 +187,6 @@ export class SceneDetailScrubberComponent implements OnInit, OnChanges {
     let marker = this.scene.scene_markers[i];
     let duration = Number(this.scene.file.duration);
     let percentage = marker.seconds / duration;
-
-    let spriteLength = duration / this.spriteItems.length;
-    let spriteWidth = this.getBounds() / this.spriteItems.length;
 
     // Need to offset from the left margin or the tags are slightly off.
     let offset = Number(window.getComputedStyle(this.slider.offsetParent).marginLeft.replace('px', ''));

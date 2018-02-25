@@ -94,7 +94,17 @@
 
 .scrubber-item {
   position: absolute;
-  display: inline-block;
+  display: flex;
   margin-right: 10px;
   cursor: pointer;
+  color: white;
+  text-shadow: 1px 1px black;
+  text-align: center;
+  font-size: 10px;
+}
+
+.scrubber-item span {
+  display: inline-block;
+  align-self: flex-end;
+  width: 100%;
 }
