@@ -21,17 +21,17 @@ export class SceneDetailScrubberComponent implements OnInit, OnChanges {
 
   spriteItems: SceneSpriteItem[] = [];
 
-  private mouseDown: boolean = false;
+  private mouseDown = false;
   private last: MouseEvent;
   private start: MouseEvent;
-  private velocity: number = 0;
+  private velocity = 0;
 
-  private _position: number = 0;
+  private _position = 0;
   getPostion(): number { return this._position; }
   setPosition(newPostion: number, shouldEmit: boolean = true) {
     if (shouldEmit) { this.scrolled.emit(); }
 
-    let bounds = this.getBounds() * -1
+    const bounds = this.getBounds() * -1
     if (newPostion > 0) {
       newPostion = 0;
     } else if (newPostion < bounds) {
@@ -45,7 +45,7 @@ export class SceneDetailScrubberComponent implements OnInit, OnChanges {
   onMouseup(event: MouseEvent) {
     if (!this.start) { return }
     this.mouseDown = false;
-    let delta = Math.abs(event.clientX - this.start.clientX);
+    const delta = Math.abs(event.clientX - this.start.clientX);
     if (delta < 1 && event.target instanceof HTMLDivElement) {
       let target: HTMLDivElement = event.target;
       let seekSeconds: number = null;
@@ -58,7 +58,7 @@ export class SceneDetailScrubberComponent implements OnInit, OnChanges {
         let seconds = spriteLength * percentage;
         seekSeconds = sprite.start + seconds;
       }
-      
+
       let markerIdString = target.getAttribute("data-marker-id");
       if (markerIdString != null) {
         let marker = this.scene.scene_markers[Number(markerIdString)];
@@ -131,8 +131,7 @@ export class SceneDetailScrubberComponent implements OnInit, OnChanges {
   fetchSpriteInfo() {
     if (!this.scene) { return }
 
-    let url = `${this.stashService.url}${this.scene.paths.vtt}`;
-    this.http.get(url, {responseType: 'text'}).subscribe(res => {
+    this.http.get(this.scene.paths.vtt, {responseType: 'text'}).subscribe(res => {
       // TODO: This is gnarly
       let lines = res.split('\n');
       if (lines.shift() != 'WEBVTT') { return; }
@@ -179,7 +178,7 @@ export class SceneDetailScrubberComponent implements OnInit, OnChanges {
       'height.px': sprite.h,
       'margin': '0px auto',
       'background-position': -sprite.x + 'px ' + -sprite.y + 'px',
-      'background-image': `url(${this.stashService.url}${path})`,
+      'background-image': `url(${path})`,
       'left.px': left
     };
   }

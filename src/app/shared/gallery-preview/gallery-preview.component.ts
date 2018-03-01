@@ -12,7 +12,7 @@ import { Gallery, GalleryImage } from '../../shared/models/gallery.model';
 export class GalleryPreviewComponent implements OnInit {
   @Input() gallery: Gallery;
   @Input() galleryId: number;
-  @Input() type: string = 'random';
+  @Input() type = 'random';
   @Input() numberOfRandomImages = 12;
   @Input() showTitles = true;
   @Input() numberPerRow = 4;
@@ -27,15 +27,18 @@ export class GalleryPreviewComponent implements OnInit {
 
   ngOnInit() {
     if (!!this.galleryId) {
-      this.stashService.fetchGallery(this.galleryId).subscribe(response => {
-        this.gallery = response;
-        this.setupFiles();
-      })
+      this.fetchGallery();
     }
   }
 
+  async fetchGallery() {
+    const result = await this.stashService.findGallery(this.galleryId).result();
+    this.gallery = result.data.findGallery;
+    this.setupFiles();
+  }
+
   imagePath(image) {
-    return `${this.stashService.url}${image.path}?thumb=true`
+    return `${image.path}?thumb=true`
   }
 
   shuffle(a) {

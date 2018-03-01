@@ -22,14 +22,9 @@ export class TagListComponent implements OnInit {
     this.getTags();
   }
 
-  getTags() {
-    this.stashService.getAllTags()
-                     .subscribe(
-                        apiResult => {
-                          this.tags = apiResult.data;
-                        },
-                        error => console.log('tag list error', error)
-                     );
+  async getTags() {
+    const result = await this.stashService.allTags().result();
+    this.tags = result.data.allTags;
   }
 
   onClickTag(tag: Tag) {

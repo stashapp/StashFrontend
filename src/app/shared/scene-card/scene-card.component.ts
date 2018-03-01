@@ -27,22 +27,10 @@ export class SceneCardComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.stashService.getPerformersWithIds(this.scene.performer_ids).subscribe(performers => {
-      this.scene.fetchedPerformers = performers;
-    });
-    this.stashService.getTagsWithIds(this.scene.tag_ids).subscribe(tags => {
-      this.scene.fetchedTags = tags;
-    });
-    if (!!this.scene.studio_id) {
-      this.stashService.getStudio(this.scene.studio_id).subscribe(studio => {
-        this.scene.fetchedStudio = studio;
-      });
-    }
-
     this.video = this.videoTag.nativeElement;
     this.video.volume = 0.05;
     this.video.onplaying = () => {
-      if (this.isHovering == true) {
+      if (this.isHovering === true) {
         this.isPlaying = true;
       } else {
         this.video.pause();
@@ -55,7 +43,7 @@ export class SceneCardComponent implements OnInit {
   onMouseEnter() {
     this.isHovering = true;
     if (!this.previewPath) {
-      this.previewPath = `${this.stashService.url}${this.scene.paths.preview}`
+      this.previewPath = this.scene.paths.preview
     }
     if (this.video.paused && !this.isPlaying) {
       this.video.play();
@@ -72,13 +60,5 @@ export class SceneCardComponent implements OnInit {
 
   onSelect(): void {
     this.router.navigate(['/scenes', this.scene.id]);
-  }
-
-  screenshotPath(): string {
-    return `${this.stashService.url}${this.scene.paths.screenshot}`
-  }
-
-  studioImagePath(): string {
-    return `${this.stashService.url}${this.scene.fetchedStudio.image_path}`
   }
 }

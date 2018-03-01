@@ -33,24 +33,29 @@ export class ListComponent implements OnInit {
     this.getData();
   }
 
-  getData() {
-    let observable: Observable<ApiResult<any>>;
+  async getData() {
     if (this.state instanceof SceneListState) {
-      observable = this.stashService.getScenes(this.state.currentPage, this.state.filter)
+      this.stashService
+          .findScenes(this.state.currentPage, this.state.filter)
+          .valueChanges
+          .subscribe(result => {
+        this.state.data = result.data.findScenes.scenes;
+        this.state.totalCount = result.data.findScenes.count;
+        console.log(this.state.data)
+      })
     } else if (this.state instanceof GalleryListState) {
-      observable = this.stashService.getGalleries(this.state.currentPage, this.state.filter)
+      const result = await this.stashService.findGalleries(this.state.currentPage, this.state.filter).result();
+      this.state.data = result.data.findGalleries.galleries;
+      this.state.totalCount = result.data.findGalleries.count;
     } else if (this.state instanceof PerformerListState) {
-      observable = this.stashService.getPerformers(this.state.currentPage, this.state.filter)
+      const result = await this.stashService.findPerformers(this.state.currentPage, this.state.filter).result();
+      this.state.data = result.data.findPerformers.performers;
+      this.state.totalCount = result.data.findPerformers.count;
     } else if (this.state instanceof StudioListState) {
-      observable = this.stashService.getStudios(this.state.currentPage, this.state.filter)
+      const result = await this.stashService.findStudios(this.state.currentPage, this.state.filter).result();
+      this.state.data = result.data.findStudios.studios;
+      this.state.totalCount = result.data.findStudios.count;
     }
-
-    observable.subscribe(apiResult => {
-        this.state.data = apiResult.data;
-        this.state.totalCount = apiResult.count;
-      },
-      error => this.state.errorMessage = <any>error
-    );
   }
 
   onFilterUpdate(filter: ListFilter) {

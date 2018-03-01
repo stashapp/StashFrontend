@@ -23,18 +23,6 @@ export class SceneListItemComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.stashService.getPerformersWithIds(this.scene.performer_ids).subscribe(performers => {
-      this.scene.fetchedPerformers = performers;
-    });
-    this.stashService.getTagsWithIds(this.scene.tag_ids).subscribe(tags => {
-      this.scene.fetchedTags = tags;
-    });
-    if (!!this.scene.studio_id) {
-      this.stashService.getStudio(this.scene.studio_id).subscribe(studio => {
-        this.scene.fetchedStudio = studio;
-      });
-    }
-
     this.videoTag.nativeElement.volume = 0.05;
   }
 
@@ -50,17 +38,5 @@ export class SceneListItemComponent implements OnInit {
 
   onSelect(): void {
     this.router.navigate(['/scenes', this.scene.id]);
-  }
-
-  screenshotPath(): string {
-    return `${this.stashService.url}${this.scene.paths.screenshot}`
-  }
-
-  previewPath(): string {
-    return `${this.stashService.url}${this.scene.paths.preview}`
-  }
-
-  studioImagePath(): string {
-    return `${this.stashService.url}${this.scene.fetchedStudio.image_path}`
   }
 }

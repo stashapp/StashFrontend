@@ -1,5 +1,5 @@
-<video (click)="onSelect()" class="image preview" loop [poster]="screenshotPath()" #videoTag>
-  <source [src]="previewPath()" />
+<video (click)="onSelect()" class="image preview" loop [poster]="scene.paths.screenshot" #videoTag>
+  <source [src]="scene.paths.preview" />
 </video>
 <div class="content">
   <div class="header">{{scene.title || scene.path}}</div>
@@ -12,14 +12,14 @@
   </div>
   <ng-template #descriptionEmptyBlock>No details</ng-template>
   <div class="extra">
-    <a *ngIf="scene.fetchedStudio" [style.background-image]="'url(' + studioImagePath() + ')'" style="width: 100%; height: 75px; background-size: contain; display: inline-block; background-position: right; background-repeat: no-repeat;">
+    <a *ngIf="scene.studio" [style.background-image]="'url(' + scene.studio.image_path + ')'" style="width: 100%; height: 75px; background-size: contain; display: inline-block; background-position: right; background-repeat: no-repeat;">
     </a>
-    <span *ngIf="!scene.fetchedStudio">No Studio</span>
+    <span *ngIf="!scene.studio">No Studio</span>
   </div>
   <div class="extra content">
     <div class="ui tag labels">
-      <a *ngFor="let tag of scene.fetchedTags" class="ui label">{{tag.name}}</a>
-      <span *ngIf="!scene.tag_ids || scene.tag_ids.length == 0">No Tags</span>
+      <a *ngFor="let tag of scene.tags" class="ui label">{{tag.name}}</a>
+      <span *ngIf="!scene.tags || scene.tags.length == 0">No Tags</span>
     </div>
   </div>
 </div>

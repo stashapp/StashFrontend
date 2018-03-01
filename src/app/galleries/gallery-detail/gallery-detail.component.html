@@ -2,7 +2,7 @@
   <button (click)="onClickClose()" class="ui button" style="position: fixed; z-index: 1000; margin: 10px;">Close</button>
   <div style="position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); display: inline;">
     <div>
-      <img style="z-index: 1;" [ngClass]="{'gallery-image-zoomed': zoomed == true, 'gallery-image-unzoomed': zoomed == false}" [src]="imagePath()" />
+      <img style="z-index: 1;" [ngClass]="{'gallery-image-zoomed': zoomed == true, 'gallery-image-unzoomed': zoomed == false}" [src]="displayedImage.path" />
     </div>
   </div>
 </div>

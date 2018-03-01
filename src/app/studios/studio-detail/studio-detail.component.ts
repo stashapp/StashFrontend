@@ -17,7 +17,12 @@ export class StudioDetailComponent implements OnInit {
   studio: Studio;
   sceneListState: SceneListState;
 
-  constructor(private route: ActivatedRoute, private stashService: StashService, private studioService: StudiosService, private router: Router) { }
+  constructor(
+    private route: ActivatedRoute,
+    private stashService: StashService,
+    private studioService: StudiosService,
+    private router: Router
+  ) { }
 
   ngOnInit() {
     const id = parseInt(this.route.snapshot.params['id'], 10);
@@ -28,18 +33,10 @@ export class StudioDetailComponent implements OnInit {
     this.getStudio();
   }
 
-  getStudio() {
+  async getStudio() {
     const id = parseInt(this.route.snapshot.params['id'], 10);
-    this.stashService.getStudio(id).subscribe(studio => {
-      this.studio = studio;
-    }, error => {
-      console.log(error);
-    });
-  }
-
-  imagePath(): string {
-    if (!!this.studio === false) { return ''; }
-    return `${this.stashService.url}${this.studio.image_path}`
+    const result = await this.stashService.findStudio(id).result();
+    this.studio = result.data.findStudio;
   }
 
   onClickEdit() {

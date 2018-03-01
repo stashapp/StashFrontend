@@ -2,6 +2,7 @@ import { Scene } from './scene.model';
 import { Performer } from './performer.model';
 import { Studio } from './studio.model';
 import { Gallery } from './gallery.model';
+import { SceneFilterType, ResolutionEnum, PerformerFilterType } from '../../core/graphql-generated'
 
 export enum DisplayMode {
   Grid,
@@ -47,6 +48,30 @@ export class Criteria {
   options: any[];
   parameterName: string;
   value: string;
+
+  getSceneFilter(): SceneFilterType {
+    switch (this.type) {
+      case CriteriaType.Rating: return { rating: Number(this.value) };
+      case CriteriaType.Resolution: {
+        switch (this.value) {
+          case '240p': return { resolution: ResolutionEnum.LOW };
+          case '480p': return { resolution: ResolutionEnum.STANDARD };
+          case '720p': return { resolution: ResolutionEnum.STANDARD_HD };
+          case '1080p': return { resolution: ResolutionEnum.FULL_HD };
+          case '4k': return { resolution: ResolutionEnum.FOUR_K };
+        }
+        return {}
+      }
+      case CriteriaType.HasMarkers: return { has_markers: Boolean(this.value) };
+      case CriteriaType.IsMissing: return { is_missing: this.value};
+    }
+  }
+
+  getPerformerFilter(): PerformerFilterType {
+    switch (this.type) {
+      case CriteriaType.Favorite: return { filter_favorites: this.value === 'true' }
+    }
+  }
 }
 
 export class ListFilter {

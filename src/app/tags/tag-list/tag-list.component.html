@@ -9,15 +9,15 @@
     *ngFor="let tag of tags"
     (click)="onClickTag(tag)"
     class="ui label"
-    [class.tiny]="tag.scene_ids.length <= 5"
-    [class.large]="tag.scene_ids.length > 5 && tag.scene_ids.length <= 50"
-    [class.big]="tag.scene_ids.length > 50 && tag.scene_ids.length <= 100"
-    [class.huge]="tag.scene_ids.length > 100 && tag.scene_ids.length <= 200"
-    [class.massive]="tag.scene_ids.length > 200">
+    [class.tiny]="tag.scene_count <= 5"
+    [class.large]="tag.scene_count > 5 && tag.scene_count <= 50"
+    [class.big]="tag.scene_count > 50 && tag.scene_count <= 100"
+    [class.huge]="tag.scene_count > 100 && tag.scene_count <= 200"
+    [class.massive]="tag.scene_count > 200">
     {{tag.name}}
     <div class="detail">
       <i class="video play icon"></i>
-      {{tag.scene_ids.length}}
+      {{tag.scene_count}}
     </div>
   </a>
 </div>

@@ -24,17 +24,10 @@ export class GalleryDetailComponent implements OnInit {
     window.scrollTo(0, 0);
   }
 
-  getGallery() {
+  async getGallery() {
     const id = parseInt(this.route.snapshot.params['id'], 10);
-    this.stashService.getGallery(id).subscribe(gallery => {
-      this.gallery = gallery;
-    }, error => {
-      console.log(error);
-    });
-  }
-
-  imagePath(): string {
-    return `${this.stashService.url}${this.displayedImage.path}`
+    const result = await this.stashService.findGallery(id).result();
+    this.gallery = result.data.findGallery;
   }
 
   getStyle(): string {

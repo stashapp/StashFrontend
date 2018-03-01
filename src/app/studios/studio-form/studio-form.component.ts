@@ -16,8 +16,13 @@ import { Gallery } from '../../shared/models/gallery.model';
   styleUrls: ['./studio-form.component.css']
 })
 export class StudioFormComponent implements OnInit, OnDestroy {
+  name: string;
+  url: string;
+  image: string;
+
+  image_path: string;
+
   loading: Boolean = true;
-  studio: Studio = new Studio();
   imagePreview: string;
 
   constructor(private route: ActivatedRoute, private stashService: StashService, private router: Router) { }
@@ -29,7 +34,7 @@ export class StudioFormComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
   }
 
-  getStudio() {
+  async getStudio() {
     const id = parseInt(this.route.snapshot.params['id'], 10);
     if (!!id === false) {
       console.log('new studio');
@@ -37,21 +42,13 @@ export class StudioFormComponent implements OnInit, OnDestroy {
       return;
     }
 
-    this.stashService.getStudio(id).subscribe(studio => {
-      this.studio = studio;
-      this.loading = false;
-      this.imagePreview = this.imagePath();
-    }, error => {
-      console.log(error);
-    });
-  }
+    const result = await this.stashService.findStudio(id).result();
+    this.loading = result.loading;
+    this.name = result.data.findStudio.name;
+    this.url = result.data.findStudio.url;
 
-  imagePath(): string {
-    if (!!this.studio.image_path) {
-      return `${this.stashService.url}${this.studio.image_path}`
-    } else {
-      return null;
-    }
+    this.image_path = result.data.findStudio.image_path
+    this.imagePreview = this.image_path;
   }
 
   onImageChange(event) {
@@ -59,16 +56,16 @@ export class StudioFormComponent implements OnInit, OnDestroy {
     const reader: FileReader = new FileReader();
 
     reader.onloadend = (e) => {
-      this.studio.image = reader.result;
-      this.imagePreview = this.studio.image;
+      this.image = reader.result;
+      this.imagePreview = this.image;
     }
     reader.readAsDataURL(file);
   }
 
   onResetImage(imageInput) {
     imageInput.value = ''
-    this.imagePreview = this.imagePath();
-    this.studio.image = null;
+    this.imagePreview = this.image_path;
+    this.image = null;
   }
 
   // onFavoriteChange() {
@@ -76,19 +73,24 @@ export class StudioFormComponent implements OnInit, OnDestroy {
   // }
 
   onSubmit() {
-    console.log(this.studio);
+    const id = this.route.snapshot.params['id'];
 
-    if (!!this.studio.id) {
-      this.stashService.updateStudio(this.studio).subscribe(response => {
-        this.router.navigate(['/studios', this.studio.id]);
-      }, error => {
-        console.log(error)
+    if (!!id) {
+      this.stashService.studioUpdate({
+        id: id,
+        name: this.name,
+        url: this.url,
+        image: this.image
+      }).subscribe(result => {
+        this.router.navigate(['/studios', id]);
       });
     } else {
-      this.stashService.createStudio(this.studio).subscribe(response => {
-        this.router.navigate(['/studios', response.id]);
-      }, error => {
-        console.log(error)
+      this.stashService.studioCreate({
+        name: this.name,
+        url: this.url,
+        image: this.image
+      }).subscribe(result => {
+        this.router.navigate(['/studios', result.data.studioCreate.studio.id]);
       });
     }
   }

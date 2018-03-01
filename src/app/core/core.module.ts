@@ -4,6 +4,8 @@ import { RouterModule, RouteReuseStrategy } from '@angular/router';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http'; // TODO remove later when angular updates
 import { HttpClientModule } from '@angular/common/http';
+import { ApolloModule } from 'apollo-angular';
+import { HttpLinkModule } from 'apollo-angular-link-http';
 
 import { NavigationBarComponent } from './navigation-bar/navigation-bar.component';
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
@@ -19,7 +21,9 @@ import { ArtooService } from './artoo.service';
     HttpModule,
     HttpClientModule,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    ApolloModule,
+    HttpLinkModule
   ],
   declarations: [
     NavigationBarComponent,
