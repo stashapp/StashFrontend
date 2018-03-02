@@ -75,35 +75,35 @@ export class JwplayerComponent {
     bufferPercent: number,
     position: number,
     metadata?: number
-  }) => this.bufferChange.emit(options);
+  }) => this.bufferChange.emit(options)
 
   public onBuffer = (options: {
     oldState: string,
     newState: string,
     reason: string
-  }) => this.buffer.emit();
+  }) => this.buffer.emit()
 
   public onStart = (options: {
     oldState: string,
     newState: string,
     reason: string
-  }) => this.buffer.emit();
+  }) => this.buffer.emit()
 
   public onFullScreen = (options: {
     oldState: string,
     newState: string,
     reason: string
-  }) => this.buffer.emit();
+  }) => this.buffer.emit()
 
   public onPlay = (options: {
-  }) => this.play.emit();
+  }) => this.play.emit()
 
   public onSeeked = (options: {
-  }) => this.seeked.emit();
+  }) => this.seeked.emit()
 
   public onTime = (options: {
     duration: number,
     position: number,
     viewable: boolean
-  }) => this.time.emit(options);
+  }) => this.time.emit(options)
 }

@@ -11,13 +11,13 @@ import { Scene, SceneMarker } from '../../shared/models/scene.model';
 })
 export class SceneWallItemComponent implements OnInit {
 
-  private video: any
+  private video: any;
   private hoverTimeout: any = null;
-  private isHovering: boolean = false;
+  private isHovering = false;
 
-  title: string = '';
-  imagePath: string = '';
-  videoPath: string = '';
+  title = '';
+  imagePath = '';
+  videoPath = '';
   @Input() scene: Scene;
   @Input() marker: SceneMarker;
 
@@ -29,7 +29,7 @@ export class SceneWallItemComponent implements OnInit {
     this.video.loop = true;
     this.video.oncanplay = () => {
       this.video.play();
-    }
+    };
   }
 
   constructor(
@@ -41,12 +41,12 @@ export class SceneWallItemComponent implements OnInit {
   ngOnInit() {
     if (!!this.marker) {
       this.title = this.marker.title;
-      this.imagePath = `${this.stashService.url}${this.marker.preview}`;
-      this.videoPath = `${this.stashService.url}${this.marker.stream}`;
+      this.imagePath = this.marker.preview;
+      this.videoPath = this.marker.stream;
     } else if (!!this.scene) {
       this.title = this.scene.title;
-      this.imagePath = `${this.stashService.url}${this.scene.paths.webp}`;
-      this.videoPath = `${this.stashService.url}${this.scene.paths.preview}`;
+      this.imagePath = this.scene.paths.webp;
+      this.videoPath = this.scene.paths.preview;
     } else {
       this.title = '';
       this.imagePath = '';
@@ -55,7 +55,7 @@ export class SceneWallItemComponent implements OnInit {
 
   @HostListener('mouseenter')
   onMouseEnter() {
-    if (!!this.hoverTimeout) { return }
+    if (!!this.hoverTimeout) { return; }
 
     const that = this;
     this.hoverTimeout = setTimeout(function() {
@@ -85,7 +85,7 @@ export class SceneWallItemComponent implements OnInit {
   }
 
   onClick(): void {
-    const id = this.marker != undefined ? this.marker.scene_id : this.scene.id
+    const id = this.marker !== undefined ? this.marker.scene.id : this.scene.id;
     this.router.navigate(['/scenes', id]);
   }
 

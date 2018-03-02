@@ -1,8 +1,8 @@
 import { Scene } from './scene.model';
 
 export class Performer {
-  id: number;
-  checksum: string;
+  id: any;
+  checksum?: string;
   name?: string;
   url?: string;
   twitter?: string;
@@ -18,11 +18,12 @@ export class Performer {
   tattoos?: string;
   piercings?: string;
   aliases?: string;
-  favorite: boolean;
-  image: string;
-  image_path: string;
+  favorite?: boolean;
+  image_path?: string;
+  scene_count?: number;
 
-  scene_ids: number[];
+  // image: string;
+  // scene_ids: number[];
 
-  fetchedScenes?: Scene[];
+  // fetchedScenes?: Scene[];
 }

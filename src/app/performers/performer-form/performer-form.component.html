@@ -6,34 +6,34 @@
     <div class="fields">
       <div class="fourteen wide field">
         <label>Name</label>
-        <input [(ngModel)]="performer.name" type="text" placeholder="Name" />
+        <input [(ngModel)]="name" type="text" placeholder="Name" />
       </div>
       <div class="two wide field">
         <label>Favorite</label>
         <div (click)="onFavoriteChange()" class="ui massive heart rating">
-          <i class="icon" [class.active]="performer.favorite"></i>
+          <i class="icon" [class.active]="favorite"></i>
         </div>
       </div>
     </div>
 
     <div class="field">
       <label>Aliases</label>
-      <input [(ngModel)]="performer.aliases" type="text" placeholder="Aliases" />
+      <input [(ngModel)]="aliases" type="text" placeholder="Aliases" />
     </div>
 
     <div class="equal width fields">
       <div class="field">
         <label>Origin Country</label>
-        <input [(ngModel)]="performer.country" type="text" placeholder="Origin Country" />
+        <input [(ngModel)]="country" type="text" placeholder="Origin Country" />
       </div>
       <div class="field">
         <label>Birth Date (YYYY-MM-DD)</label>
-        <input [(ngModel)]="performer.birthdate" type="text" placeholder="YYYY-MM-DD" />
+        <input [(ngModel)]="birthdate" type="text" placeholder="YYYY-MM-DD" />
       </div>
       <div class="field">
         <label>Ethnicity</label>
         <sui-select
-          [(ngModel)]="performer.ethnicity"
+          [(ngModel)]="ethnicity"
           [options]="ethnicityOptions"
           placeholder="Ethnicity"
           #ethnicitySelect>
@@ -45,49 +45,49 @@
     <div class="equal width fields">
       <div class="field">
         <label>Eye Color</label>
-        <input [(ngModel)]="performer.eye_color" type="text" placeholder="Eye Color" />
+        <input [(ngModel)]="eye_color" type="text" placeholder="Eye Color" />
       </div>
       <div class="field">
         <label>Height (cm)</label>
-        <input [(ngModel)]="performer.height" type="text" placeholder="Height (cm)" />
+        <input [(ngModel)]="height" type="text" placeholder="Height (cm)" />
       </div>
       <div class="field">
         <label>Measurements</label>
-        <input [(ngModel)]="performer.measurements" type="text" placeholder="Measurements" />
+        <input [(ngModel)]="measurements" type="text" placeholder="Measurements" />
       </div>
       <div class="field">
         <label>Fake Tits</label>
-        <input [(ngModel)]="performer.fake_tits" type="text" placeholder="Fake Tits" />
+        <input [(ngModel)]="fake_tits" type="text" placeholder="Fake Tits" />
       </div>
       <div class="field">
         <label>Career Length</label>
-        <input [(ngModel)]="performer.career_length" type="text" placeholder="Career Length" />
+        <input [(ngModel)]="career_length" type="text" placeholder="Career Length" />
       </div>
     </div>
 
     <div class="equal width fields">
       <div class="field">
         <label>Tattoos</label>
-        <input [(ngModel)]="performer.tattoos" type="text" placeholder="Tattoos" />
+        <input [(ngModel)]="tattoos" type="text" placeholder="Tattoos" />
       </div>
       <div class="field">
         <label>Piercings</label>
-        <input [(ngModel)]="performer.piercings" type="text" placeholder="Piercings" />
+        <input [(ngModel)]="piercings" type="text" placeholder="Piercings" />
       </div>
     </div>
 
     <div class="equal width fields">
       <div class="field">
         <label>URL</label>
-        <input [(ngModel)]="performer.url" type="url" placeholder="URL" />
+        <input [(ngModel)]="url" type="url" placeholder="URL" />
       </div>
       <div class="field">
         <label>Twitter Handle</label>
-        <input [(ngModel)]="performer.twitter" type="text" placeholder="Twitter Handle" />
+        <input [(ngModel)]="twitter" type="text" placeholder="Twitter Handle" />
       </div>
       <div class="field">
         <label>Instagram Handle</label>
-        <input [(ngModel)]="performer.instagram" type="text" placeholder="Instagram Handle" />
+        <input [(ngModel)]="instagram" type="text" placeholder="Instagram Handle" />
       </div>
     </div>
 

@@ -13,11 +13,16 @@ import { SceneListState, CustomCriteria } from '../../shared/models/list-state.m
   templateUrl: './studio-detail.component.html',
   styleUrls: ['./studio-detail.component.css']
 })
-export class StudioDetailComponent implements OnInit {
+export class StudioDetailComponent implements OnInit, OnDestroy {
   studio: Studio;
   sceneListState: SceneListState;
 
-  constructor(private route: ActivatedRoute, private stashService: StashService, private studioService: StudiosService, private router: Router) { }
+  constructor(
+    private route: ActivatedRoute,
+    private stashService: StashService,
+    private studioService: StudiosService,
+    private router: Router
+  ) { }
 
   ngOnInit() {
     const id = parseInt(this.route.snapshot.params['id'], 10);
@@ -28,18 +33,12 @@ export class StudioDetailComponent implements OnInit {
     this.getStudio();
   }
 
-  getStudio() {
-    const id = parseInt(this.route.snapshot.params['id'], 10);
-    this.stashService.getStudio(id).subscribe(studio => {
-      this.studio = studio;
-    }, error => {
-      console.log(error);
-    });
-  }
+  ngOnDestroy() {}
 
-  imagePath(): string {
-    if (!!this.studio === false) { return ''; }
-    return `${this.stashService.url}${this.studio.image_path}`
+  async getStudio() {
+    const id = parseInt(this.route.snapshot.params['id'], 10);
+    const result = await this.stashService.findStudio(id).result();
+    this.studio = result.data.findStudio;
   }
 
   onClickEdit() {

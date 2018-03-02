@@ -4,19 +4,23 @@ import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { StashService } from '../../core/stash.service';
 
 import { Scene, SceneMarker } from '../../shared/models/scene.model';
+import { FindSceneQuery } from '../../core/graphql-generated';
+import { QueryRef } from 'apollo-angular';
 
 @Component({
   selector: 'app-scene-detail',
   templateUrl: './scene-detail.component.html',
   styleUrls: ['./scene-detail.component.css']
 })
-export class SceneDetailComponent implements OnInit, AfterViewInit {
+export class SceneDetailComponent implements OnInit {
   scene: Scene;
-  isDeleteMarkerEnabled: boolean = false;
+  isDeleteMarkerEnabled = false;
   markerOptions: any[];
-  isMarkerOverlayOpen: boolean = false;
+  isMarkerOverlayOpen = false;
 
-  private lastTime: number = 0;
+  private lastTime = 0;
+
+  private isPlayerSetup = false;
 
   @ViewChild('jwplayer') jwplayer: any;
   @ViewChild('markerInput') markerInput: any;
@@ -29,56 +33,28 @@ export class SceneDetailComponent implements OnInit, AfterViewInit {
     window.scrollTo(0, 0);
   }
 
-  ngAfterViewInit() {
-    // this.temp();
-  }
-
   getScene() {
     const id = parseInt(this.route.snapshot.params['id'], 10);
-    this.stashService.getScene(id).subscribe(scene => {
-      this.scene = scene;
-      this.scene.paths.stream += '.mp4';
-      this.jwplayer.setupPlayer(this.streamPath(), this.imagePath(), this.vttPath(), this.chaptersVttPath());
 
-      this.stashService.getPerformersWithIds(this.scene.performer_ids).subscribe(performers => {
-        this.scene.fetchedPerformers = performers;
-      });
+    this.stashService.findScene(id).valueChanges.subscribe(result => {
+      this.scene = result.data.findScene;
 
-      this.stashService.getTagsWithIds(this.scene.tag_ids).subscribe(tags => {
-        this.scene.fetchedTags = tags;
-      });
-
-      this.stashService.getStudio(this.scene.studio_id).subscribe(studio => {
-        this.scene.fetchedStudio = studio;
-      }, error => {});
-
-      this.stashService.getGallery(this.scene.gallery_id).subscribe(gallery => {
-        this.scene.fetchedGallery = gallery;
-      });
+      // TODO: Check this, this didn't matter before...
+      if (!this.isPlayerSetup) {
+        const streamPath = this.scene.paths.stream;
+        const screenshotPath = this.scene.paths.screenshot;
+        const vttPath = this.scene.paths.vtt;
+        const chaptersVttPath = this.scene.paths.chapters_vtt;
+        this.jwplayer.setupPlayer(streamPath, screenshotPath, vttPath, chaptersVttPath);
+        this.isPlayerSetup = true;
+      }
     }, error => {
       console.log(error);
     });
 
-    this.stashService.getAllMarkerStrings().subscribe(markers => {
-      this.markerOptions = markers
+    this.stashService.markerStrings().valueChanges.subscribe(result => {
+      this.markerOptions = result.data.markerStrings;
     });
-  }
-
-  streamPath(): string {
-    return !!this.scene ? `${this.stashService.url}${this.scene.paths.stream}` : '';
-  }
-
-  imagePath(): string {
-    return !!this.scene ? `${this.stashService.url}${this.scene.paths.screenshot}` : '';
-  }
-
-  vttPath(): string {
-    // todo: don't hardcode this
-    return !!this.scene ? `${this.stashService.url}${this.scene.paths.vtt}` : '';
-  }
-
-  chaptersVttPath(): string {
-    return !!this.scene ? `${this.stashService.url}${this.scene.paths.chapters_vtt}` : '';
   }
 
   onClickEdit() {
@@ -86,47 +62,30 @@ export class SceneDetailComponent implements OnInit, AfterViewInit {
   }
 
   onSeeked() {
-    let position = this.jwplayer.player.getPosition();
+    const position = this.jwplayer.player.getPosition();
     this.scrubber.scrollTo(position);
     this.jwplayer.player.play();
   }
 
   onTime(data) {
-    let position = this.jwplayer.player.getPosition();
-    let difference = Math.abs(position - this.lastTime);
+    const position = this.jwplayer.player.getPosition();
+    const difference = Math.abs(position - this.lastTime);
     if (difference > 5) {
       this.lastTime = position;
       this.scrubber.scrollTo(position);
     }
   }
 
-  markerStreamPath(marker: SceneMarker): string {
-    return !!marker ? `${this.stashService.url}${marker.stream}` : '';
-  }
-
-  markerPreviewPath(marker: SceneMarker): string {
-    return !!marker ? `${this.stashService.url}${marker.preview}` : '';
-  }
-
   onClickAddMarker() {
-    let sceneMarker = new SceneMarker();
-    sceneMarker.title = this.markerInput.query;
-    sceneMarker.seconds = Math.round(this.jwplayer.player.getPosition());
-    sceneMarker.scene_id = this.scene.id;
-    console.log(sceneMarker);
+    const title = this.markerInput.query;
+    const seconds = Math.round(this.jwplayer.player.getPosition());
+    const scene_id = Number(this.scene.id);
     this.markerInput.query = null;
 
-    this.stashService.createSceneMarker(sceneMarker).subscribe(response => {
-      if (!!response && !!response.errors) {
-        console.log(response.errors);
-      } else {
-        console.log(response);
-        let marker = new SceneMarker();
-        marker.id = response.id;
-        marker.seconds = response.seconds;
-        marker.title = response.title;
-        this.scene.scene_markers.push(marker);
-      }
+    this.stashService.markerCreate(title, seconds, scene_id).subscribe(response => {
+      console.log(response);
+    }, error => {
+      console.log(error);
     });
   }
 
@@ -134,17 +93,12 @@ export class SceneDetailComponent implements OnInit, AfterViewInit {
     if (this.isMarkerOverlayOpen) {
       this.isMarkerOverlayOpen = false;
     }
-    this.jwplayer.player.seek(marker.seconds)
+    this.jwplayer.player.seek(marker.seconds);
   }
 
   onClickDeleteMarker(marker: SceneMarker) {
-    marker.scene_id = this.scene.id;
-    this.stashService.deleteSceneMarker(marker).subscribe(response => {
-      if (!!response && !!response.errors) {
-        console.log(response.errors);
-      } else {
-        this.scene.scene_markers = this.scene.scene_markers.filter(item => item.id !== marker.id);
-      }
+    this.stashService.markerDestory(marker.id, this.scene.id).subscribe(response => {
+      console.log('Delete successfull:', response);
     });
   }
 

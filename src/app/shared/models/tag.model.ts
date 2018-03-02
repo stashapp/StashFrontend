@@ -1,5 +1,5 @@
 export class Tag {
-  id: number;
+  id: any;
   name: string;
-  scene_ids: number[];
+  scenes?: number[];
 }

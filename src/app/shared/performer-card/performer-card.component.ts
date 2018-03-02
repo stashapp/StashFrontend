@@ -25,10 +25,6 @@ export class PerformerCardComponent implements OnInit {
   ngOnInit() {
   }
 
-  imagePath(): string {
-    return `${this.stashService.url}${this.performer.image_path}`
-  }
-
   onSelect(): void {
     this.router.navigate(['/performers', this.performer.id]);
   }

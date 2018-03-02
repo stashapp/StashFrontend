@@ -2,8 +2,12 @@ import { Component, OnInit, OnDestroy, ViewChild, AfterViewInit } from '@angular
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 
 import { StashService } from '../../core/stash.service';
+import { PerformersService } from '../performers.service';
 
 import { Performer } from '../../shared/models/performer.model';
+import { Scene } from '../../shared/models/scene.model';
+
+import { SceneListState, CustomCriteria } from '../../shared/models/list-state.model';
 
 @Component({
   selector: 'app-performer-detail',
@@ -12,34 +16,35 @@ import { Performer } from '../../shared/models/performer.model';
 })
 export class PerformerDetailComponent implements OnInit {
   performer: Performer;
+  sceneListState: SceneListState;
 
-  constructor(private route: ActivatedRoute, private stashService: StashService, private router: Router) { }
+  constructor(
+    private route: ActivatedRoute,
+    private stashService: StashService,
+    private performerService: PerformersService,
+    private router: Router
+  ) {}
 
   ngOnInit() {
+    const id = parseInt(this.route.snapshot.params['id'], 10);
+    this.sceneListState = this.performerService.detailsSceneListState;
+    this.sceneListState.filter.customCriteria = [];
+    this.sceneListState.filter.customCriteria.push(new CustomCriteria('performer_id', id.toString()));
+
     this.getPerformer();
     window.scrollTo(0, 0);
   }
 
   getPerformer() {
     const id = parseInt(this.route.snapshot.params['id'], 10);
-    this.stashService.getPerformer(id).subscribe(performer => {
-      this.performer = performer;
 
-      this.stashService.getScenesWithIds(this.performer.scene_ids).subscribe(scenes => {
-        this.performer.fetchedScenes = scenes;
-      });
-    }, error => {
-      console.log(error);
+    this.stashService.findPerformer(id).valueChanges.subscribe(performer => {
+      this.performer = performer.data.findPerformer;
     });
   }
 
   onClickEdit() {
     this.router.navigate(['edit'], { relativeTo: this.route });
-  }
-
-  imagePath(): string {
-    if (!!this.performer === false) { return ''; }
-    return `${this.stashService.url}${this.performer.image_path}`
   }
 
   twitterLink(): string {

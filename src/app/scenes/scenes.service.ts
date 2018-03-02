@@ -17,13 +17,13 @@ export class ScenesService {
 
   constructor() {
     this.lf.getItem('state').then(val => {
-      console.log('restoring state', val)
-      this.sceneListState.update(val as SceneListState)
+      console.log('restoring state', val);
+      this.sceneListState.update(val as SceneListState);
     }, error => {
-      console.log('error reading state')
+      console.log('error reading state');
     });
 
-    let timer = TimerObservable.create(5000, 1000 * 15);
+    const timer = TimerObservable.create(5000, 1000 * 15);
     timer.subscribe(t => {
       this.lf.setItem('state', this.sceneListState).then(val => {}, error => {
         console.log('err', error);

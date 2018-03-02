@@ -2,407 +2,479 @@ import { Injectable } from '@angular/core';
 import { PlatformLocation } from '@angular/common';
 import { HttpClient, HttpResponse, HttpHeaders, HttpParams } from '@angular/common/http';
 
-import { Observable } from 'rxjs/Observable';
-import { ReplaySubject } from 'rxjs/ReplaySubject';
-
-import 'rxjs/add/operator/catch';
-import 'rxjs/add/operator/map';
-import 'rxjs/add/operator/mergeMap';
-import 'rxjs/add/operator/switchMap';
-import 'rxjs/add/operator/publishReplay';
-import 'rxjs/add/operator/publishLast';
-import 'rxjs/add/operator/take';
-import 'rxjs/add/operator/share';
-import 'rxjs/add/operator/shareReplay';
-import 'rxjs/add/observable/forkJoin';
-import 'rxjs/add/observable/of';
-import 'rxjs/add/observable/empty';
-import 'rxjs/add/observable/from';
-import 'rxjs/add/observable/concat';
-import 'rxjs/add/observable/fromPromise';
-import 'rxjs/add/observable/throw';
-
-import { CacheService } from './cache.service';
-
-import { Scene, SceneMarker } from '../shared/models/scene.model'
-import { Performer } from '../shared/models/performer.model'
-import { Tag } from '../shared/models/tag.model'
-import { Studio } from '../shared/models/studio.model'
-import { Gallery } from '../shared/models/gallery.model'
-import { ApiResult } from '../shared/models/api-result.model'
 import { ListFilter, CriteriaType, CustomCriteria } from '../shared/models/list-state.model';
 
-import * as stringify from 'json-stringify-safe';
+import { ApolloModule, Apollo, QueryRef } from 'apollo-angular';
+import { HttpLinkModule, HttpLink } from 'apollo-angular-link-http';
+import { InMemoryCache } from 'apollo-cache-inmemory';
+import { onError } from 'apollo-link-error';
+import { ApolloLink } from 'apollo-link';
+import gql from 'graphql-tag';
+
+import {
+  FIND_SCENES,
+  FIND_SCENE,
+  MARKER_STRINGS,
+  MARKER_CREATE,
+  MARKER_DESTROY,
+  FIND_SCENE_FOR_EDITING,
+  FIND_PERFORMER,
+  SCENE_WALL,
+  MARKER_WALL,
+  ALL_TAGS,
+  FIND_PERFORMERS,
+  FIND_STUDIOS,
+  FIND_STUDIO,
+  FIND_GALLERIES,
+  FIND_GALLERY,
+  SCENE_UPDATE,
+  PERFORMER_UPDATE,
+  PERFORMER_CREATE,
+  ALL_PERFORMERS,
+  TAG_CREATE,
+  STUDIO_CREATE,
+  ALL_STUDIOS,
+  STUDIO_UPDATE
+} from './graphql';
+import * as GQL from './graphql-generated';
+
+import { toIdValue } from 'apollo-utilities';
 
 @Injectable()
 export class StashService {
-  url = 'http://localhost:4000';
-  private observableCache: { [key: string]: Observable<any> } = {};
+  url = 'http://192.168.1.200:4000';
 
   constructor(private http: HttpClient,
-              private cache: CacheService,
-              private platformLocation: PlatformLocation) {
+              private platformLocation: PlatformLocation,
+              private apollo: Apollo,
+              private httpLink: HttpLink) {
     const platform: any = this.platformLocation;
-    const url = new URL(platform.location.origin)
-    url.port = '4000'
+    const url = new URL(platform.location.origin);
+    url.port = '4000';
     this.url = url.toString().slice(0, -1);
-  }
 
-  getScenes(page?: number, filter?: ListFilter): Observable<ApiResult<Scene>> {
-    const params = new URLSearchParams();
-    if (page) { params.set('page', page.toString()) }
-    if (!!filter) {
-      if (filter.searchTerm) { params.set('q', filter.searchTerm); }
-      if (filter.itemsPerPage) { params.set('per_page', filter.itemsPerPage.toString()) }
-      if (filter.sortBy) { params.set('sort', filter.sortBy) }
-      if (filter.sortDirection) { params.set('direction', filter.sortDirection) }
-      if (filter.criteriaFilterOpen && !!filter.criteria.value) {
-        params.set(filter.criteria.parameterName, filter.criteria.value);
+    const errorLink = onError(({ graphQLErrors, networkError }) => {
+      if (graphQLErrors) {
+        graphQLErrors.map(({ message, locations, path }) =>
+          console.log(
+            `[GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}`,
+          ),
+        );
       }
-      if (filter.customCriteria) {
-        filter.customCriteria.forEach(criteria => {
-          params.set(criteria.key, criteria.value);
-        });
+
+      if (networkError) {
+        console.log(`[Network error]: ${networkError}`);
       }
+    });
+
+    const httpLinkHandler = httpLink.create({uri: `${this.url}/graphql`});
+
+    const link = ApolloLink.from([
+      errorLink,
+      httpLinkHandler
+    ]);
+
+    apollo.create({
+      link: link,
+      cache: new InMemoryCache({
+        // dataIdFromObject: o => {
+        //   if (o.__typename === "MarkerStringsResultType") {
+        //     return `${o.__typename}:${o.title}`
+        //   } else {
+        //     return `${o.__typename}:${o.id}`
+        //   }
+        // },
+
+        cacheRedirects: {
+          Query: {
+            findScene: (rootValue, args, context) => {
+              return context.getCacheKey({__typename: 'Scene', id: args.id});
+            }
+          },
+          Mutation: {
+            sceneMarkerCreate: (rootValue, args, context) => {
+              // return toIdValue(client.dataIdFromObject({__typename: 'SceneMarker', id: args.id}))
+              debugger;
+              return context.getCacheKey({__typename: 'SceneMarker', id: args.id});
+            }
+          }
+        }
+      })
+    });
+  }
+
+  findScenes(page?: number, filter?: ListFilter): QueryRef<GQL.FindScenesQuery, Record<string, any>> {
+    let scene_filter = {};
+    if (filter.criteriaFilterOpen && !!filter.criteria.value) {
+      scene_filter = filter.criteria.getSceneFilter();
     }
-    
-    return this.http.get<ApiResult<Scene>>(this.url + '/scenes.json' + '?' + params.toString())
-                    // .flatMap((scenes: Scene[]) => {
-                    //   if (scenes.length > 0) {
-                    //     const sceneObservables = scenes.map(scene => this.getScene(scene.id));
-                    //     return Observable.forkJoin(sceneObservables);
-                    //   }
-                    //   return Observable.of([]);
-                    // });
-  }
-
-  getScenesWithIds(sceneIds?: number[]): Observable<Scene[]> {
-    if (!!sceneIds === false) { return Observable.of([]); }
-    const sceneObservables = sceneIds.map(sceneId => this.getScene(sceneId));
-    if (sceneObservables.length === 0) {
-      console.log('No scenes.  Returning empty observable');
-      return Observable.of([]);
+    if (filter.customCriteria) {
+      filter.customCriteria.forEach(criteria => {
+        scene_filter[criteria.key] = criteria.value;
+      });
     }
-    return Observable.forkJoin(sceneObservables);
-  }
 
-  getScene(sceneId: number): Observable<Scene> {
-    // return this.cache.getItem('scene-' + sceneId, cachedValue => {
-    //   if (cachedValue != null) {
-    //     return Observable.of(cachedValue);
-    //   } else {
-        return this.fetchScene(sceneId);
-    //   }
-    // });
-  }
-
-  getScenesForWall(q: string): Observable<Scene[]> {
-    const params = new URLSearchParams();
-    if (q) { params.set('q', q); }
-    return this.http.get<Scene[]>(this.url + '/scenes/wall.json' + '?' + params.toString())
-  }
-
-  getSceneMarkersForWall(q: string): Observable<SceneMarker[]> {
-    const params = new URLSearchParams();
-    if (q) { params.set('q', q); }
-    return this.http.get<SceneMarker[]>(this.url + '/markers/wall.json' + '?' + params.toString())
-  }
-
-  fetchScene(sceneId: number): Observable<Scene> {
-    return this.http.get(this.url + `/scenes/${sceneId}.json`)
-                    .flatMap((scene: Scene) => {
-                      return Observable.forkJoin(
-                        Observable.of(scene),
-                        this.getPerformersWithIds(scene.performer_ids),
-                        // this.getPublished(book.id)
-                      );
-                    }).map((sceneDetails) => {
-                      console.log(sceneDetails)
-                      const scene = sceneDetails[0];
-                      const performers = sceneDetails[1];
-                      // var publisher = bookDetails[2];
-
-                      scene.fetchedPerformers = performers;
-                      // book.publisher = publisher;
-
-                      this.cache.setItem('scene-' + scene.id, scene);
-                      return scene;
-                  });
-  }
-
-  updateScene(scene: Scene): Observable<ApiResult<Scene>> {
-    const headers = { 'Content-Type': 'application/json' };
-    const options = { headers };
-    const body = stringify(scene);
-
-    return this.http.patch<ApiResult<Scene>>(this.url + `/scenes/${scene.id}.json`, body, options);
-  }
-
-  getAllMarkerStrings(): Observable<any[]> {
-    return this.http.get<any[]>(this.url + '/markers.json');
-  }
-
-  createSceneMarker(sceneMarker: SceneMarker): Observable<any> {
-    const headers = { 'Content-Type': 'application/json' };
-    const options = { headers };
-    const body = stringify(sceneMarker);
-
-    return this.http.post(this.url + `/scenes/${sceneMarker.scene_id}/scene_markers.json`, body, options)
-                    .catch(this.handleError);
-  }
-
-  deleteSceneMarker(sceneMarker: SceneMarker): Observable<any> {
-    const headers = { 'Content-Type': 'application/json' };
-    const options = { headers };
-
-    return this.http.delete(this.url + `/scenes/${sceneMarker.scene_id}/scene_markers/${sceneMarker.id}.json`, options)
-                    .catch(this.handleError);
-  }
-
-  getPerformersWithIds(performerIds?: number[]): Observable<Performer[]> {
-    if (!!performerIds) {
-      const performerObservables = performerIds.map(performerId => this.getPerformer(performerId));
-      if (performerObservables.length === 0) {
-        console.log('No performers.  Returning empty observable');
-        return Observable.of([]);
+    return this.apollo.watchQuery<GQL.FindScenesQuery, GQL.FindScenesQueryVariables>({
+      query: FIND_SCENES,
+      variables: {
+        filter: {
+          q: filter.searchTerm,
+          page: page,
+          per_page: filter.itemsPerPage,
+          sort: filter.sortBy,
+          direction: filter.sortDirection === 'asc' ? GQL.SortDirectionEnum.ASC : GQL.SortDirectionEnum.DESC
+        },
+        scene_filter: scene_filter
       }
-      return Observable.forkJoin(performerObservables);
-    } else {
-      return this.http.get<Performer[]> (this.url + '/performers.json');
-    }
+    });
   }
 
-  getPerformers(page?: number, filter?: ListFilter): Observable<ApiResult<Performer>> {
-    const params = new URLSearchParams();
-    if (page) { params.set('page', page.toString()) }
-    if (!!filter) {
-      if (filter.searchTerm) { params.set('q', filter.searchTerm); }
-      if (filter.itemsPerPage) { params.set('per_page', filter.itemsPerPage.toString()) }
-      if (filter.sortBy) { params.set('sort', filter.sortBy) }
-      if (filter.sortDirection) { params.set('direction', filter.sortDirection) }
-      if (filter.criteriaFilterOpen && !!filter.criteria.value) {
-        params.set(filter.criteria.parameterName, filter.criteria.value);
+  findScene(id?: any, checksum?: string) {
+    return this.apollo.watchQuery<GQL.FindSceneQuery, GQL.FindSceneQueryVariables>({
+      query: FIND_SCENE,
+      variables: {
+        id: id,
+        checksum: checksum
       }
-    }
-    return this.http.get<ApiResult<Performer>>(this.url + '/performers.json' + '?' + params.toString());
+    });
   }
 
-  getAllPerformers(): Observable<ApiResult<Performer>> {
-    const params = new URLSearchParams();
-    params.set('all', 'true');
-    return this.http.get<ApiResult<Performer>>(this.url + '/performers.json' + '?' + params.toString());
-  }
-
-  getPerformer(performerId: number): Observable<Performer> {
-    // return this.cache.getItem('performer-' + performerId, cachedValue => {
-    //   if (cachedValue != null) {
-    //     return Observable.of(cachedValue);
-    //   } else {
-        return this.fetchPerformer(performerId);
-    //   }
-    // });
-  }
-
-  fetchPerformer(performerId: number): Observable<Performer> {
-    const url = this.url + `/performers/${performerId}.json`;
-    return this.cacheable(url, this.http.get(url)
-                                        // .map(performer => this.cache.setItem('performer-' + performerId, performer))
-                                        .catch(this.handleError))
-  }
-
-  createPerformer(performer: Performer): Observable<any> {
-    const headers = { 'Content-Type': 'application/json' };
-    const options = { headers };
-    const body = stringify(performer);
-
-    return this.http.post(this.url + `/performers.json`, body, options)
-                    .catch(this.handleError);
-  }
-
-  updatePerformer(performer: Performer): Observable<any> {
-    const headers = { 'Content-Type': 'application/json' };
-    const options = { headers };
-    const body = stringify(performer);
-
-    return this.http.patch(this.url + `/performers/${performer.id}.json`, body, options)
-                    .catch(this.handleError);
-  }
-
-  getTagsWithIds(tagIds?: number[]): Observable<Tag[]> {
-    if (!!tagIds === false) { return Observable.of([]); }
-    const tagObservables = tagIds.map(tagId => this.getTag(tagId));
-    if (tagObservables.length === 0) {
-      console.log('No tags.  Returning empty observable');
-      return Observable.of([]);
-    }
-    return Observable.forkJoin(tagObservables);
-  }
-
-  getTags(q?: string, page?: number, perPage?: number): Observable<ApiResult<Tag>> {
-    const params = new URLSearchParams();
-    if (q) { params.set('q', q); }
-    if (page) { params.set('page', page.toString()) }
-    if (perPage) { params.set('per_page', perPage.toString()) }
-    return this.http.get<ApiResult<Tag>>(this.url + '/tags.json' + '?' + params.toString());
-  }
-
-  getAllTags(): Observable<ApiResult<Tag>> {
-    const params = new URLSearchParams();
-    params.set('all', 'true');
-    return this.http.get<ApiResult<Tag>>(this.url + '/tags.json' + '?' + params.toString());
-  }
-
-  getTag(tagId: number): Observable<Tag> {
-    return this.fetchTag(tagId);
-  }
-
-  fetchTag(tagId: number): Observable<Tag> {
-    const url = this.url + `/tags/${tagId}.json`;
-    return this.cacheable(url, this.http.get(url)
-                                        // .map(performer => this.cache.setItem('performer-' + performerId, performer))
-                                        .catch(this.handleError))
-  }
-
-  createTag(tag: Tag): Observable<any> {
-    const headers = { 'Content-Type': 'application/json' };
-    const options = { headers };
-    const body = stringify(tag);
-
-    return this.http.post(this.url + `/tags.json`, body, options)
-                    .catch(this.handleError);
-  }
-
-  updateTag(tag: Tag): Observable<any> {
-    const headers = { 'Content-Type': 'application/json' };
-    const options = { headers };
-    const body = stringify(tag);
-
-    return this.http.patch(this.url + `/tags/${tag.id}.json`, body, options)
-                    .catch(this.handleError);
-  }
-
-  getAllStudios(): Observable<ApiResult<Studio>> {
-    const params = new URLSearchParams();
-    params.set('all', 'true');
-    return this.http.get<ApiResult<Studio>>(this.url + '/studios.json' + '?' + params.toString());
-  }
-
-  getStudios(page?: number, filter?: ListFilter): Observable<ApiResult<Studio>> {
-    const params = new URLSearchParams();
-    if (page) { params.set('page', page.toString()) }
-    if (!!filter) {
-      if (filter.searchTerm) { params.set('q', filter.searchTerm); }
-      if (filter.itemsPerPage) { params.set('per_page', filter.itemsPerPage.toString()) }
-      if (filter.sortBy) { params.set('sort', filter.sortBy) }
-      if (filter.sortDirection) { params.set('direction', filter.sortDirection) }
-      if (filter.criteriaFilterOpen && !!filter.criteria.value) {
-        params.set(filter.criteria.parameterName, filter.criteria.value);
+  findSceneForEditing(id?: any) {
+    return this.apollo.watchQuery<GQL.FindSceneForEditingQuery, GQL.FindSceneForEditingQueryVariables>({
+      query: FIND_SCENE_FOR_EDITING,
+      variables: {
+        id: id
       }
-    }
-    return this.http.get<ApiResult<Studio>>(this.url + '/studios.json' + '?' + params.toString());
+    });
   }
 
-  getStudio(studioId: number): Observable<Studio> {
-    if (!!studioId === false) { return Observable.throw('Trying to get studio without an ID'); }
-    return this.fetchStudio(studioId);
-  }
-
-  fetchStudio(studioId: number): Observable<Studio> {
-    const url = this.url + `/studios/${studioId}.json`;
-    return this.cacheable(url, this.http.get(url)
-                                        .catch(this.handleError))
-  }
-
-  createStudio(studio: Studio): Observable<any> {
-    const headers = { 'Content-Type': 'application/json' };
-    const options = { headers };
-    const body = stringify(studio);
-
-    return this.http.post(this.url + `/studios.json`, body, options)
-                    .catch(this.handleError);
-  }
-
-  updateStudio(studio: Studio): Observable<any> {
-    const headers = { 'Content-Type': 'application/json' };
-    const options = { headers };
-    const body = stringify(studio);
-
-    return this.http.patch(this.url + `/studios/${studio.id}.json`, body, options)
-                    .catch(this.handleError);
-  }
-
-  getValidGalleriesForScene(sceneId: number): Observable<ApiResult<Gallery>> {
-    const params = new URLSearchParams();
-    params.set('scene_id', sceneId.toString());
-    return this.http.get<ApiResult<Gallery>>(this.url + '/galleries.json' + '?' + params.toString());
-  }
-
-  fetchGallery(galleryId: number): Observable<Gallery> {
-    const url = this.url + `/galleries/${galleryId}.json`;
-    return this.cacheable(url, this.http.get(url)
-                                        .catch(this.handleError))
-  }
-
-  getGallery(galleryId: number): Observable<Gallery> {
-    if (!!galleryId) {
-      return this.fetchGallery(galleryId);
-    }
-  }
-
-  getGalleries(page?: number, filter?: ListFilter): Observable<ApiResult<Gallery>> {
-    const params = new URLSearchParams();
-    if (page) { params.set('page', page.toString()) }
-    if (!!filter) {
-      if (filter.searchTerm) { params.set('q', filter.searchTerm); }
-      if (filter.itemsPerPage) { params.set('per_page', filter.itemsPerPage.toString()) }
-      if (filter.sortBy) { params.set('sort', filter.sortBy) }
-      if (filter.sortDirection) { params.set('direction', filter.sortDirection) }
-      if (filter.criteriaFilterOpen && !!filter.criteria.value) {
-        params.set(filter.criteria.parameterName, filter.criteria.value);
+  sceneWall(q?: string) {
+    return this.apollo.watchQuery<GQL.SceneWallQuery, GQL.SceneWallQueryVariables>({
+      fetchPolicy: 'network-only',
+      query: SCENE_WALL,
+      variables: {
+        q: q
       }
-    }
-    return this.http.get<ApiResult<Gallery>>(this.url + '/galleries.json' + '?' + params.toString());
+    });
   }
 
-  getStatus(): Observable<any> {
-    const url = this.url + `/status.json`;
-    return this.http.get(url)
-                    .catch(this.handleError)
+  markerWall(q?: string) {
+    return this.apollo.watchQuery<GQL.MarkerWallQuery, GQL.MarkerWallQueryVariables>({
+      fetchPolicy: 'network-only',
+      query: MARKER_WALL,
+      variables: {
+        q: q
+      }
+    });
   }
 
-  startScan() {
-    const url = this.url + `/scan.json`;
-    return this.http.get(url)
-                    .catch(this.handleError)
-                    .subscribe(data => console.log(''));
+  findPerformers(page?: number, filter?: ListFilter) {
+    let performer_filter = {};
+    if (filter.criteriaFilterOpen && !!filter.criteria.value) {
+      performer_filter = filter.criteria.getPerformerFilter();
+    }
+    // if (filter.customCriteria) {
+    //   filter.customCriteria.forEach(criteria => {
+    //     scene_filter[criteria.key] = criteria.value;
+    //   });
+    // }
+
+    return this.apollo.watchQuery<GQL.FindPerformersQuery, GQL.FindPerformersQueryVariables>({
+      query: FIND_PERFORMERS,
+      variables: {
+        filter: {
+          q: filter.searchTerm,
+          page: page,
+          per_page: filter.itemsPerPage,
+          sort: filter.sortBy,
+          direction: filter.sortDirection === 'asc' ? GQL.SortDirectionEnum.ASC : GQL.SortDirectionEnum.DESC
+        },
+        performer_filter: performer_filter
+      }
+    });
   }
 
-  private handleError (error: HttpResponse<any> | any) {
-    if (error instanceof HttpResponse) {
-      const body = !!error.body.errors ? error.body.errors : error.body;
-      const message: string = !!body.message ? body.message : error.toString();
-      console.error(message);
-      return Observable.throw(body);
-    } else {
-      return Observable.throw(error);
-    }
+  findPerformer(id: any) {
+    return this.apollo.watchQuery<GQL.FindPerformerQuery, GQL.FindPerformerQueryVariables>({
+      query: FIND_PERFORMER,
+      variables: {
+        id: id
+      }
+    });
   }
 
-  private cacheable<T>(key: string, observable: Observable<T>): Observable<T> {
-    if (!!key && this.observableCache[key]) {
-      return this.observableCache[key] as Observable<T>;
-    }
-    const replay = new ReplaySubject<T>(1);
-    observable.subscribe(
-      x => replay.next(x),
-      x => replay.error(x),
-      () => replay.complete()
-    );
-    const replayObservable = replay.asObservable();
-    if (!!key) {
-      this.observableCache[key] = replayObservable;
-    }
-    return replayObservable;
+  findStudios(page?: number, filter?: ListFilter) {
+    return this.apollo.watchQuery<GQL.FindStudiosQuery, GQL.FindStudiosQueryVariables>({
+      query: FIND_STUDIOS,
+      variables: {
+        filter: {
+          q: filter.searchTerm,
+          page: page,
+          per_page: filter.itemsPerPage,
+          sort: filter.sortBy,
+          direction: filter.sortDirection === 'asc' ? GQL.SortDirectionEnum.ASC : GQL.SortDirectionEnum.DESC
+        }
+      }
+    });
   }
+
+  findStudio(id: any) {
+    return this.apollo.watchQuery<GQL.FindStudioQuery, GQL.FindStudioQueryVariables>({
+      query: FIND_STUDIO,
+      variables: {
+        id: id
+      }
+    });
+  }
+
+  findGalleries(page?: number, filter?: ListFilter) {
+    return this.apollo.watchQuery<GQL.FindGalleriesQuery, GQL.FindGalleriesQueryVariables>({
+      query: FIND_GALLERIES,
+      variables: {
+        filter: {
+          q: filter.searchTerm,
+          page: page,
+          per_page: filter.itemsPerPage,
+          sort: filter.sortBy,
+          direction: filter.sortDirection === 'asc' ? GQL.SortDirectionEnum.ASC : GQL.SortDirectionEnum.DESC
+        }
+      }
+    });
+  }
+
+  findGallery(id: any) {
+    return this.apollo.watchQuery<GQL.FindGalleryQuery, GQL.FindGalleryQueryVariables>({
+      query: FIND_GALLERY,
+      variables: {
+        id: id
+      }
+    });
+  }
+
+  markerStrings(q?: string, sort?: string) {
+    return this.apollo.watchQuery<GQL.MarkerStringsQuery, GQL.MarkerStringsQueryVariables>({
+      query: MARKER_STRINGS,
+      variables: {
+        q: q,
+        sort: sort
+      }
+    });
+  }
+
+  allTags() {
+    return this.apollo.watchQuery<GQL.AllTagsQuery>({
+      query: ALL_TAGS
+    });
+  }
+
+  sceneUpdate(scene: GQL.SceneUpdateMutationVariables) {
+    return this.apollo.mutate<GQL.SceneUpdateMutation, GQL.SceneUpdateMutationVariables>({
+      mutation: SCENE_UPDATE,
+      variables: {
+        id: scene.id,
+        title: scene.title,
+        details: scene.details,
+        url: scene.url,
+        date: scene.date,
+        rating: scene.rating,
+        studio_id: scene.studio_id,
+        gallery_id: scene.gallery_id,
+        performer_ids: scene.performer_ids,
+        tag_ids: scene.tag_ids
+      },
+      refetchQueries: [
+        {
+          query: FIND_SCENE,
+          variables: {
+            id: scene.id
+          }
+        }
+      ],
+    });
+  }
+
+  performerCreate(performer: GQL.PerformerCreateMutationVariables) {
+    return this.apollo.mutate<GQL.PerformerCreateMutation, GQL.PerformerCreateMutationVariables>({
+      mutation: PERFORMER_CREATE,
+      variables: {
+        name: performer.name,
+        url: performer.url,
+        birthdate: performer.birthdate,
+        ethnicity: performer.ethnicity,
+        country: performer.country,
+        eye_color: performer.eye_color,
+        height: performer.height,
+        measurements: performer.measurements,
+        fake_tits: performer.fake_tits,
+        career_length: performer.career_length,
+        tattoos: performer.tattoos,
+        piercings: performer.piercings,
+        aliases: performer.aliases,
+        twitter: performer.twitter,
+        instagram: performer.instagram,
+        favorite: performer.favorite,
+        image: performer.image
+      },
+      refetchQueries: [
+        {
+          query: ALL_PERFORMERS
+        }
+      ],
+    });
+  }
+
+  performerUpdate(performer: GQL.PerformerUpdateMutationVariables) {
+    return this.apollo.mutate<GQL.PerformerUpdateMutation, GQL.PerformerUpdateMutationVariables>({
+      mutation: PERFORMER_UPDATE,
+      variables: {
+        id: performer.id,
+        name: performer.name,
+        url: performer.url,
+        birthdate: performer.birthdate,
+        ethnicity: performer.ethnicity,
+        country: performer.country,
+        eye_color: performer.eye_color,
+        height: performer.height,
+        measurements: performer.measurements,
+        fake_tits: performer.fake_tits,
+        career_length: performer.career_length,
+        tattoos: performer.tattoos,
+        piercings: performer.piercings,
+        aliases: performer.aliases,
+        twitter: performer.twitter,
+        instagram: performer.instagram,
+        favorite: performer.favorite,
+        image: performer.image
+      },
+      refetchQueries: [
+        {
+          query: FIND_PERFORMER,
+          variables: {
+            id: performer.id
+          }
+        }
+      ],
+    });
+  }
+
+  studioCreate(studio: GQL.StudioCreateMutationVariables) {
+    return this.apollo.mutate<GQL.StudioCreateMutation, GQL.StudioCreateMutationVariables>({
+      mutation: STUDIO_CREATE,
+      variables: {
+        name: studio.name,
+        url: studio.url,
+        image: studio.image
+      },
+      refetchQueries: [
+        {
+          query: ALL_STUDIOS
+        }
+      ],
+    });
+  }
+
+  studioUpdate(studio: GQL.StudioUpdateMutationVariables) {
+    return this.apollo.mutate<GQL.StudioUpdateMutation, GQL.StudioUpdateMutationVariables>({
+      mutation: STUDIO_UPDATE,
+      variables: {
+        id: studio.id,
+        name: studio.name,
+        url: studio.url,
+        image: studio.image
+      },
+      refetchQueries: [
+        {
+          query: FIND_STUDIO,
+          variables: {
+            id: studio.id
+          }
+        }
+      ],
+    });
+  }
+
+  tagCreate(tag: GQL.TagCreateMutationVariables) {
+    return this.apollo.mutate<GQL.TagCreateMutation, GQL.TagCreateMutationVariables>({
+      mutation: TAG_CREATE,
+      variables: {
+        name: tag.name
+      },
+      refetchQueries: [
+        {
+          query: ALL_TAGS
+        }
+      ],
+    });
+  }
+
+  markerCreate(title: string, seconds: number, scene_id: any) {
+    return this.apollo.mutate<GQL.SceneMarkerCreateMutation, GQL.SceneMarkerCreateMutationVariables>({
+      mutation: MARKER_CREATE,
+      variables: {
+        title: title,
+        seconds: seconds,
+        scene_id: scene_id
+      },
+      updateQueries: {
+        FindScene: (record, mutation) => {
+          const updatedRecord = { ...record };
+          const newMarker = mutation.mutationResult.data.sceneMarkerCreate;
+          updatedRecord.findScene.scene_markers.push(newMarker);
+          return updatedRecord;
+        },
+      },
+      refetchQueries: [
+        {
+          query: MARKER_STRINGS
+        }
+      ]
+    });
+  }
+
+  markerDestory(id: any, scene_id: any) {
+    return this.apollo.mutate<GQL.SceneMarkerDestroyMutation, GQL.SceneMarkerDestroyMutationVariables>({
+      mutation: MARKER_DESTROY,
+      variables: {
+        id: id
+      },
+      refetchQueries: [
+        {
+          query: FIND_SCENE,
+          variables: {
+            id: scene_id
+          }
+        },
+        {
+          query: MARKER_STRINGS
+        }
+      ],
+    });
+  }
+
+  // TODO: Implement in GraphQL
+
+  // getStatus(): Observable<any> {
+  //   const url = this.url + `/status.json`;
+  //   return this.http.get(url)
+  //                   .catch(this.handleError)
+  // }
+
+  // startScan() {
+  //   const url = this.url + `/scan.json`;
+  //   return this.http.get(url)
+  //                   .catch(this.handleError)
+  //                   .subscribe(data => console.log(''));
+  // }
+
+  // private handleError (error: HttpResponse<any> | any) {
+  //   if (error instanceof HttpResponse) {
+  //     const body = !!error.body.errors ? error.body.errors : error.body;
+  //     const message: string = !!body.message ? body.message : error.toString();
+  //     console.error(message);
+  //     return Observable.throw(body);
+  //   } else {
+  //     return Observable.throw(error);
+  //   }
+  // }
 
 }

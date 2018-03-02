@@ -16,8 +16,9 @@ import { Gallery } from '../../shared/models/gallery.model';
   styleUrls: ['./tag-form.component.css']
 })
 export class TagFormComponent implements OnInit {
-    loading: Boolean = true;
-    tag: Tag = new Tag();
+  name: string;
+
+  loading: Boolean = true;
 
   constructor(private route: ActivatedRoute, private stashService: StashService, private router: Router) {}
 
@@ -33,28 +34,19 @@ export class TagFormComponent implements OnInit {
       return;
     }
 
-    this.stashService.getTag(id).subscribe(tag => {
-      this.tag = tag;
-      this.loading = false;
-    }, error => {
-      console.log(error);
-    });
+    // TODO: Fetch tag for editing
   }
 
   onSubmit() {
-    console.log(this.tag);
+    const id = this.route.snapshot.params['id'];
 
-    if (!!this.tag.id) {
-      this.stashService.updateTag(this.tag).subscribe(response => {
-        this.router.navigate(['/tags', this.tag.id]);
-      }, error => {
-        console.log(error)
-      });
+    if (!!id) {
+      // TODO: Edit the tag
     } else {
-      this.stashService.createTag(this.tag).subscribe(response => {
-        this.router.navigate(['/tags', response.id]);
-      }, error => {
-        console.log(error)
+      this.stashService.tagCreate({
+        name: this.name
+      }).subscribe(result => {
+        this.router.navigate(['/tags', result.data.tagCreate.tag.id]);
       });
     }
   }

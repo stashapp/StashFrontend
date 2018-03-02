@@ -17,11 +17,16 @@ import { Gallery } from '../../shared/models/gallery.model';
 })
 export class SceneFormComponent implements OnInit {
   loading = true;
-  loadingPerformers = true;
-  loadingTags = true;
-  loadingStudios = true;
-  loadingGalleries = true;
-  scene: Scene = new Scene();
+
+  title: string;
+  details: string;
+  url: string;
+  date: string;
+  rating: number;
+  gallery_id: string;
+  studio_id: string;
+  performer_ids: string[] = [];
+  tag_ids: string[] = [];
 
   performers: Performer[];
   tags: Tag[];
@@ -29,71 +34,60 @@ export class SceneFormComponent implements OnInit {
   galleries: Gallery[];
 
 
-  constructor(private route: ActivatedRoute, private stashService: StashService, private router: Router, private artooService: ArtooService) {}
+  constructor(
+    private route: ActivatedRoute,
+    private stashService: StashService,
+    private router: Router,
+    private artooService: ArtooService
+  ) {}
 
   ngOnInit() {
     this.getScene();
-    // TODO: http patch to update
   }
 
   getScene() {
     const id = parseInt(this.route.snapshot.params['id'], 10);
+
     if (!!id === false) {
       console.log('new scene');
       return;
     }
 
-    this.stashService.getScene(id).subscribe(scene => {
-      this.scene = scene;
-      this.loading = false;
+    this.stashService.findSceneForEditing(id).valueChanges.subscribe(result => {
+      this.title = result.data.findScene.title;
+      this.details = result.data.findScene.details;
+      this.url   = result.data.findScene.url;
+      this.date  = result.data.findScene.date;
+      this.rating = result.data.findScene.rating;
+      this.gallery_id = !!result.data.findScene.gallery ? result.data.findScene.gallery.id : null;
+      this.studio_id = !!result.data.findScene.studio ? result.data.findScene.studio.id : null;
+      this.performer_ids = result.data.findScene.performers.map(performer => performer.id);
+      this.tag_ids = result.data.findScene.tags.map(tag => tag.id);
 
-      // TODO: better way then hardcoding
-      this.stashService.getAllPerformers().subscribe(apiResponse => {
-        this.performers = apiResponse.data
-        this.loadingPerformers = false;
-      });
-      this.stashService.getTags(null, 1, 1000).subscribe(apiResponse => {
-        this.tags = apiResponse.data
-        this.loadingTags = false;
-      });
-      this.stashService.getAllStudios().subscribe(apiResponse => {
-        this.studios = apiResponse.data
-        this.loadingStudios = false;
-      });
-      this.stashService.getValidGalleriesForScene(id).subscribe(apiResponse => {
-        this.galleries = apiResponse.data;
-        this.loadingGalleries = false;
-      })
+      this.performers = result.data.allPerformers;
+      this.tags = result.data.allTags;
+      this.studios = result.data.allStudios;
+      this.galleries = result.data.validGalleriesForScene;
 
-      // this.stashService.getPerformersWithIds(this.scene.performer_ids).subscribe(performers => {
-      //   this.scene.fetchedPerformers = performers;
-      // });
-    }, error => {
-      console.log(error);
+      this.loading = result.loading;
     });
   }
 
   onSubmit() {
-    console.log(this.scene);
-
-    this.stashService.updateScene(this.scene).subscribe(response => {
-      if (!!response && !!response.errors) {
-        console.log(response.errors);
-      } else {
-        this.router.navigate(['/scenes', this.scene.id]);
-      }
-    });
-  }
-
-  onScrape() {
-    console.log('scrape', this.scene.url);
-
-    this.artooService.scrape(this.scene.url, this.studios, this.tags).then(response => {
-      this.scene.title = response.title;
-      this.scene.date = response.date;
-      this.scene.studio_id = response.studio_id;
-      this.scene.tag_ids = response.tag_ids;
-      this.scene.details = response.details;
+    const id = this.route.snapshot.params['id'];
+    this.stashService.sceneUpdate({
+      id: id,
+      title: this.title,
+      details: this.details,
+      url: this.url,
+      date: this.date,
+      rating: this.rating,
+      studio_id: this.studio_id,
+      gallery_id: this.gallery_id,
+      performer_ids: this.performer_ids,
+      tag_ids: this.tag_ids
+    }).subscribe(result => {
+      this.router.navigate(['/scenes', id]);
     });
   }
 

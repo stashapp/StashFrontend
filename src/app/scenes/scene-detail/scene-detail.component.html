@@ -8,7 +8,7 @@
         loop
         autoplay="true"
         muted="true">
-        <source [src]="markerStreamPath(marker)" />
+        <source [src]="marker.stream" />
       </video>
       <div style="position: absolute; bottom: 1em; left: 1em; font-weight: 900; font-size: small; text-shadow: black 1px 1px;">{{marker.title}} - {{marker.seconds | seconds}}</div>
     </a>
@@ -17,17 +17,11 @@
 
 <div class="ui container segments">
   <div class="ui top attached segment">
-    <!--[hidden]="!scene?.is_streamable"-->
     <app-jwplayer
       (seeked)="onSeeked()"
       (time)="onTime($event)"
       #jwplayer>
     </app-jwplayer>
-    <!--<% else %>
-      <%= link_to "scene_playlist_path(@scene).m3u8", class: 'ui fluid image' do %>
-        <%= image_tag screenshot_path(@scene) %>
-      <% end %>
-    <% end %>-->
 
     <app-scene-detail-scrubber
       #scrubber
@@ -76,7 +70,7 @@
                 muted="true">
                 <source [src]="markerStreamPath(marker)" type="video/mp4" />
               </video>-->
-              <img [src]="markerPreviewPath(marker)" />
+              <img [src]="marker.preview" />
               <a (click)="onClickMarker(marker)">
                 {{marker.title}} - {{marker.seconds | seconds}}
               </a>
@@ -102,34 +96,34 @@
     <p class="pre">{{scene.details}}</p>
   </div>
 
-  <div *ngIf="scene?.performer_ids.length > 0" class="ui attached segment">
+  <div *ngIf="scene?.performers.length > 0" class="ui attached segment">
     <h3>Performers</h3>
     <div class="ui four centered stackable link cards">
-      <app-performer-card *ngFor="let performer of scene?.fetchedPerformers"
+      <app-performer-card *ngFor="let performer of scene?.performers"
       [performer]="performer"
       [ageFromDate]="scene.date">
       </app-performer-card>
     </div>
   </div>
 
-  <div *ngIf="scene?.tag_ids.length > 0" class="ui attached segment">
+  <div *ngIf="scene?.tags.length > 0" class="ui attached segment">
     <h3>Tags</h3>
     <div class="ui labels">
-      <a *ngFor="let tag of scene?.fetchedTags" class="ui label">{{tag.name}}</a>
+      <a *ngFor="let tag of scene?.tags" class="ui label">{{tag.name}}</a>
     </div>
   </div>
 
-  <div *ngIf="!!scene?.studio_id" class="ui attached segment">
+  <div *ngIf="!!scene?.studio" class="ui attached segment">
     <div class="ui four centered stackable link cards">
-      <app-studio-card [studio]="scene?.fetchedStudio"></app-studio-card>
+      <app-studio-card [studio]="scene?.studio"></app-studio-card>
     </div>
   </div>
 
-  <div *ngIf="!!scene?.gallery_id" class="ui attached segment">
+  <div *ngIf="!!scene?.gallery" class="ui attached segment">
     <h3 class="ui header">
       Gallery
     </h3>
-    <app-gallery-preview *ngIf="!!scene?.fetchedGallery" [gallery]="scene?.fetchedGallery"></app-gallery-preview>
+    <app-gallery-preview *ngIf="!!scene?.gallery" [gallery]="scene?.gallery"></app-gallery-preview>
   </div>
 
   <div class="ui bottom attached segment">

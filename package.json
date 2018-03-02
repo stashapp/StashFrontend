@@ -8,7 +8,8 @@
     "build": "ng build",
     "test": "ng test",
     "lint": "ng lint",
-    "e2e": "ng e2e"
+    "e2e": "ng e2e",
+    "update_schema": "./update_schema.sh"
   },
   "private": true,
   "dependencies": {
@@ -21,7 +22,14 @@
     "@angular/platform-browser": "^5.1.2",
     "@angular/platform-browser-dynamic": "^5.1.2",
     "@angular/router": "^5.1.2",
+    "apollo-angular": "^1.0.1",
+    "apollo-angular-link-http": "^1.0.2-beta.0",
+    "apollo-cache-inmemory": "^1.1.9",
+    "apollo-link-error": "^1.0.7",
+    "apollo-client": "^2.2.5",
     "core-js": "^2.5.3",
+    "graphql": "^0.13.1",
+    "graphql-tag": "^2.8.0",
     "json-stringify-safe": "^5.0.1",
     "localforage": "^1.5.5",
     "ng2-semantic-ui": "0.9.6",

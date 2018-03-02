@@ -28,7 +28,7 @@ export class GalleryImageCardComponent implements OnInit {
   }
 
   imagePath(): string {
-    return `${this.stashService.url}${this.galleryImage.path}?thumb=true`
+    return `${this.stashService.url}${this.galleryImage.path}?thumb=true`;
   }
 
   onSelect(): void {

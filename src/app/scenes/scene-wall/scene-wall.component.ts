@@ -25,10 +25,12 @@ export class SceneWallComponent implements OnInit {
   WallMode = WallMode;
   items: any[]; // scenes or scene markers
   markerOptions: any[];
-  showingMarkerList: boolean = false;
-  searchTerm: string = '';
+  showingMarkerList = false;
+  searchTerm = '';
   searchFormControl = new FormControl();
   mode: WallMode = WallMode.Markers;
+
+
 
   constructor(
     private router: Router,
@@ -43,26 +45,24 @@ export class SceneWallComponent implements OnInit {
                       .subscribe(term => {
                         this.getScenes(term);
                       });
-    this.stashService.getAllMarkerStrings().subscribe(markers => {
-      this.markerOptions = markers
+    this.stashService.markerStrings().valueChanges.subscribe(result => {
+      this.markerOptions = result.data.markerStrings;
     });
   }
 
-  getScenes(q: string) {
+  async getScenes(q: string) {
     this.items = null;
-    if (this.mode == WallMode.Scenes) {
-      this.stashService.getScenesForWall(q).subscribe(scenes => {
-        this.items = scenes;
-      });
+    if (this.mode === WallMode.Scenes) {
+      const response = await this.stashService.sceneWall(q).result();
+      this.items = response.data.sceneWall;
     } else {
-      this.stashService.getSceneMarkersForWall(q).subscribe(markers => {
-        this.items = markers;
-      })
+      const response = await this.stashService.markerWall(q).result();
+      this.items = response.data.markerWall;
     }
   }
 
   toggleMode() {
-    if (this.mode == WallMode.Scenes) {
+    if (this.mode === WallMode.Scenes) {
       this.mode = WallMode.Markers;
     } else {
       this.mode = WallMode.Scenes;
@@ -83,16 +83,9 @@ export class SceneWallComponent implements OnInit {
     this.showingMarkerList = false;
   }
 
-  sortMarkers(by) {
-    this.markerOptions = this.markerOptions.sort((a, b) => {
-      if (by == 'count') {
-        return b.count - a.count;
-      } else {
-        if (a.title > b.title) { return 1; }
-        if (a.title < b.title) { return -1; }
-        return 0;
-      }
-    });
+  async sortMarkers(by) {
+    const result = await this.stashService.markerStrings(null, by).result();
+    this.markerOptions = result.data.markerStrings;
   }
 
 }

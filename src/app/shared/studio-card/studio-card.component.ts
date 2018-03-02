@@ -21,13 +21,7 @@ export class StudioCardComponent implements OnInit {
     private stashService: StashService
   ) {}
 
-  ngOnInit() {
-  }
-
-  imagePath(): string {
-    if (!this.studio) { return ''; }
-    return `${this.stashService.url}${this.studio.image_path}`
-  }
+  ngOnInit() {}
 
   onSelect(): void {
     this.router.navigate(['/studios', this.studio.id]);

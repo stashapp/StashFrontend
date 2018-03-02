@@ -1,5 +1,5 @@
 <a (click)="onSelect()" class="image previewable">
-  <video class="preview" loop [poster]="screenshotPath()" #videoTag>
+  <video class="preview" loop [poster]="this.scene.paths.screenshot" #videoTag>
     <source *ngIf="previewPath" [src]="previewPath" />
   </video>
   <!--<div class="glass">
@@ -66,8 +66,8 @@
   </div>
 </div>
 <div class="extra content" style="background-color: rgba(0,0,0,0.1);">
-  <a *ngIf="scene.fetchedStudio" [style.background-image]="'url(' + studioImagePath() + ')'" style="width: 100%; line-height: 5; background-size: contain; display: inline-block; background-position: right; background-repeat: no-repeat;">
+  <a *ngIf="scene.studio" [style.background-image]="'url(' + this.scene.studio.image_path + ')'" style="width: 100%; line-height: 5; background-size: contain; display: inline-block; background-position: right; background-repeat: no-repeat;">
     <i class="huge record icon"></i>
   </a>
-  <span *ngIf="!scene.fetchedStudio">No Studio</span>
+  <span *ngIf="!scene.studio">No Studio</span>
 </div>

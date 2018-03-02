@@ -1,8 +1,16 @@
-# StashFrontend
+# Stash Frontend
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 1.1.3.
+## CSS
 
 To build the CSS, cd into semantic and run `gulp build`
+
+# GraphQL
+
+If a change is made to the GraphQL querys you must run the commands in `update_schema.sh` to regenerate the interfaces.
+
+# Angular CLI Info
+
+This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 1.1.3.
 
 ## Development server
 

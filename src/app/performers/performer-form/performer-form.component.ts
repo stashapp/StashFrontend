@@ -17,21 +17,43 @@ import { Gallery } from '../../shared/models/gallery.model';
   styleUrls: ['./performer-form.component.css']
 })
 export class PerformerFormComponent implements OnInit, OnDestroy {
-  loading: Boolean = true;
-  performer: Performer = new Performer();
+  name: string;
+  favorite: boolean;
+  aliases: string;
+  country: string;
+  birthdate: string;
+  ethnicity: string;
+  eye_color: string;
+  height: string;
+  measurements: string;
+  fake_tits: string;
+  career_length: string;
+  tattoos: string;
+  piercings: string;
+  url: string;
+  twitter: string;
+  instagram: string;
+  image: string;
+
+  loading = true;
   imagePreview: string;
+  image_path: string;
   ethnicityOptions: string[] = ['white', 'black', 'asian', 'hispanic'];
 
-  constructor(private route: ActivatedRoute, private stashService: StashService, private artooService: ArtooService, private router: Router) { }
+  constructor(
+    private route: ActivatedRoute,
+    private stashService: StashService,
+    private artooService: ArtooService,
+    private router: Router
+  ) {}
 
   ngOnInit() {
     this.getPerformer();
   }
 
-  ngOnDestroy() {
-  }
+  ngOnDestroy() {}
 
-  getPerformer() {
+  async getPerformer() {
     const id = parseInt(this.route.snapshot.params['id'], 10);
     if (!!id === false) {
       console.log('new performer');
@@ -39,21 +61,28 @@ export class PerformerFormComponent implements OnInit, OnDestroy {
       return;
     }
 
-    this.stashService.getPerformer(id).subscribe(performer => {
-      this.performer = performer;
-      this.loading = false;
-      this.imagePreview = this.imagePath();
-    }, error => {
-      console.log(error);
-    });
-  }
+    const result = await this.stashService.findPerformer(id).result();
+    this.loading = result.loading;
 
-  imagePath(): string {
-    if (!!this.performer.image_path) {
-      return `${this.stashService.url}${this.performer.image_path}`
-    } else {
-      return null;
-    }
+    this.name = result.data.findPerformer.name;
+    this.favorite = result.data.findPerformer.favorite;
+    this.aliases = result.data.findPerformer.aliases;
+    this.country = result.data.findPerformer.country;
+    this.birthdate = result.data.findPerformer.birthdate;
+    this.ethnicity = result.data.findPerformer.ethnicity;
+    this.eye_color = result.data.findPerformer.eye_color;
+    this.height = result.data.findPerformer.height;
+    this.measurements = result.data.findPerformer.measurements;
+    this.fake_tits = result.data.findPerformer.fake_tits;
+    this.career_length = result.data.findPerformer.career_length;
+    this.tattoos = result.data.findPerformer.tattoos;
+    this.piercings = result.data.findPerformer.piercings;
+    this.url = result.data.findPerformer.url;
+    this.twitter = result.data.findPerformer.twitter;
+    this.instagram = result.data.findPerformer.instagram;
+
+    this.image_path = result.data.findPerformer.image_path;
+    this.imagePreview = this.image_path;
   }
 
   onImageChange(event) {
@@ -61,58 +90,91 @@ export class PerformerFormComponent implements OnInit, OnDestroy {
     const reader: FileReader = new FileReader();
 
     reader.onloadend = (e) => {
-      this.performer.image = reader.result;
-      this.imagePreview = this.performer.image;
-    }
+      this.image = reader.result;
+      this.imagePreview = this.image;
+    };
     reader.readAsDataURL(file);
   }
 
   onResetImage(imageInput) {
-    imageInput.value = ''
-    this.imagePreview = this.imagePath();
-    this.performer.image = null;
+    imageInput.value = '';
+    this.imagePreview = this.image_path;
+    this.image = null;
   }
 
   onFavoriteChange() {
-    this.performer.favorite = !this.performer.favorite;
+    this.favorite = !this.favorite;
   }
 
   onSubmit() {
-    console.log(this.performer);
+    const id = this.route.snapshot.params['id'];
 
-    if (!!this.performer.id) {
-      this.stashService.updatePerformer(this.performer).subscribe(response => {
-        this.router.navigate(['/performers', this.performer.id]);
-      }, error => {
-        console.log(error)
+    if (!!id) {
+      this.stashService.performerUpdate({
+        id: id,
+        name: this.name,
+        url: this.url,
+        birthdate: this.birthdate,
+        ethnicity: this.ethnicity,
+        country: this.country,
+        eye_color: this.eye_color,
+        height: this.height,
+        measurements: this.measurements,
+        fake_tits: this.fake_tits,
+        career_length: this.career_length,
+        tattoos: this.tattoos,
+        piercings: this.piercings,
+        aliases: this.aliases,
+        twitter: this.twitter,
+        instagram: this.instagram,
+        favorite: this.favorite,
+        image: this.image
+      }).subscribe(result => {
+        this.router.navigate(['/performers', id]);
       });
     } else {
-      this.stashService.createPerformer(this.performer).subscribe(response => {
-        this.router.navigate(['/performers', response.id]);
-      }, error => {
-        console.log(error)
+      this.stashService.performerCreate({
+        name: this.name,
+        url: this.url,
+        birthdate: this.birthdate,
+        ethnicity: this.ethnicity,
+        country: this.country,
+        eye_color: this.eye_color,
+        height: this.height,
+        measurements: this.measurements,
+        fake_tits: this.fake_tits,
+        career_length: this.career_length,
+        tattoos: this.tattoos,
+        piercings: this.piercings,
+        aliases: this.aliases,
+        twitter: this.twitter,
+        instagram: this.instagram,
+        favorite: this.favorite,
+        image: this.image
+      }).subscribe(result => {
+        this.router.navigate(['/performers', result.data.performerCreate.performer.id]);
       });
     }
   }
 
   onScrape() {
-    console.log('scrape', this.performer.url);
+    console.log('scrape', this.url);
 
-    this.artooService.scrapeFreeones(this.performer.url).then(response => {
-      this.performer.name = response.name;
-      this.performer.aliases = response.aliases;
-      this.performer.country = response.country;
-      this.performer.birthdate = response.birthdate;
-      this.performer.ethnicity = response.ethnicity;
-      this.performer.eye_color = response.eye_color;
-      this.performer.height = response.height;
-      this.performer.measurements = response.measurements;
-      this.performer.fake_tits = response.fake_tits;
-      this.performer.career_length = response.career_length;
-      this.performer.tattoos = response.tattoos;
-      this.performer.piercings = response.piercings;
-      this.performer.twitter = response.twitter;
-      this.performer.instagram = response.instagram;
+    this.artooService.scrapeFreeones(this.url).then(response => {
+      this.name = response.name;
+      this.aliases = response.aliases;
+      this.country = response.country;
+      this.birthdate = response.birthdate;
+      this.ethnicity = response.ethnicity;
+      this.eye_color = response.eye_color;
+      this.height = response.height;
+      this.measurements = response.measurements;
+      this.fake_tits = response.fake_tits;
+      this.career_length = response.career_length;
+      this.tattoos = response.tattoos;
+      this.piercings = response.piercings;
+      this.twitter = response.twitter;
+      this.instagram = response.instagram;
     });
   }
 

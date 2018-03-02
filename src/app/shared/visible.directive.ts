@@ -7,9 +7,10 @@ import 'rxjs/add/operator/startWith';
 import { DOCUMENT } from '@angular/platform-browser';
 
 @Directive({
+  // tslint:disable-next-line:directive-selector
   selector: '[visible]'
 })
-export class VisibleDirective {
+export class VisibleDirective implements AfterViewInit, OnDestroy {
 
   @Output()
   visibleEvent: EventEmitter<boolean> = new EventEmitter<boolean>();
@@ -19,10 +20,10 @@ export class VisibleDirective {
 
   constructor(private element: ElementRef, @Inject(DOCUMENT) private document: any) {}
 
-  ngAfterViewInit(){
+  ngAfterViewInit() {
     this.subscribe();
   }
-  ngOnDestroy(){
+  ngOnDestroy() {
     this.unsubscribe();
   }
 
