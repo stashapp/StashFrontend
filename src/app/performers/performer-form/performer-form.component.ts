@@ -92,12 +92,12 @@ export class PerformerFormComponent implements OnInit, OnDestroy {
     reader.onloadend = (e) => {
       this.image = reader.result;
       this.imagePreview = this.image;
-    }
+    };
     reader.readAsDataURL(file);
   }
 
   onResetImage(imageInput) {
-    imageInput.value = ''
+    imageInput.value = '';
     this.imagePreview = this.image_path;
     this.image = null;
   }

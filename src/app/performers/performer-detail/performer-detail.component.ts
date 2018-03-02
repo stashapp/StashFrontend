@@ -18,7 +18,12 @@ export class PerformerDetailComponent implements OnInit {
   performer: Performer;
   sceneListState: SceneListState;
 
-  constructor(private route: ActivatedRoute, private stashService: StashService, private performerService: PerformersService, private router: Router) { }
+  constructor(
+    private route: ActivatedRoute,
+    private stashService: StashService,
+    private performerService: PerformersService,
+    private router: Router
+  ) {}
 
   ngOnInit() {
     const id = parseInt(this.route.snapshot.params['id'], 10);

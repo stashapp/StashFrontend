@@ -6,25 +6,37 @@ import 'rxjs/add/operator/filter';
 import { StashService } from '../../core/stash.service';
 
 import { Scene } from '../../shared/models/scene.model';
-import { ApiResult } from '../../shared/models/api-result.model'
-import { DisplayMode, FilterMode, ListFilter, ListState, SceneListState, GalleryListState, PerformerListState, StudioListState } from '../../shared/models/list-state.model';
+import {
+  DisplayMode,
+  FilterMode,
+  ListFilter,
+  ListState,
+  SceneListState,
+  GalleryListState,
+  PerformerListState,
+  StudioListState
+} from '../../shared/models/list-state.model';
 
 @Component({
   selector: 'app-list',
   templateUrl: './list.component.html',
   styleUrls: ['./list.component.css']
 })
-export class ListComponent implements OnInit {
+export class ListComponent implements OnInit, OnDestroy, AfterViewInit {
   DisplayMode = DisplayMode;
   FilterMode = FilterMode;
 
   @Input() state: ListState<any>;
+
+  loading = true;
 
   constructor(private stashService: StashService) {}
 
   ngOnInit() {}
 
   ngOnDestroy() {
+    this.loading = true;
+    this.state.reset();
     this.state.scrollY = window.scrollY;
   }
 
@@ -34,15 +46,12 @@ export class ListComponent implements OnInit {
   }
 
   async getData() {
+    this.loading = true;
+
     if (this.state instanceof SceneListState) {
-      this.stashService
-          .findScenes(this.state.currentPage, this.state.filter)
-          .valueChanges
-          .subscribe(result => {
-        this.state.data = result.data.findScenes.scenes;
-        this.state.totalCount = result.data.findScenes.count;
-        console.log(this.state.data)
-      })
+      const result = await this.stashService.findScenes(this.state.currentPage, this.state.filter).result();
+      this.state.data = result.data.findScenes.scenes;
+      this.state.totalCount = result.data.findScenes.count;
     } else if (this.state instanceof GalleryListState) {
       const result = await this.stashService.findGalleries(this.state.currentPage, this.state.filter).result();
       this.state.data = result.data.findGalleries.galleries;
@@ -56,6 +65,8 @@ export class ListComponent implements OnInit {
       this.state.data = result.data.findStudios.studios;
       this.state.totalCount = result.data.findStudios.count;
     }
+
+    this.loading = false;
   }
 
   onFilterUpdate(filter: ListFilter) {

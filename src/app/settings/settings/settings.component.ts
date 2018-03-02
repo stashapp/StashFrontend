@@ -31,6 +31,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
+    if (!this.statusObservable) { return; }
     this.statusObservable.unsubscribe();
   }
 

@@ -1,6 +1,6 @@
 import { Scene, SceneMarker } from '../shared/models/scene.model';
 
-import gql from 'graphql-tag'
+import gql from 'graphql-tag';
 
 // - Fragments
 
@@ -16,7 +16,7 @@ export const Fragment_SceneMarkerData = gql`
       id
     }
   }
-`
+`;
 
 export const Fragment_StudioData = gql`
   fragment StudioData on Studio {
@@ -27,7 +27,7 @@ export const Fragment_StudioData = gql`
     image_path
     scene_count
   }
-`
+`;
 
 export const Fragment_PerformerData = gql`
   fragment PerformerData on Performer {
@@ -52,7 +52,7 @@ export const Fragment_PerformerData = gql`
     image_path
     scene_count
   }
-`
+`;
 
 export const Fragment_TagData = gql`
   fragment TagData on Tag {
@@ -60,7 +60,7 @@ export const Fragment_TagData = gql`
     name
     scene_count
   }
-`
+`;
 
 export const Fragment_GalleryData = gql`
   fragment GalleryData on Gallery {
@@ -74,7 +74,7 @@ export const Fragment_GalleryData = gql`
       path
     }
   }
-`
+`;
 
 export const Fragment_SceneData = gql`
   ${Fragment_SceneMarkerData}
@@ -133,18 +133,80 @@ export const Fragment_SceneData = gql`
       ...PerformerData
     }
   }
-`
+`;
+
+export const Fragment_SlimSceneData = gql`
+  fragment SlimSceneData on Scene {
+    id
+    checksum
+    title
+    details
+    url
+    date
+    rating
+    path
+
+    file {
+      size
+      duration
+      video_codec
+      audio_codec
+      width
+      height
+    }
+
+    paths {
+      screenshot
+      preview
+      stream
+      webp
+      vtt
+      chapters_vtt
+    }
+
+    scene_markers {
+      id
+      title
+      seconds
+    }
+
+    gallery {
+      id
+      path
+      title
+    }
+
+    studio {
+      id
+      name
+      image_path
+    }
+
+    tags {
+      id
+      name
+    }
+
+    performers {
+      id
+      name
+      image_path
+    }
+  }
+`;
+
+
 
 // - Querys
 
 export const FIND_SCENES = gql`
-  ${Fragment_SceneData}
+  ${Fragment_SlimSceneData}
 
   query FindScenes($filter: FindFilterType, $scene_filter: SceneFilterType, $scene_ids: [Int]) {
     findScenes(filter: $filter, scene_filter: $scene_filter, scene_ids: $scene_ids) {
       count
       scenes {
-        ...SceneData
+        ...SlimSceneData
       }
     }
   }
@@ -201,7 +263,7 @@ export const SCENE_WALL = gql`
       ...SceneData
     }
   }
-`
+`;
 
 export const MARKER_WALL = gql`
   ${Fragment_SceneMarkerData}
@@ -211,7 +273,7 @@ export const MARKER_WALL = gql`
       ...SceneMarkerData
     }
   }
-`
+`;
 
 export const FIND_PERFORMERS = gql`
   ${Fragment_PerformerData}
@@ -300,7 +362,7 @@ export const ALL_PERFORMERS = gql`
       ...PerformerData
     }
   }
-`
+`;
 
 export const ALL_STUDIOS = gql`
   ${Fragment_StudioData}
@@ -310,7 +372,7 @@ export const ALL_STUDIOS = gql`
       ...StudioData
     }
   }
-`
+`;
 
 export const ALL_TAGS = gql`
   ${Fragment_TagData}
@@ -320,7 +382,7 @@ export const ALL_TAGS = gql`
       ...TagData
     }
   }
-`
+`;
 
 // - Mutations
 
@@ -519,4 +581,4 @@ export const MARKER_DESTROY = gql`
   mutation SceneMarkerDestroy($id: ID!) {
     sceneMarkerDestroy(id: $id)
   }
-`
+`;

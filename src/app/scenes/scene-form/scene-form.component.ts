@@ -25,7 +25,7 @@ export class SceneFormComponent implements OnInit {
   rating: number;
   gallery_id: string;
   studio_id: string;
-  performer_ids: string[] = []
+  performer_ids: string[] = [];
   tag_ids: string[] = [];
 
   performers: Performer[];

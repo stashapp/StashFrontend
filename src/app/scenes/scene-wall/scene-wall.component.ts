@@ -30,6 +30,8 @@ export class SceneWallComponent implements OnInit {
   searchFormControl = new FormControl();
   mode: WallMode = WallMode.Markers;
 
+
+
   constructor(
     private router: Router,
     private el: ElementRef,
@@ -48,16 +50,14 @@ export class SceneWallComponent implements OnInit {
     });
   }
 
-  getScenes(q: string) {
+  async getScenes(q: string) {
     this.items = null;
     if (this.mode === WallMode.Scenes) {
-      this.stashService.sceneWall(q).valueChanges.subscribe(response => {
-        this.items = response.data.sceneWall;
-      });
+      const response = await this.stashService.sceneWall(q).result();
+      this.items = response.data.sceneWall;
     } else {
-      this.stashService.markerWall(q).valueChanges.subscribe(response => {
-        this.items = response.data.markerWall;
-      });
+      const response = await this.stashService.markerWall(q).result();
+      this.items = response.data.markerWall;
     }
   }
 
@@ -84,18 +84,8 @@ export class SceneWallComponent implements OnInit {
   }
 
   async sortMarkers(by) {
-    const result = await this.stashService.markerStrings(null, by).result()
+    const result = await this.stashService.markerStrings(null, by).result();
     this.markerOptions = result.data.markerStrings;
-
-    // this.markerOptions = this.markerOptions.sort((a, b) => {
-    //   if (by === 'count') {
-    //     return b.count - a.count;
-    //   } else {
-    //     if (a.title > b.title) { return 1; }
-    //     if (a.title < b.title) { return -1; }
-    //     return 0;
-    //   }
-    // });
   }
 
 }

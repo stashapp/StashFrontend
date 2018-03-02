@@ -2,34 +2,6 @@ import { Injectable } from '@angular/core';
 import { PlatformLocation } from '@angular/common';
 import { HttpClient, HttpResponse, HttpHeaders, HttpParams } from '@angular/common/http';
 
-import { Observable } from 'rxjs/Observable';
-import { ReplaySubject } from 'rxjs/ReplaySubject';
-
-import 'rxjs/add/operator/catch';
-import 'rxjs/add/operator/map';
-import 'rxjs/add/operator/mergeMap';
-import 'rxjs/add/operator/switchMap';
-import 'rxjs/add/operator/publishReplay';
-import 'rxjs/add/operator/publishLast';
-import 'rxjs/add/operator/take';
-import 'rxjs/add/operator/share';
-import 'rxjs/add/operator/shareReplay';
-import 'rxjs/add/observable/forkJoin';
-import 'rxjs/add/observable/of';
-import 'rxjs/add/observable/empty';
-import 'rxjs/add/observable/from';
-import 'rxjs/add/observable/concat';
-import 'rxjs/add/observable/fromPromise';
-import 'rxjs/add/observable/throw';
-
-import { CacheService } from './cache.service';
-
-import { Scene, SceneMarker } from '../shared/models/scene.model'
-import { Performer } from '../shared/models/performer.model'
-import { Tag } from '../shared/models/tag.model'
-import { Studio } from '../shared/models/studio.model'
-import { Gallery } from '../shared/models/gallery.model'
-import { ApiResult } from '../shared/models/api-result.model'
 import { ListFilter, CriteriaType, CustomCriteria } from '../shared/models/list-state.model';
 
 import { ApolloModule, Apollo, QueryRef } from 'apollo-angular';
@@ -40,26 +12,45 @@ import { ApolloLink } from 'apollo-link';
 import gql from 'graphql-tag';
 
 import {
-  FIND_SCENES, FIND_SCENE, MARKER_STRINGS, MARKER_CREATE, MARKER_DESTROY, FIND_SCENE_FOR_EDITING, FIND_PERFORMER, SCENE_WALL, MARKER_WALL, ALL_TAGS, FIND_PERFORMERS, FIND_STUDIOS, FIND_STUDIO, FIND_GALLERIES, FIND_GALLERY, SCENE_UPDATE, PERFORMER_UPDATE, PERFORMER_CREATE, ALL_PERFORMERS, TAG_CREATE, STUDIO_CREATE, ALL_STUDIOS, STUDIO_UPDATE,
-} from './graphql'
-import * as GQL from './graphql-generated'
+  FIND_SCENES,
+  FIND_SCENE,
+  MARKER_STRINGS,
+  MARKER_CREATE,
+  MARKER_DESTROY,
+  FIND_SCENE_FOR_EDITING,
+  FIND_PERFORMER,
+  SCENE_WALL,
+  MARKER_WALL,
+  ALL_TAGS,
+  FIND_PERFORMERS,
+  FIND_STUDIOS,
+  FIND_STUDIO,
+  FIND_GALLERIES,
+  FIND_GALLERY,
+  SCENE_UPDATE,
+  PERFORMER_UPDATE,
+  PERFORMER_CREATE,
+  ALL_PERFORMERS,
+  TAG_CREATE,
+  STUDIO_CREATE,
+  ALL_STUDIOS,
+  STUDIO_UPDATE
+} from './graphql';
+import * as GQL from './graphql-generated';
 
-import * as stringify from 'json-stringify-safe';
 import { toIdValue } from 'apollo-utilities';
 
 @Injectable()
 export class StashService {
   url = 'http://192.168.1.200:4000';
-  private observableCache: { [key: string]: Observable<any> } = {};
 
   constructor(private http: HttpClient,
-              private cache: CacheService,
               private platformLocation: PlatformLocation,
               private apollo: Apollo,
               private httpLink: HttpLink) {
     const platform: any = this.platformLocation;
-    const url = new URL(platform.location.origin)
-    url.port = '4000'
+    const url = new URL(platform.location.origin);
+    url.port = '4000';
     this.url = url.toString().slice(0, -1);
 
     const errorLink = onError(({ graphQLErrors, networkError }) => {
@@ -81,7 +72,7 @@ export class StashService {
     const link = ApolloLink.from([
       errorLink,
       httpLinkHandler
-    ])
+    ]);
 
     apollo.create({
       link: link,
@@ -97,14 +88,14 @@ export class StashService {
         cacheRedirects: {
           Query: {
             findScene: (rootValue, args, context) => {
-              return context.getCacheKey({__typename: 'Scene', id: args.id})
+              return context.getCacheKey({__typename: 'Scene', id: args.id});
             }
           },
           Mutation: {
             sceneMarkerCreate: (rootValue, args, context) => {
               // return toIdValue(client.dataIdFromObject({__typename: 'SceneMarker', id: args.id}))
-              debugger
-              return context.getCacheKey({__typename: 'SceneMarker', id: args.id})
+              debugger;
+              return context.getCacheKey({__typename: 'SceneMarker', id: args.id});
             }
           }
         }
@@ -159,6 +150,7 @@ export class StashService {
 
   sceneWall(q?: string) {
     return this.apollo.watchQuery<GQL.SceneWallQuery, GQL.SceneWallQueryVariables>({
+      fetchPolicy: 'network-only',
       query: SCENE_WALL,
       variables: {
         q: q
@@ -168,6 +160,7 @@ export class StashService {
 
   markerWall(q?: string) {
     return this.apollo.watchQuery<GQL.MarkerWallQuery, GQL.MarkerWallQueryVariables>({
+      fetchPolicy: 'network-only',
       query: MARKER_WALL,
       variables: {
         q: q
@@ -424,10 +417,10 @@ export class StashService {
       },
       updateQueries: {
         FindScene: (record, mutation) => {
-          const updatedRecord = { ...record }
-          const newMarker = mutation.mutationResult.data.sceneMarkerCreate
-          updatedRecord.findScene.scene_markers.push(newMarker)
-          return updatedRecord
+          const updatedRecord = { ...record };
+          const newMarker = mutation.mutationResult.data.sceneMarkerCreate;
+          updatedRecord.findScene.scene_markers.push(newMarker);
+          return updatedRecord;
         },
       },
       refetchQueries: [
@@ -455,7 +448,7 @@ export class StashService {
           query: MARKER_STRINGS
         }
       ],
-    })
+    });
   }
 
   // TODO: Implement in GraphQL

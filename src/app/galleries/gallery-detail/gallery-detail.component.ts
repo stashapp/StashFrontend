@@ -32,9 +32,9 @@ export class GalleryDetailComponent implements OnInit {
 
   getStyle(): string {
     if (this.zoomed) {
-      return "z-index: 1; height: 100%;"
+      return 'z-index: 1; height: 100%;';
     } else {
-      return "z-index: 1; height: 80vh;"
+      return 'z-index: 1; height: 80vh;';
     }
   }
 
@@ -49,7 +49,7 @@ export class GalleryDetailComponent implements OnInit {
   }
 
   onClickClose() {
-    console.log('close')
+    console.log('close');
     this.displayedImage = null;
   }
 
@@ -77,7 +77,7 @@ export class GalleryDetailComponent implements OnInit {
         this.zoomed = false;
         break;
       }
-    
+
       default:
         break;
     }

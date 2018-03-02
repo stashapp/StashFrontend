@@ -21,8 +21,8 @@ export interface SceneFilterType {
   rating?: number | null,
   // Filter by resolution
   resolution?: ResolutionEnum | null,
-  // Filter to only include scenes which have markers
-  has_markers?: boolean | null,
+  // Filter to only include scenes which have markers. `true` or `false`
+  has_markers?: string | null,
   // Filter to only include scenes missing this property
   is_missing?: string | null,
   // Filter to only include scenes with this studio
@@ -87,61 +87,25 @@ export interface FindScenesQuery {
         id: string,
         title: string,
         seconds: number,
-        // The path to stream this marker
-        stream: string,
-        // The path to the preview image for this marker
-        preview: string,
-        scene:  {
-          id: string,
-        },
       } | null >,
-      is_streamable: boolean,
       gallery:  {
         id: string,
-        checksum: string,
         path: string,
         title: string | null,
-        // The files in the gallery
-        files:  Array< {
-          index: number,
-          name: string | null,
-          path: string | null,
-        } | null >,
       } | null,
       studio:  {
         id: string,
-        checksum: string,
         name: string,
-        url: string | null,
         image_path: string | null,
-        scene_count: number | null,
       } | null,
       tags:  Array< {
         id: string,
         name: string,
-        scene_count: number | null,
       } | null >,
       performers:  Array< {
         id: string,
-        checksum: string,
         name: string | null,
-        url: string | null,
-        twitter: string | null,
-        instagram: string | null,
-        birthdate: string | null,
-        ethnicity: string | null,
-        country: string | null,
-        eye_color: string | null,
-        height: string | null,
-        measurements: string | null,
-        fake_tits: string | null,
-        career_length: string | null,
-        tattoos: string | null,
-        piercings: string | null,
-        aliases: string | null,
-        favorite: boolean,
         image_path: string | null,
-        scene_count: number | null,
       } | null >,
     } | null >,
   },
@@ -1095,5 +1059,56 @@ export interface SceneDataFragment {
     favorite: boolean,
     image_path: string | null,
     scene_count: number | null,
+  } | null >,
+};
+
+export interface SlimSceneDataFragment {
+  id: string,
+  checksum: string,
+  title: string | null,
+  details: string | null,
+  url: string | null,
+  date: string | null,
+  rating: number | null,
+  path: string,
+  file:  {
+    size: string | null,
+    duration: number | null,
+    video_codec: string | null,
+    audio_codec: string | null,
+    width: number | null,
+    height: number | null,
+  },
+  paths:  {
+    screenshot: string | null,
+    preview: string | null,
+    stream: string | null,
+    webp: string | null,
+    vtt: string | null,
+    chapters_vtt: string | null,
+  },
+  scene_markers:  Array< {
+    id: string,
+    title: string,
+    seconds: number,
+  } | null >,
+  gallery:  {
+    id: string,
+    path: string,
+    title: string | null,
+  } | null,
+  studio:  {
+    id: string,
+    name: string,
+    image_path: string | null,
+  } | null,
+  tags:  Array< {
+    id: string,
+    name: string,
+  } | null >,
+  performers:  Array< {
+    id: string,
+    name: string | null,
+    image_path: string | null,
   } | null >,
 };

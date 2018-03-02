@@ -47,7 +47,7 @@ export class StudioFormComponent implements OnInit, OnDestroy {
     this.name = result.data.findStudio.name;
     this.url = result.data.findStudio.url;
 
-    this.image_path = result.data.findStudio.image_path
+    this.image_path = result.data.findStudio.image_path;
     this.imagePreview = this.image_path;
   }
 
@@ -58,12 +58,12 @@ export class StudioFormComponent implements OnInit, OnDestroy {
     reader.onloadend = (e) => {
       this.image = reader.result;
       this.imagePreview = this.image;
-    }
+    };
     reader.readAsDataURL(file);
   }
 
   onResetImage(imageInput) {
-    imageInput.value = ''
+    imageInput.value = '';
     this.imagePreview = this.image_path;
     this.image = null;
   }

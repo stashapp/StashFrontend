@@ -13,6 +13,8 @@
   <div *ngIf="state.filter.filterMode == FilterMode.Studios; then studioListItems"></div>
 </div>
 
+<div *ngIf="loading" class="ui active centered inline large text loader">Loading...</div>
+
 <app-sui-pagination #pagination id="main-pagination" (pageChange)="getPage($event)"></app-sui-pagination>
 
 <ng-template #sceneCards>

@@ -83,9 +83,9 @@ export class SceneDetailComponent implements OnInit {
     this.markerInput.query = null;
 
     this.stashService.markerCreate(title, seconds, scene_id).subscribe(response => {
-      console.log(response)
+      console.log(response);
     }, error => {
-      console.log(error)
+      console.log(error);
     });
   }
 
@@ -93,13 +93,13 @@ export class SceneDetailComponent implements OnInit {
     if (this.isMarkerOverlayOpen) {
       this.isMarkerOverlayOpen = false;
     }
-    this.jwplayer.player.seek(marker.seconds)
+    this.jwplayer.player.seek(marker.seconds);
   }
 
   onClickDeleteMarker(marker: SceneMarker) {
     this.stashService.markerDestory(marker.id, this.scene.id).subscribe(response => {
       console.log('Delete successfull:', response);
-    })
+    });
   }
 
   scrubberSeek(seconds) {

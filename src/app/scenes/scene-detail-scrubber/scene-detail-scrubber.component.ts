@@ -1,4 +1,17 @@
-import { Component, OnInit, OnChanges, SimpleChanges, Input, Output, HostBinding, HostListener, ElementRef, ViewChild, EventEmitter } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  OnChanges,
+  SimpleChanges,
+  Input,
+  Output,
+  HostBinding,
+  HostListener,
+  ElementRef,
+  ViewChild,
+  EventEmitter
+} from '@angular/core';
+
 import { Router } from '@angular/router';
 import { HttpClient, HttpResponse, HttpHeaders, HttpParams } from '@angular/common/http';
 import { takeUntil } from 'rxjs/operators';
@@ -31,7 +44,7 @@ export class SceneDetailScrubberComponent implements OnInit, OnChanges {
   setPosition(newPostion: number, shouldEmit: boolean = true) {
     if (shouldEmit) { this.scrolled.emit(); }
 
-    const bounds = this.getBounds() * -1
+    const bounds = this.getBounds() * -1;
     if (newPostion > 0) {
       newPostion = 0;
     } else if (newPostion < bounds) {
@@ -43,25 +56,25 @@ export class SceneDetailScrubberComponent implements OnInit, OnChanges {
 
   @HostListener('window:mouseup', ['$event'])
   onMouseup(event: MouseEvent) {
-    if (!this.start) { return }
+    if (!this.start) { return; }
     this.mouseDown = false;
     const delta = Math.abs(event.clientX - this.start.clientX);
     if (delta < 1 && event.target instanceof HTMLDivElement) {
-      let target: HTMLDivElement = event.target;
+      const target: HTMLDivElement = event.target;
       let seekSeconds: number = null;
 
-      let spriteIdString = target.getAttribute("data-sprite-item-id");
+      const spriteIdString = target.getAttribute('data-sprite-item-id');
       if (spriteIdString != null) {
-        let sprite = this.spriteItems[Number(spriteIdString)];
-        let spriteLength = sprite.end - sprite.start;
-        let percentage = event.offsetX / target.clientWidth;
-        let seconds = spriteLength * percentage;
+        const sprite = this.spriteItems[Number(spriteIdString)];
+        const spriteLength = sprite.end - sprite.start;
+        const percentage = event.offsetX / target.clientWidth;
+        const seconds = spriteLength * percentage;
         seekSeconds = sprite.start + seconds;
       }
 
-      let markerIdString = target.getAttribute("data-marker-id");
+      const markerIdString = target.getAttribute('data-marker-id');
       if (markerIdString != null) {
-        let marker = this.scene.scene_markers[Number(markerIdString)];
+        const marker = this.scene.scene_markers[Number(markerIdString)];
         seekSeconds = marker.seconds;
       }
 
@@ -72,14 +85,14 @@ export class SceneDetailScrubberComponent implements OnInit, OnChanges {
   }
 
   dragInertia(iteration: number, delta: number) {
-    let multiplier = Math.acos(iteration) * 0.33;
-    let movement = multiplier * this.velocity;
-    let newDelta = movement + delta;
+    const multiplier = Math.acos(iteration) * 0.33;
+    const movement = multiplier * this.velocity;
+    const newDelta = movement + delta;
 
     if (iteration < 0.9) {
-      this.dragInertia(iteration + 0.1, newDelta)
+      this.dragInertia(iteration + 0.1, newDelta);
     } else {
-      let newPosition = this.getPostion() + newDelta;
+      const newPosition = this.getPostion() + newDelta;
       this.setPosition(newPosition);
       this.velocity = 0;
     }
@@ -99,14 +112,14 @@ export class SceneDetailScrubberComponent implements OnInit, OnChanges {
     if (!this.mouseDown) { return; }
 
     // negative dragging right (past), positive left (future)
-    let delta = event.clientX - this.last.clientX;
+    const delta = event.clientX - this.last.clientX;
 
-    let movement = event.movementX;
+    const movement = event.movementX;
     if (Math.abs(movement) > Math.abs(this.velocity)) {
       this.velocity = movement;
     }
 
-    let newPostion = this.getPostion() + delta;
+    const newPostion = this.getPostion() + delta;
     this.setPosition(newPostion);
     this.last = event;
   }
@@ -129,20 +142,20 @@ export class SceneDetailScrubberComponent implements OnInit, OnChanges {
   }
 
   fetchSpriteInfo() {
-    if (!this.scene) { return }
+    if (!this.scene) { return; }
 
     this.http.get(this.scene.paths.vtt, {responseType: 'text'}).subscribe(res => {
       // TODO: This is gnarly
-      let lines = res.split('\n');
-      if (lines.shift() != 'WEBVTT') { return; }
-      if (lines.shift() != '') { return; }
-      var item = new SceneSpriteItem()
+      const lines = res.split('\n');
+      if (lines.shift() !== 'WEBVTT') { return; }
+      if (lines.shift() !== '') { return; }
+      let item = new SceneSpriteItem();
       this.spriteItems = [];
-      while(lines.length) {
-        let line = lines.shift();
+      while (lines.length) {
+        const line = lines.shift();
 
         if (line.includes('#') && line.includes('=') && line.includes(',')) {
-          let size = line.split('#')[1].split('=')[1].split(',')
+          const size = line.split('#')[1].split('=')[1].split(',');
           item.x = Number(size[0]);
           item.y = Number(size[1]);
           item.w = Number(size[2]);
@@ -151,12 +164,12 @@ export class SceneDetailScrubberComponent implements OnInit, OnChanges {
           this.spriteItems.push(item);
           item = new SceneSpriteItem();
         } else if (line.includes(' --> ')) {
-          let times = line.split(' --> ');
+          const times = line.split(' --> ');
 
-          var start = times[0].split(':');
+          const start = times[0].split(':');
           item.start = (+start[0]) * 60 * 60 + (+start[1]) * 60 + (+start[2]);
 
-          var end = times[1].split(':');
+          const end = times[1].split(':');
           item.end = (+end[0]) * 60 * 60 + (+end[1]) * 60 + (+end[2]);
         }
       }
@@ -170,9 +183,9 @@ export class SceneDetailScrubberComponent implements OnInit, OnChanges {
   }
 
   getStyleForSprite(i) {
-    let sprite = this.spriteItems[i];
-    let left = sprite.w * i;
-    let path = this.scene.paths.vtt.replace('_thumbs.vtt', '_sprite.jpg'); // TODO: Gnarly
+    const sprite = this.spriteItems[i];
+    const left = sprite.w * i;
+    const path = this.scene.paths.vtt.replace('_thumbs.vtt', '_sprite.jpg'); // TODO: Gnarly
     return {
       'width.px': sprite.w,
       'height.px': sprite.h,
@@ -184,16 +197,16 @@ export class SceneDetailScrubberComponent implements OnInit, OnChanges {
   }
 
   getTagStyle(tag: HTMLDivElement, i: number) {
-    if (!this.slider || this.spriteItems.length == 0 || this.getBounds() == 0) { return }
+    if (!this.slider || this.spriteItems.length === 0 || this.getBounds() === 0) { return; }
 
-    let marker = this.scene.scene_markers[i];
-    let duration = Number(this.scene.file.duration);
-    let percentage = marker.seconds / duration;
+    const marker = this.scene.scene_markers[i];
+    const duration = Number(this.scene.file.duration);
+    const percentage = marker.seconds / duration;
 
     // Need to offset from the left margin or the tags are slightly off.
-    let offset = Number(window.getComputedStyle(this.slider.offsetParent).marginLeft.replace('px', ''));
+    const offset = Number(window.getComputedStyle(this.slider.offsetParent).marginLeft.replace('px', ''));
 
-    let left = (this.slider.scrollWidth * percentage) - (tag.clientWidth / 2) + offset;
+    const left = (this.slider.scrollWidth * percentage) - (tag.clientWidth / 2) + offset;
     return {
       'left.px': left,
       'height.px': 20
@@ -201,19 +214,19 @@ export class SceneDetailScrubberComponent implements OnInit, OnChanges {
   }
 
   goBack() {
-    let newPosition = this.getPostion() + this.slider.clientWidth;
+    const newPosition = this.getPostion() + this.slider.clientWidth;
     this.setPosition(newPosition);
   }
 
   goForward() {
-    let newPosition = this.getPostion() - this.slider.clientWidth;
+    const newPosition = this.getPostion() - this.slider.clientWidth;
     this.setPosition(newPosition);
   }
 
   public scrollTo(seconds: number) {
-    let duration = Number(this.scene.file.duration);
-    let percentage = seconds / duration;
-    let position = ((this.slider.scrollWidth * percentage) - (this.slider.clientWidth / 2)) * -1;
+    const duration = Number(this.scene.file.duration);
+    const percentage = seconds / duration;
+    const position = ((this.slider.scrollWidth * percentage) - (this.slider.clientWidth / 2)) * -1;
     this.setPosition(position, false);
   }
 

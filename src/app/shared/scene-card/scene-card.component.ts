@@ -12,7 +12,7 @@ import { Scene } from '../../shared/models/scene.model';
 export class SceneCardComponent implements OnInit {
   private isPlaying = false;
   private isHovering = false;
-  private video: any
+  private video: any;
   previewPath: string = null;
   @Input() scene: Scene;
 
@@ -35,7 +35,7 @@ export class SceneCardComponent implements OnInit {
       } else {
         this.video.pause();
       }
-    }
+    };
     this.video.onpause = () => this.isPlaying = false;
   }
 
@@ -43,7 +43,7 @@ export class SceneCardComponent implements OnInit {
   onMouseEnter() {
     this.isHovering = true;
     if (!this.previewPath) {
-      this.previewPath = this.scene.paths.preview
+      this.previewPath = this.scene.paths.preview;
     }
     if (this.video.paused && !this.isPlaying) {
       this.video.play();

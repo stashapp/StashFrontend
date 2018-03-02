@@ -119,11 +119,11 @@
     </div>
   </div>
 
-  <div *ngIf="!!scene?.gallery_id" class="ui attached segment">
+  <div *ngIf="!!scene?.gallery" class="ui attached segment">
     <h3 class="ui header">
       Gallery
     </h3>
-    <app-gallery-preview *ngIf="!!scene?.fetchedGallery" [gallery]="scene?.fetchedGallery"></app-gallery-preview>
+    <app-gallery-preview *ngIf="!!scene?.gallery" [gallery]="scene?.gallery"></app-gallery-preview>
   </div>
 
   <div class="ui bottom attached segment">

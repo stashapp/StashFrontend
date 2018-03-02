@@ -11,7 +11,7 @@ import { Scene, SceneMarker } from '../../shared/models/scene.model';
 })
 export class SceneWallItemComponent implements OnInit {
 
-  private video: any
+  private video: any;
   private hoverTimeout: any = null;
   private isHovering = false;
 
@@ -29,7 +29,7 @@ export class SceneWallItemComponent implements OnInit {
     this.video.loop = true;
     this.video.oncanplay = () => {
       this.video.play();
-    }
+    };
   }
 
   constructor(
@@ -55,7 +55,7 @@ export class SceneWallItemComponent implements OnInit {
 
   @HostListener('mouseenter')
   onMouseEnter() {
-    if (!!this.hoverTimeout) { return }
+    if (!!this.hoverTimeout) { return; }
 
     const that = this;
     this.hoverTimeout = setTimeout(function() {
@@ -85,7 +85,7 @@ export class SceneWallItemComponent implements OnInit {
   }
 
   onClick(): void {
-    const id = this.marker !== undefined ? this.marker.scene.id : this.scene.id
+    const id = this.marker !== undefined ? this.marker.scene.id : this.scene.id;
     this.router.navigate(['/scenes', id]);
   }
 

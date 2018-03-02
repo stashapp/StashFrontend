@@ -11,7 +11,6 @@ import { NavigationBarComponent } from './navigation-bar/navigation-bar.componen
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 
 import { StashService } from './stash.service';
-import { CacheService } from './cache.service';
 import { ArtooService } from './artoo.service';
 
 @NgModule({
@@ -35,7 +34,6 @@ import { ArtooService } from './artoo.service';
   ],
   providers: [
     StashService,
-    CacheService,
     ArtooService
   ]
 })
