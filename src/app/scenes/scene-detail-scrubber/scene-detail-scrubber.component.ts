@@ -32,6 +32,9 @@ export class SceneDetailScrubberComponent implements OnInit, OnChanges {
   slider: HTMLElement;
   @ViewChild('scrubberSlider') sliderTag: any;
 
+  indicator: HTMLElement;
+  @ViewChild('positionIndicator') indicatorTag: any;
+
   spriteItems: SceneSpriteItem[] = [];
 
   private mouseDown = false;
@@ -44,14 +47,21 @@ export class SceneDetailScrubberComponent implements OnInit, OnChanges {
   setPosition(newPostion: number, shouldEmit: boolean = true) {
     if (shouldEmit) { this.scrolled.emit(); }
 
+    const midpointOffset = this.slider.clientWidth / 2;
+
     const bounds = this.getBounds() * -1;
-    if (newPostion > 0) {
-      newPostion = 0;
-    } else if (newPostion < bounds) {
-      newPostion = bounds;
+    if (newPostion > midpointOffset) {
+      this._position = midpointOffset;
+    } else if (newPostion < bounds - midpointOffset) {
+      this._position = bounds - midpointOffset;
+    } else {
+      this._position = newPostion;
     }
-    this._position = newPostion;
+
     this.slider.style.transform = `translateX(${this._position}px)`;
+
+    const indicatorPosition = ((newPostion - midpointOffset) / (bounds - (midpointOffset * 2)) * this.slider.clientWidth);
+    this.indicator.style.transform = `translateX(${indicatorPosition}px)`;
   }
 
   @HostListener('window:mouseup', ['$event'])
@@ -65,11 +75,10 @@ export class SceneDetailScrubberComponent implements OnInit, OnChanges {
 
       const spriteIdString = target.getAttribute('data-sprite-item-id');
       if (spriteIdString != null) {
-        const sprite = this.spriteItems[Number(spriteIdString)];
-        const spriteLength = sprite.end - sprite.start;
-        const percentage = event.offsetX / target.clientWidth;
-        const seconds = spriteLength * percentage;
-        seekSeconds = sprite.start + seconds;
+        const spritePercentage = event.offsetX / target.clientWidth;
+        const offset = target.offsetLeft + (target.clientWidth * spritePercentage);
+        const percentage = offset / this.slider.scrollWidth;
+        seekSeconds = percentage * this.scene.file.duration;
       }
 
       const markerIdString = target.getAttribute('data-marker-id');
@@ -79,20 +88,8 @@ export class SceneDetailScrubberComponent implements OnInit, OnChanges {
       }
 
       if (!!seekSeconds) { this.seek.emit(seekSeconds); }
-    } else if (Math.abs(this.velocity) > 0) {
-      this.dragInertia(0, this.velocity * 5);
-    }
-  }
-
-  dragInertia(iteration: number, delta: number) {
-    const multiplier = Math.acos(iteration) * 0.33;
-    const movement = multiplier * this.velocity;
-    const newDelta = movement + delta;
-
-    if (iteration < 0.9) {
-      this.dragInertia(iteration + 0.1, newDelta);
-    } else {
-      const newPosition = this.getPostion() + newDelta;
+    } else if (Math.abs(this.velocity) > 25) {
+      const newPosition = this.getPostion() + (this.velocity * 10);
       this.setPosition(newPosition);
       this.velocity = 0;
     }
@@ -115,9 +112,7 @@ export class SceneDetailScrubberComponent implements OnInit, OnChanges {
     const delta = event.clientX - this.last.clientX;
 
     const movement = event.movementX;
-    if (Math.abs(movement) > Math.abs(this.velocity)) {
-      this.velocity = movement;
-    }
+    this.velocity = movement;
 
     const newPostion = this.getPostion() + delta;
     this.setPosition(newPostion);
@@ -133,6 +128,9 @@ export class SceneDetailScrubberComponent implements OnInit, OnChanges {
 
   ngOnInit() {
     this.slider = this.sliderTag.nativeElement;
+    this.indicator = this.indicatorTag.nativeElement;
+
+    this.slider.style.transform = `translateX(${this.slider.clientWidth / 2}px)`;
   }
 
   ngOnChanges(changes: SimpleChanges): void {
