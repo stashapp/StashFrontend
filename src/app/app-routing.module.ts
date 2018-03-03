@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
 import { PageNotFoundComponent } from './core/page-not-found/page-not-found.component';
+import { DashboardComponent } from './core/dashboard/dashboard.component';
 
 const appRoutes: Routes = [
 //   {
@@ -19,6 +20,7 @@ const appRoutes: Routes = [
 //     data: { preload: true }
 //   },
 //   { path: '', redirectTo: '/', pathMatch: 'full' },
+  { path: '', component: DashboardComponent },
   { path: 'scenes', loadChildren: 'app/scenes/scenes.module#ScenesModule' },
   { path: 'galleries', loadChildren: 'app/galleries/galleries.module#GalleriesModule' },
   { path: 'performers', loadChildren: 'app/performers/performers.module#PerformersModule' },

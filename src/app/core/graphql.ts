@@ -384,6 +384,18 @@ export const ALL_TAGS = gql`
   }
 `;
 
+export const STATS = gql`
+  query Stats {
+    stats {
+      scene_count,
+      gallery_count,
+      performer_count,
+      studio_count,
+      tag_count
+    }
+  }
+`;
+
 // - Mutations
 
 export const SCENE_UPDATE = gql`

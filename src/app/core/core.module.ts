@@ -9,6 +9,7 @@ import { HttpLinkModule } from 'apollo-angular-link-http';
 
 import { NavigationBarComponent } from './navigation-bar/navigation-bar.component';
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
+import { DashboardComponent } from './dashboard/dashboard.component';
 
 import { StashService } from './stash.service';
 import { ArtooService } from './artoo.service';
@@ -26,11 +27,13 @@ import { ArtooService } from './artoo.service';
   ],
   declarations: [
     NavigationBarComponent,
-    PageNotFoundComponent
+    PageNotFoundComponent,
+    DashboardComponent
   ],
   exports: [
     NavigationBarComponent,
-    PageNotFoundComponent
+    PageNotFoundComponent,
+    DashboardComponent
   ],
   providers: [
     StashService,

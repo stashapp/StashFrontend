@@ -34,7 +34,8 @@ import {
   TAG_CREATE,
   STUDIO_CREATE,
   ALL_STUDIOS,
-  STUDIO_UPDATE
+  STUDIO_UPDATE,
+  STATS
 } from './graphql';
 import * as GQL from './graphql-generated';
 
@@ -264,6 +265,12 @@ export class StashService {
   allTags() {
     return this.apollo.watchQuery<GQL.AllTagsQuery>({
       query: ALL_TAGS
+    });
+  }
+
+  stats() {
+    return this.apollo.watchQuery<GQL.StatsQuery>({
+      query: STATS
     });
   }
 

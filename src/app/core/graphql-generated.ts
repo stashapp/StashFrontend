@@ -633,6 +633,17 @@ export interface AllTagsQuery {
   } | null >,
 };
 
+export interface StatsQuery {
+  // Get stats
+  stats:  {
+    scene_count: number,
+    gallery_count: number,
+    performer_count: number,
+    studio_count: number,
+    tag_count: number,
+  },
+};
+
 export interface SceneUpdateMutationVariables {
   id: string,
   title?: string | null,
