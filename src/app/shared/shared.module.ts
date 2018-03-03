@@ -5,6 +5,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SuiModule } from 'ng2-semantic-ui';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { ClipboardModule } from 'ngx-clipboard';
+import { LazyLoadImageModule } from 'ng-lazyload-image';
 
 import { SuiPaginationComponent } from './sui-pagination/sui-pagination.component';
 import { JwplayerComponent } from './jwplayer/jwplayer.component';
@@ -32,7 +33,8 @@ import { VisibleDirective } from './visible.directive';
     ReactiveFormsModule,
     SuiModule,
     NgxPaginationModule,
-    ClipboardModule
+    ClipboardModule,
+    LazyLoadImageModule
   ],
   declarations: [
     TruncatePipe,
@@ -59,6 +61,7 @@ import { VisibleDirective } from './visible.directive';
     SuiModule,
     NgxPaginationModule,
     ClipboardModule,
+    LazyLoadImageModule,
     SuiPaginationComponent,
     JwplayerComponent,
     SceneCardComponent,
