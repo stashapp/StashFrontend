@@ -5,6 +5,10 @@
 </div>
 <sui-progress class="indicating" [value]="progress">{{message}}</sui-progress>
 
-<ul>
-  <li *ngFor="let log of logs">{{log}}</li>
-</ul>
+<div class="ui divider"></div>
+
+<div class="ui list">
+  <div *ngFor="let log of logs" class="item">
+    <strong>{{log.type}}</strong> - {{log.message}}
+  </div>
+</div>
