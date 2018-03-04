@@ -9,7 +9,11 @@ import { HttpLinkModule, HttpLink } from 'apollo-angular-link-http';
 import { InMemoryCache } from 'apollo-cache-inmemory';
 import { onError } from 'apollo-link-error';
 import { ApolloLink } from 'apollo-link';
+import { getMainDefinition } from 'apollo-utilities';
 import gql from 'graphql-tag';
+
+import * as ActionCable from 'actioncable';
+import * as ActionCableLink from 'graphql-ruby-client/subscriptions/ActionCableLink';
 
 import {
   FIND_SCENES,
@@ -35,7 +39,9 @@ import {
   STUDIO_CREATE,
   ALL_STUDIOS,
   STUDIO_UPDATE,
-  STATS
+  STATS,
+  METADATA_UPDATE_SUBSCRIPTION,
+  METADATA_SCAN
 } from './graphql';
 import * as GQL from './graphql-generated';
 
@@ -54,6 +60,10 @@ export class StashService {
     url.port = '4000';
     this.url = url.toString().slice(0, -1);
 
+    // http://graphql-ruby.org/javascript_client/apollo_subscriptions
+    const cable = ActionCable.createConsumer(`ws://${platform.location.hostname}:3000/subscriptions`);
+    const actionCableLink = new ActionCableLink({cable});
+
     const errorLink = onError(({ graphQLErrors, networkError }) => {
       if (graphQLErrors) {
         graphQLErrors.map(({ message, locations, path }) =>
@@ -70,9 +80,19 @@ export class StashService {
 
     const httpLinkHandler = httpLink.create({uri: `${this.url}/graphql`});
 
+    const splitLink = ApolloLink.split(
+      // split based on operation type
+      ({ query }) => {
+        const { kind, operation } = getMainDefinition(query);
+        return kind === 'OperationDefinition' && operation === 'subscription';
+      },
+      actionCableLink,
+      httpLinkHandler
+    );
+
     const link = ApolloLink.from([
       errorLink,
-      httpLinkHandler
+      splitLink
     ]);
 
     apollo.create({
@@ -455,6 +475,18 @@ export class StashService {
           query: MARKER_STRINGS
         }
       ],
+    });
+  }
+
+  metadataScan() {
+    return this.apollo.watchQuery({
+      query: METADATA_SCAN
+    });
+  }
+
+  metadataUpdate() {
+    return this.apollo.subscribe({
+      query: METADATA_UPDATE_SUBSCRIPTION
     });
   }
 

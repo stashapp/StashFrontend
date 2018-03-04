@@ -594,3 +594,15 @@ export const MARKER_DESTROY = gql`
     sceneMarkerDestroy(id: $id)
   }
 `;
+
+export const METADATA_SCAN = gql`
+  query MetadataScan {
+    metadataScan
+  }
+`;
+
+export const METADATA_UPDATE_SUBSCRIPTION = gql`
+  subscription MetadataUpdate {
+    metadataUpdate
+  }
+`;

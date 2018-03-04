@@ -922,6 +922,16 @@ export interface SceneMarkerDestroyMutation {
   sceneMarkerDestroy: boolean,
 };
 
+export interface MetadataScanQuery {
+  // Start a scan.  Returns the job ID
+  metadataScan: string,
+};
+
+export interface MetadataUpdateSubscription {
+  // Update from the meatadata manager
+  metadataUpdate: string,
+};
+
 export interface SceneMarkerDataFragment {
   id: string,
   title: string,

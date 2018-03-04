@@ -20,14 +20,13 @@ export class SettingsComponent implements OnInit, OnDestroy {
   constructor(private stashService: StashService) {}
 
   ngOnInit() {
-    // TODO
-    // this.statusObservable = Observable.interval(5000).switchMap(() => {
-    //   return this.stashService.getStatus();
-    // }).subscribe(data => {
-    //   this.progress = data.progress;
-    //   this.message = data.message;
-    //   this.logs = data.logs;
-    // });
+    this.statusObservable = this.stashService.metadataUpdate().subscribe(response => {
+      const result = JSON.parse(response.data.metadataUpdate);
+
+      this.progress = result.progress;
+      this.message = result.message;
+      this.logs = result.logs;
+    });
   }
 
   ngOnDestroy() {
@@ -36,8 +35,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
   }
 
   onClickScan() {
-    // TODO
-    // this.stashService.startScan();
+    this.stashService.metadataScan().refetch();
   }
 
 }
