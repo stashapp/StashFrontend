@@ -2,7 +2,6 @@ import { NgModule, ModuleWithProviders, Optional, SkipSelf } from '@angular/core
 import { CommonModule } from '@angular/common';
 import { RouterModule, RouteReuseStrategy } from '@angular/router';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { HttpModule } from '@angular/http'; // TODO remove later when angular updates
 import { HttpClientModule } from '@angular/common/http';
 import { ApolloModule } from 'apollo-angular';
 import { HttpLinkModule } from 'apollo-angular-link-http';
@@ -18,7 +17,6 @@ import { ArtooService } from './artoo.service';
   imports: [
     CommonModule,
     RouterModule,
-    HttpModule,
     HttpClientModule,
     FormsModule,
     ReactiveFormsModule,

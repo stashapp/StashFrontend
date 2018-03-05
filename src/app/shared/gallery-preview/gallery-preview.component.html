@@ -3,7 +3,8 @@
     *ngFor="let image of files"
     [lazyLoad]="imagePath(image)"
     (click)="onClickImage(image)"
-    style="height: 15vh; min-height: 400px; background-size: cover; background-position: 50% 25%;"
+    [style.min-height]="(numberOfRandomImages <= 4) ? '200px' : '400px'"
+    style="height: 15vh; background-size: cover; background-position: 50% 25%;"
     class="{{suiWidthForNumberPerRow()}} wide column">
     <h3 *ngIf="showTitles">{{image.name}}</h3>
   </div>

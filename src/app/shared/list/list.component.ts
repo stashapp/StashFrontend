@@ -42,7 +42,6 @@ export class ListComponent implements OnInit, OnDestroy, AfterViewInit {
 
   ngAfterViewInit() {
     window.scroll(0, this.state.scrollY);
-    this.getData();
   }
 
   async getData() {
@@ -78,6 +77,7 @@ export class ListComponent implements OnInit, OnDestroy, AfterViewInit {
   getPage(page: number) {
     this.state.currentPage = page;
     this.getData();
+    window.scroll(0, 0);
   }
 
 }
