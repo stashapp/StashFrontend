@@ -595,9 +595,33 @@ export const MARKER_DESTROY = gql`
   }
 `;
 
+export const METADATA_IMPORT = gql`
+  query MetadataImport {
+    metadataImport
+  }
+`;
+
+export const METADATA_EXPORT = gql`
+  query MetadataExport {
+    metadataExport
+  }
+`;
+
 export const METADATA_SCAN = gql`
   query MetadataScan {
     metadataScan
+  }
+`;
+
+export const METADATA_GENERATE = gql`
+  query MetadataGenerate {
+    metadataGenerate
+  }
+`;
+
+export const METADATA_CLEAN = gql`
+  query MetadataClean {
+    metadataClean
   }
 `;
 

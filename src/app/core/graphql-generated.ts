@@ -922,9 +922,29 @@ export interface SceneMarkerDestroyMutation {
   sceneMarkerDestroy: boolean,
 };
 
+export interface MetadataImportQuery {
+  // Start an import.  Returns the job ID
+  metadataImport: string,
+};
+
+export interface MetadataExportQuery {
+  // Start an export.  Returns the job ID
+  metadataExport: string,
+};
+
 export interface MetadataScanQuery {
   // Start a scan.  Returns the job ID
   metadataScan: string,
+};
+
+export interface MetadataGenerateQuery {
+  // Start generating content.  Returns the job ID
+  metadataGenerate: string,
+};
+
+export interface MetadataCleanQuery {
+  // Clean metadata.  Returns the job ID
+  metadataClean: string,
 };
 
 export interface MetadataUpdateSubscription {

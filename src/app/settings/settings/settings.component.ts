@@ -16,6 +16,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
   message: string;
   logs: string[];
   statusObservable: Subscription;
+  importClickCount = 0;
 
   constructor(private stashService: StashService) {}
 
@@ -34,8 +35,28 @@ export class SettingsComponent implements OnInit, OnDestroy {
     this.statusObservable.unsubscribe();
   }
 
+  onClickImport() {
+    this.importClickCount += 1;
+    if (this.importClickCount > 2) {
+      this.stashService.metadataImport().refetch();
+      this.importClickCount = 0;
+    }
+  }
+
+  onClickExport() {
+    this.stashService.metadataExport().refetch();
+  }
+
   onClickScan() {
     this.stashService.metadataScan().refetch();
+  }
+
+  onClickGenerate() {
+    this.stashService.metadataGenerate().refetch();
+  }
+
+  onClickClean() {
+    this.stashService.metadataClean().refetch();
   }
 
 }

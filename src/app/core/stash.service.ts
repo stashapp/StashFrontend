@@ -41,7 +41,11 @@ import {
   STUDIO_UPDATE,
   STATS,
   METADATA_UPDATE_SUBSCRIPTION,
-  METADATA_SCAN
+  METADATA_SCAN,
+  METADATA_EXPORT,
+  METADATA_IMPORT,
+  METADATA_GENERATE,
+  METADATA_CLEAN
 } from './graphql';
 import * as GQL from './graphql-generated';
 
@@ -478,9 +482,33 @@ export class StashService {
     });
   }
 
+  metadataImport() {
+    return this.apollo.watchQuery({
+      query: METADATA_IMPORT
+    });
+  }
+
+  metadataExport() {
+    return this.apollo.watchQuery({
+      query: METADATA_EXPORT
+    });
+  }
+
   metadataScan() {
     return this.apollo.watchQuery({
       query: METADATA_SCAN
+    });
+  }
+
+  metadataGenerate() {
+    return this.apollo.watchQuery({
+      query: METADATA_GENERATE
+    });
+  }
+
+  metadataClean() {
+    return this.apollo.watchQuery({
+      query: METADATA_CLEAN
     });
   }
 
@@ -489,31 +517,5 @@ export class StashService {
       query: METADATA_UPDATE_SUBSCRIPTION
     });
   }
-
-  // TODO: Implement in GraphQL
-
-  // getStatus(): Observable<any> {
-  //   const url = this.url + `/status.json`;
-  //   return this.http.get(url)
-  //                   .catch(this.handleError)
-  // }
-
-  // startScan() {
-  //   const url = this.url + `/scan.json`;
-  //   return this.http.get(url)
-  //                   .catch(this.handleError)
-  //                   .subscribe(data => console.log(''));
-  // }
-
-  // private handleError (error: HttpResponse<any> | any) {
-  //   if (error instanceof HttpResponse) {
-  //     const body = !!error.body.errors ? error.body.errors : error.body;
-  //     const message: string = !!body.message ? body.message : error.toString();
-  //     console.error(message);
-  //     return Observable.throw(body);
-  //   } else {
-  //     return Observable.throw(error);
-  //   }
-  // }
 
 }
