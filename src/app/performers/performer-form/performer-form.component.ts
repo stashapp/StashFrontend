@@ -157,25 +157,25 @@ export class PerformerFormComponent implements OnInit, OnDestroy {
     }
   }
 
-  onScrape() {
-    console.log('scrape', this.url);
+  async onScrape() {
+    this.loading = true;
+    const result = await this.stashService.scrapeFreeones(this.name).result();
+    this.loading = false;
 
-    this.artooService.scrapeFreeones(this.url).then(response => {
-      this.name = response.name;
-      this.aliases = response.aliases;
-      this.country = response.country;
-      this.birthdate = response.birthdate;
-      this.ethnicity = response.ethnicity;
-      this.eye_color = response.eye_color;
-      this.height = response.height;
-      this.measurements = response.measurements;
-      this.fake_tits = response.fake_tits;
-      this.career_length = response.career_length;
-      this.tattoos = response.tattoos;
-      this.piercings = response.piercings;
-      this.twitter = response.twitter;
-      this.instagram = response.instagram;
-    });
+    this.url           = result.data.scrapeFreeones.url;
+    this.name          = result.data.scrapeFreeones.name;
+    this.aliases       = result.data.scrapeFreeones.aliases;
+    this.country       = result.data.scrapeFreeones.country;
+    this.birthdate     = result.data.scrapeFreeones.birthdate;
+    this.ethnicity     = result.data.scrapeFreeones.ethnicity;
+    this.eye_color     = result.data.scrapeFreeones.eye_color;
+    this.height        = result.data.scrapeFreeones.height;
+    this.measurements  = result.data.scrapeFreeones.measurements;
+    this.fake_tits     = result.data.scrapeFreeones.fake_tits;
+    this.career_length = result.data.scrapeFreeones.career_length;
+    this.tattoos       = result.data.scrapeFreeones.tattoos;
+    this.piercings     = result.data.scrapeFreeones.piercings;
+    this.twitter       = result.data.scrapeFreeones.twitter;
+    this.instagram     = result.data.scrapeFreeones.instagram;
   }
-
 }

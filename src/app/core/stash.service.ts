@@ -45,7 +45,8 @@ import {
   METADATA_EXPORT,
   METADATA_IMPORT,
   METADATA_GENERATE,
-  METADATA_CLEAN
+  METADATA_CLEAN,
+  SCRAPE_FREEONES
 } from './graphql';
 import * as GQL from './graphql-generated';
 
@@ -282,6 +283,15 @@ export class StashService {
       variables: {
         q: q,
         sort: sort
+      }
+    });
+  }
+
+  scrapeFreeones(performer_name: string) {
+    return this.apollo.watchQuery<GQL.ScrapeFreeonesQuery, GQL.ScrapeFreeonesQueryVariables>({
+      query: SCRAPE_FREEONES,
+      variables: {
+        performer_name: performer_name
       }
     });
   }

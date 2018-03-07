@@ -354,6 +354,28 @@ export const MARKER_STRINGS = gql`
   }
 `;
 
+export const SCRAPE_FREEONES = gql`
+  query ScrapeFreeones($performer_name: String!) {
+    scrapeFreeones(performer_name: $performer_name) {
+      name
+      url
+      twitter
+      instagram
+      birthdate
+      ethnicity
+      country
+      eye_color
+      height
+      measurements
+      fake_tits
+      career_length
+      tattoos
+      piercings
+      aliases
+    }
+  }
+`;
+
 export const ALL_PERFORMERS = gql`
   ${Fragment_PerformerData}
 

@@ -589,6 +589,31 @@ export interface MarkerStringsQuery {
   } | null >,
 };
 
+export interface ScrapeFreeonesQueryVariables {
+  performer_name: string,
+};
+
+export interface ScrapeFreeonesQuery {
+  // Scrape a performer using Freeones
+  scrapeFreeones:  {
+    name: string | null,
+    url: string | null,
+    twitter: string | null,
+    instagram: string | null,
+    birthdate: string | null,
+    ethnicity: string | null,
+    country: string | null,
+    eye_color: string | null,
+    height: string | null,
+    measurements: string | null,
+    fake_tits: string | null,
+    career_length: string | null,
+    tattoos: string | null,
+    piercings: string | null,
+    aliases: string | null,
+  } | null,
+};
+
 export interface AllPerformersQuery {
   allPerformers:  Array< {
     id: string,
