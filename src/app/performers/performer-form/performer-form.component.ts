@@ -1,9 +1,7 @@
 import { Component, OnInit, OnDestroy, ViewChild, AfterViewInit } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
-import { Headers, RequestOptions } from '@angular/http';
 
 import { StashService } from '../../core/stash.service';
-import { ArtooService } from '../../core/artoo.service';
 
 import { Scene } from '../../shared/models/scene.model';
 import { Performer } from '../../shared/models/performer.model';
@@ -43,7 +41,6 @@ export class PerformerFormComponent implements OnInit, OnDestroy {
   constructor(
     private route: ActivatedRoute,
     private stashService: StashService,
-    private artooService: ArtooService,
     private router: Router
   ) {}
 

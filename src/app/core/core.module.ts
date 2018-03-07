@@ -2,7 +2,6 @@ import { NgModule, ModuleWithProviders, Optional, SkipSelf } from '@angular/core
 import { CommonModule } from '@angular/common';
 import { RouterModule, RouteReuseStrategy } from '@angular/router';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { HttpModule } from '@angular/http'; // TODO remove later when deleting Artoo
 import { HttpClientModule } from '@angular/common/http';
 import { ApolloModule } from 'apollo-angular';
 import { HttpLinkModule } from 'apollo-angular-link-http';
@@ -12,13 +11,11 @@ import { PageNotFoundComponent } from './page-not-found/page-not-found.component
 import { DashboardComponent } from './dashboard/dashboard.component';
 
 import { StashService } from './stash.service';
-import { ArtooService } from './artoo.service';
 
 @NgModule({
   imports: [
     CommonModule,
     RouterModule,
-    HttpModule,
     HttpClientModule,
     FormsModule,
     ReactiveFormsModule,
@@ -36,8 +33,7 @@ import { ArtooService } from './artoo.service';
     DashboardComponent
   ],
   providers: [
-    StashService,
-    ArtooService
+    StashService
   ]
 })
 export class CoreModule {
