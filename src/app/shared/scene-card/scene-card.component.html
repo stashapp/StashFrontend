@@ -20,14 +20,14 @@
 <div class="extra content">
   <ng-template let-tags #tagsTemplate>
     <div class="ui labels">
-      <a *ngFor="let tag of scene.fetchedTags" class="ui label">{{tag.name}}</a>
-      <span *ngIf="!scene.tag_ids || scene.tag_ids.length == 0">No Tags</span>
+      <a *ngFor="let tag of scene.tags" class="ui label">{{tag.name}}</a>
+      <span *ngIf="!scene.tags || scene.tags.length == 0">No Tags</span>
     </div>
   </ng-template>
   <ng-template let-performers #performersTemplate>
     <div class="ui labels">
-      <a *ngFor="let performer of scene.fetchedPerformers" class="ui label">{{performer.name}}</a>
-      <span *ngIf="!scene.performer_ids || scene.performer_ids.length == 0">No Performers</span>
+      <a *ngFor="let performer of scene.performers" class="ui label">{{performer.name}}</a>
+      <span *ngIf="!scene.performers || scene.performers.length == 0">No Performers</span>
     </div>
   </ng-template>
   <ng-template let-markers #markersTemplate>
