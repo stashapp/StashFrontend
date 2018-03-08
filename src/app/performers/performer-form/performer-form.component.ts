@@ -8,6 +8,7 @@ import { Performer } from '../../shared/models/performer.model';
 import { Tag } from '../../shared/models/tag.model';
 import { Studio } from '../../shared/models/studio.model';
 import { Gallery } from '../../shared/models/gallery.model';
+import { FormControl } from '@angular/forms';
 
 @Component({
   selector: 'app-performer-form',
@@ -37,6 +38,10 @@ export class PerformerFormComponent implements OnInit, OnDestroy {
   imagePreview: string;
   image_path: string;
   ethnicityOptions: string[] = ['white', 'black', 'asian', 'hispanic'];
+  performerNameOptions: string[] = [];
+  selectedName: string;
+
+  searchFormControl = new FormControl();
 
   constructor(
     private route: ActivatedRoute,
@@ -46,6 +51,13 @@ export class PerformerFormComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.getPerformer();
+
+    this.searchFormControl.valueChanges
+                          .debounceTime(400)
+                          .distinctUntilChanged()
+                          .subscribe(term => {
+                            this.getPerformerNames(term);
+                          });
   }
 
   ngOnDestroy() {}
@@ -80,6 +92,18 @@ export class PerformerFormComponent implements OnInit, OnDestroy {
 
     this.image_path = result.data.findPerformer.image_path;
     this.imagePreview = this.image_path;
+  }
+
+  async getPerformerNames(query: string) {
+    if (query === undefined) { return; }
+    if (this.selectedName !== this.name) { this.selectedName = null; }
+    const result = await this.stashService.scrapeFreeonesPerformers(query).result();
+    this.performerNameOptions = result.data.scrapeFreeonesPerformerList;
+  }
+
+  onClickedPerformerName(name) {
+    this.name = name;
+    this.selectedName = name;
   }
 
   onImageChange(event) {

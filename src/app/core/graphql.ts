@@ -376,6 +376,12 @@ export const SCRAPE_FREEONES = gql`
   }
 `;
 
+export const SCRAPE_FREEONES_PERFORMERS = gql`
+  query ScrapeFreeonesPerformers($q: String!) {
+    scrapeFreeonesPerformerList(query: $q)
+  }
+`;
+
 export const ALL_PERFORMERS = gql`
   ${Fragment_PerformerData}
 

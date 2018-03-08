@@ -4,7 +4,16 @@
     <div class="fields">
       <div class="fourteen wide field">
         <label>Name</label>
-        <input [(ngModel)]="name" type="text" placeholder="Name" />
+        <div class="ui search focus">
+          <input [(ngModel)]="name" [formControl]="searchFormControl" type="text" placeholder="Name" />
+          <div *ngIf="performerNameOptions.length > 0 && !selectedName" class="results transition visible">
+              <a *ngFor="let name of performerNameOptions" (click)="onClickedPerformerName(name)" class="result">
+                <div class="content">
+                  <div class="title">{{name}}</div>
+                </div>
+              </a>
+          </div>
+        </div>
       </div>
       <div class="two wide field">
         <label>Favorite</label>
@@ -97,7 +106,7 @@
         </div>
         <div class="two wide field">
           <div class="ui small image">
-            <img [src]="imagePreview" />
+            <img *ngIf="!!imagePreview" [src]="imagePreview" />
           </div>
           <button class="ui button" (click)="onResetImage(imageInput)">Reset</button>
         </div>

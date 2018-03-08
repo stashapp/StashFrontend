@@ -614,6 +614,15 @@ export interface ScrapeFreeonesQuery {
   } | null,
 };
 
+export interface ScrapeFreeonesPerformersQueryVariables {
+  q: string,
+};
+
+export interface ScrapeFreeonesPerformersQuery {
+  // Scrape a list of performers from a query
+  scrapeFreeonesPerformerList: Array< string | null >,
+};
+
 export interface AllPerformersQuery {
   allPerformers:  Array< {
     id: string,
