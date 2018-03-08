@@ -38,20 +38,20 @@
   </ng-template>
 
   <button
-    *ngIf="!!scene.tag_ids && scene.tag_ids.length > 0"
+    *ngIf="!!scene.tags && scene.tags.length > 0"
     class="ui mini basic icon button"
     suiPopup
     [popupTemplate]="tagsTemplate"
     popupTrigger="outsideClick">
-    <i class="tag icon"></i> {{scene.tag_ids.length}}
+    <i class="tag icon"></i> {{scene.tags.length}}
   </button>
   <button
-    *ngIf="!!scene.performer_ids && scene.performer_ids.length > 0"
+    *ngIf="!!scene.performers && scene.performers.length > 0"
     class="ui mini basic icon button"
     suiPopup
     [popupTemplate]="performersTemplate"
     popupTrigger="outsideClick">
-    <i class="user icon"></i> {{scene.performer_ids.length}}
+    <i class="user icon"></i> {{scene.performers.length}}
   </button>
   <button
     *ngIf="!!scene.scene_markers && scene.scene_markers.length > 0"

@@ -13,7 +13,7 @@ export class SceneWallItemComponent implements OnInit {
 
   private video: any;
   private hoverTimeout: any = null;
-  private isHovering = false;
+  isHovering = false;
 
   title = '';
   imagePath = '';

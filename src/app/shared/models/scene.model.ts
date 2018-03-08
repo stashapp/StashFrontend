@@ -54,6 +54,7 @@ export class Scene {
   is_streamable?: boolean;
 
   scene_markers: SceneMarker[];
+  gallery: Gallery;
   studio: Studio;
   tags: Tag[];
   performers: Performer[];
