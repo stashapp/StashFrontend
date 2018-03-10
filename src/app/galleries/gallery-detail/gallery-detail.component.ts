@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, ViewChild, AfterViewInit } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild, AfterViewInit, HostListener } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 
 import { StashService } from '../../core/stash.service';
@@ -13,7 +13,6 @@ import { Gallery, GalleryImage } from '../../shared/models/gallery.model';
 export class GalleryDetailComponent implements OnInit {
   gallery: Gallery;
   displayedImage: GalleryImage = null;
-  zoomed: Boolean = false;
 
   constructor(private route: ActivatedRoute,
               private stashService: StashService,
@@ -30,11 +29,19 @@ export class GalleryDetailComponent implements OnInit {
     this.gallery = result.data.findGallery;
   }
 
-  getStyle(): string {
-    if (this.zoomed) {
-      return 'z-index: 1; height: 100%;';
+  @HostListener('mousewheel', ['$event'])
+  onMousewheel(event) {
+    this.displayedImage = null;
+  }
+
+  @HostListener('window:mouseup', ['$event'])
+  onMouseup(event: MouseEvent) {
+    if (event.button !== 0 || !(event.target instanceof HTMLDivElement)) { return; }
+    const target: HTMLDivElement = event.target;
+    if (target.id !== 'gallery-image') {
+      this.displayedImage = null;
     } else {
-      return 'z-index: 1; height: 80vh;';
+      window.open(this.displayedImage.path, '_blank');
     }
   }
 
@@ -46,11 +53,6 @@ export class GalleryDetailComponent implements OnInit {
   onClickCard(galleryImage: GalleryImage) {
     console.log(galleryImage);
     this.displayedImage = galleryImage;
-  }
-
-  onClickClose() {
-    console.log('close');
-    this.displayedImage = null;
   }
 
   onKey(event) {
@@ -69,12 +71,12 @@ export class GalleryDetailComponent implements OnInit {
       }
 
       case 'ArrowUp': {
-        this.zoomed = true;
+        window.open(this.displayedImage.path, '_blank');
         break;
       }
 
       case 'ArrowDown': {
-        this.zoomed = false;
+        this.displayedImage = null;
         break;
       }
 

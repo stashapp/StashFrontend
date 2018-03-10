@@ -1,9 +1,10 @@
-<div (window:keydown)="onKey($event)" *ngIf="!!displayedImage" style="overflow: scroll;position: fixed;left: 0;right: 0;top: 45px;bottom: 0;z-index:100;background-color: rgba(0,0,0,0.5)">
-  <button (click)="onClickClose()" class="ui button" style="position: fixed; z-index: 1000; margin: 10px;">Close</button>
-  <div style="position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); display: inline;">
-    <div>
-      <img style="z-index: 1;" [ngClass]="{'gallery-image-zoomed': zoomed == true, 'gallery-image-unzoomed': zoomed == false}" [src]="displayedImage.path" />
-    </div>
+<div
+  *ngIf="!!displayedImage"
+  (window:keydown)="onKey($event)"
+  id="gallery-modal-container">
+  <div id="gallery-modal-background"></div>
+  <div *ngIf="!!displayedImage.path" id="gallery-modal-image-wrapper">
+    <img id="gallery-modal-image" [src]="displayedImage.path" />
   </div>
 </div>
 
