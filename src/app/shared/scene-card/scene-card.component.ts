@@ -57,8 +57,4 @@ export class SceneCardComponent implements OnInit {
       this.video.pause();
     }
   }
-
-  onSelect(): void {
-    this.router.navigate(['/scenes', this.scene.id]);
-  }
 }

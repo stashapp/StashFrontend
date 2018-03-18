@@ -1,4 +1,4 @@
-<a (click)="onSelect()" class="image previewable">
+<a [routerLink]="['/scenes', scene.id]" class="image previewable">
   <video class="preview" loop [poster]="this.scene.paths.screenshot" #videoTag>
     <source *ngIf="previewPath" [src]="previewPath" />
   </video>
@@ -20,19 +20,30 @@
 <div class="extra content">
   <ng-template let-tags #tagsTemplate>
     <div class="ui labels">
-      <a *ngFor="let tag of scene.tags" class="ui label">{{tag.name}}</a>
+      <a *ngFor="let tag of scene.tags"
+        [routerLink]="['/tags', tag.id]"
+        class="ui label">
+          {{tag.name}}
+        </a>
       <span *ngIf="!scene.tags || scene.tags.length == 0">No Tags</span>
     </div>
   </ng-template>
   <ng-template let-performers #performersTemplate>
     <div class="ui labels">
-      <a *ngFor="let performer of scene.performers" class="ui label">{{performer.name}}</a>
+      <a *ngFor="let performer of scene.performers"
+        [routerLink]="['/performers', performer.id]"
+        class="ui label">
+          {{performer.name}}
+        </a>
       <span *ngIf="!scene.performers || scene.performers.length == 0">No Performers</span>
     </div>
   </ng-template>
   <ng-template let-markers #markersTemplate>
     <div class="ui labels">
-      <a *ngFor="let marker of scene.scene_markers" class="ui label">{{marker.title}} - {{marker.seconds | seconds}}</a>
+      <a *ngFor="let marker of scene.scene_markers"
+        class="ui label">
+          {{marker.title}} - {{marker.seconds | seconds}}
+        </a>
       <span *ngIf="!scene.scene_markers || scene.scene_markers.length == 0">No Markers</span>
     </div>
   </ng-template>
@@ -66,7 +77,10 @@
   </div>
 </div>
 <div class="extra content" style="background-color: rgba(0,0,0,0.1);">
-  <a *ngIf="scene.studio" [style.background-image]="'url(' + this.scene.studio.image_path + ')'" style="width: 100%; line-height: 5; background-size: contain; display: inline-block; background-position: right; background-repeat: no-repeat;">
+  <a *ngIf="scene.studio"
+    [routerLink]="['/studios', scene.studio.id]"
+    [style.background-image]="'url(' + this.scene.studio.image_path + ')'"
+    style="width: 100%; line-height: 5; background-size: contain; display: inline-block; background-position: right; background-repeat: no-repeat;">
     <i class="huge record icon"></i>
   </a>
   <span *ngIf="!scene.studio">No Studio</span>

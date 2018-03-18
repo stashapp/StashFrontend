@@ -35,8 +35,4 @@ export class SceneListItemComponent implements OnInit {
   onMouseLeave() {
     this.videoTag.nativeElement.pause();
   }
-
-  onSelect(): void {
-    this.router.navigate(['/scenes', this.scene.id]);
-  }
 }

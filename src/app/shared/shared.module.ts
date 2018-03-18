@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { RouterModule } from '@angular/router';
 
 import { SuiModule } from 'ng2-semantic-ui';
 import { NgxPaginationModule } from 'ngx-pagination';
@@ -31,6 +32,7 @@ import { VisibleDirective } from './visible.directive';
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
+    RouterModule,
     SuiModule,
     NgxPaginationModule,
     ClipboardModule,

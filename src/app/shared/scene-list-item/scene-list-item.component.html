@@ -1,6 +1,8 @@
-<video (click)="onSelect()" class="image preview" loop [poster]="scene.paths.screenshot" #videoTag>
-  <source [src]="scene.paths.preview" />
-</video>
+<a [routerLink]="['/scenes', scene.id]" class="image previewable">
+  <video class="preview" loop [poster]="scene.paths.screenshot" #videoTag>
+    <source [src]="scene.paths.preview" />
+  </video>
+</a>
 <div class="content">
   <div class="header">{{scene.title || scene.path}}</div>
   <div *ngIf="scene.rating || scene.date" class="meta">
@@ -12,13 +14,20 @@
   </div>
   <ng-template #descriptionEmptyBlock>No details</ng-template>
   <div class="extra">
-    <a *ngIf="scene.studio" [style.background-image]="'url(' + scene.studio.image_path + ')'" style="width: 100%; height: 75px; background-size: contain; display: inline-block; background-position: right; background-repeat: no-repeat;">
+    <a *ngIf="scene.studio"
+      [routerLink]="['/studios', scene.studio.id]"
+      [style.background-image]="'url(' + scene.studio.image_path + ')'"
+      style="width: 100%; height: 75px; background-size: contain; display: inline-block; background-position: right; background-repeat: no-repeat;">
     </a>
     <span *ngIf="!scene.studio">No Studio</span>
   </div>
   <div class="extra content">
     <div class="ui tag labels">
-      <a *ngFor="let tag of scene.tags" class="ui label">{{tag.name}}</a>
+      <a *ngFor="let tag of scene.tags"
+        [routerLink]="['/tags', tag.id]"
+        class="ui label">
+          {{tag.name}}
+        </a>
       <span *ngIf="!scene.tags || scene.tags.length == 0">No Tags</span>
     </div>
   </div>

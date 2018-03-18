@@ -22,11 +22,6 @@ export class PerformerCardComponent implements OnInit {
     private stashService: StashService
   ) {}
 
-  ngOnInit() {
-  }
-
-  onSelect(): void {
-    this.router.navigate(['/performers', this.performer.id]);
-  }
+  ngOnInit() {}
 
 }

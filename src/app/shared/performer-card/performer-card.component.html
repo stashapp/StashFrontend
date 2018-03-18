@@ -1,9 +1,14 @@
-<a (click)='onSelect()' class="performer image" [style.background-image]="'url(' + performer.image_path + ')'"></a>
+<a [routerLink]="['/performers', performer.id]" class="performer image" [style.background-image]="'url(' + performer.image_path + ')'"></a>
 <div class="content">
   <div class="header">{{performer.name}}</div>
   <div class="meta">
-    <span *ngIf="!!ageFromDate && !!performer.birthdate" class="date">{{performer.birthdate | age: ageFromDate}} years old in scene.</span>
-    <span *ngIf="!!ageFromDate === false && !!performer.birthdate" class="date">{{performer.birthdate | age}} years old.</span>
+    <div *ngIf="!!performer.birthdate" class="item">
+      <span *ngIf="!!ageFromDate" class="date">{{performer.birthdate | age: ageFromDate}} years old in this scene.</span>
+      <span *ngIf="!!ageFromDate === false" class="date">{{performer.birthdate | age}} years old.</span>
+    </div>
+    <div class="item">
+      <span>Stars in {{performer.scene_count}} scenes.</span>
+    </div>
   </div>
 </div>
 <div class="extra content">

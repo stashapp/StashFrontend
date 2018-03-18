@@ -1,21 +1,25 @@
-<app-list-filter (onFilterUpdate)="onFilterUpdate($event)" [filter]="state.filter"></app-list-filter>
+<div class="ui segement">
+  <app-list-filter (onFilterUpdate)="onFilterUpdate($event)" [filter]="state.filter"></app-list-filter>
 
-<div *ngIf="state.filter.displayMode == DisplayMode.Grid" class="ui four doubling cards">
-  <div *ngIf="state.filter.filterMode == FilterMode.Scenes; then sceneCards"></div>
-  <div *ngIf="state.filter.filterMode == FilterMode.Galleries; then galleryCards"></div>
-  <div *ngIf="state.filter.filterMode == FilterMode.Performers; then performerCards"></div>
-  <div *ngIf="state.filter.filterMode == FilterMode.Studios; then studioCards"></div>
+  <div *ngIf="state.filter.displayMode == DisplayMode.Grid" class="ui four doubling cards">
+    <div *ngIf="state.filter.filterMode == FilterMode.Scenes; then sceneCards"></div>
+    <div *ngIf="state.filter.filterMode == FilterMode.Galleries; then galleryCards"></div>
+    <div *ngIf="state.filter.filterMode == FilterMode.Performers; then performerCards"></div>
+    <div *ngIf="state.filter.filterMode == FilterMode.Studios; then studioCards"></div>
+  </div>
+  <div *ngIf="state.filter.displayMode == DisplayMode.List" class="ui divided items">
+    <div *ngIf="state.filter.filterMode == FilterMode.Scenes; then sceneListItems"></div>
+    <div *ngIf="state.filter.filterMode == FilterMode.Galleries; then galleryListItems"></div>
+    <div *ngIf="state.filter.filterMode == FilterMode.Performers; then performerListItems"></div>
+    <div *ngIf="state.filter.filterMode == FilterMode.Studios; then studioListItems"></div>
+  </div>
+
+  <app-sui-pagination #pagination id="main-pagination" (pageChange)="getPage($event)"></app-sui-pagination>
+
+  <div class="ui inverted dimmer" [class.active]="loading">
+    <div class="ui centered large text loader">Loading...</div>
+  </div>
 </div>
-<div *ngIf="state.filter.displayMode == DisplayMode.List" class="ui divided items">
-  <div *ngIf="state.filter.filterMode == FilterMode.Scenes; then sceneListItems"></div>
-  <div *ngIf="state.filter.filterMode == FilterMode.Galleries; then galleryListItems"></div>
-  <div *ngIf="state.filter.filterMode == FilterMode.Performers; then performerListItems"></div>
-  <div *ngIf="state.filter.filterMode == FilterMode.Studios; then studioListItems"></div>
-</div>
-
-<div *ngIf="loading" class="ui active centered inline large text loader">Loading...</div>
-
-<app-sui-pagination #pagination id="main-pagination" (pageChange)="getPage($event)"></app-sui-pagination>
 
 <ng-template #sceneCards>
   <app-scene-card *ngFor="let scene of state.data | paginate: { itemsPerPage: state.filter.itemsPerPage, currentPage: state.currentPage, totalItems: state.totalCount }"

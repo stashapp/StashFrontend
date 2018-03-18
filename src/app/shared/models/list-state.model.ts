@@ -103,7 +103,7 @@ export class ListFilter {
         break;
       case FilterMode.Performers:
         if (!!this.sortBy === false) { this.sortBy = 'name'; }
-        this.sortByOptions = ['name', 'height'];
+        this.sortByOptions = ['name', 'height', 'birthdate', 'scenes_count'];
         this.criterions = [
           new CriteriaOption(CriteriaType.None),
           new CriteriaOption(CriteriaType.Favorite)
