@@ -5777,16 +5777,16 @@ ng-lazyload-image@^3.4.2:
   version "3.4.2"
   resolved "https://registry.yarnpkg.com/ng-lazyload-image/-/ng-lazyload-image-3.4.2.tgz#0654d750185105045111b089a3f9ee2d3044f1bc"
 
-ng2-semantic-ui@0.9.6:
-  version "0.9.6"
-  resolved "https://registry.yarnpkg.com/ng2-semantic-ui/-/ng2-semantic-ui-0.9.6.tgz#9bdc5aa379466ca2bcef09db3867817cec085538"
+ng2-semantic-ui@0.9.7:
+  version "0.9.7"
+  resolved "https://registry.yarnpkg.com/ng2-semantic-ui/-/ng2-semantic-ui-0.9.7.tgz#d68f5c211a0878fc89633707e50b365b593d45ee"
   dependencies:
     bowser "^1.7.2"
     date-fns "2.0.0-alpha.1"
     element-closest "^2.0.2"
     extend "^3.0.1"
     is-ua-webview "^1.0.0"
-    popper.js "^1.11.1"
+    popper.js "^1.14.0"
     rxjs "^5.0.1"
 
 ngx-clipboard@^10.0.0:
@@ -6478,9 +6478,9 @@ pkg-dir@^2.0.0:
   dependencies:
     find-up "^2.1.0"
 
-popper.js@^1.11.1:
-  version "1.13.0"
-  resolved "https://registry.yarnpkg.com/popper.js/-/popper.js-1.13.0.tgz#e1e7ff65cc43f7cf9cf16f1510a75e81f84f4565"
+popper.js@^1.14.0:
+  version "1.14.1"
+  resolved "https://registry.yarnpkg.com/popper.js/-/popper.js-1.14.1.tgz#b8815e5cda6f62fc2042e47618649f75866e6753"
 
 portfinder@^1.0.9, portfinder@~1.0.12:
   version "1.0.13"
