@@ -187,7 +187,7 @@ export class PerformerFormComponent implements OnInit, OnDestroy {
     this.name          = result.data.scrapeFreeones.name;
     this.aliases       = result.data.scrapeFreeones.aliases;
     this.country       = result.data.scrapeFreeones.country;
-    this.birthdate     = result.data.scrapeFreeones.birthdate;
+    this.birthdate     = result.data.scrapeFreeones.birthdate ? result.data.scrapeFreeones.birthdate : this.birthdate;
     this.ethnicity     = result.data.scrapeFreeones.ethnicity;
     this.eye_color     = result.data.scrapeFreeones.eye_color;
     this.height        = result.data.scrapeFreeones.height;
