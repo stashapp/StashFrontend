@@ -470,6 +470,7 @@ export class StashService {
         FindScene: (record, mutation) => {
           const updatedRecord = { ...record };
           const newMarker = mutation.mutationResult.data.sceneMarkerCreate;
+          newMarker.scene = { __typename: 'Scene', id: updatedRecord.findScene.id };
           updatedRecord.findScene.scene_markers.push(newMarker);
           return updatedRecord;
         },
