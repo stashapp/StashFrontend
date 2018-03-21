@@ -9,6 +9,8 @@
     <span *ngIf="scene.date" class="date">{{scene.date}}</span>
     <sui-rating *ngIf="scene.rating" class="ui tiny rating" [(ngModel)]="scene.rating" [maximum]="5" [isReadonly]="true"></sui-rating>
   </div>
+  <div class="meta">{{scene?.file.size | fileSize}}</div>
+  <div class="meta">{{scene.file.width}} x {{scene.file.height}}</div>
   <div *ngIf="scene.details; else descriptionEmptyBlock" class="description">
     <p class="pre">{{scene.details | truncate : 1000 : '... (continued)'}}</p>
   </div>

@@ -24,6 +24,7 @@ import { ListComponent } from './list/list.component';
 import { SceneListItemComponent } from './scene-list-item/scene-list-item.component';
 import { SecondsPipe } from './seconds.pipe';
 import { VisibleDirective } from './visible.directive';
+import { FileSizePipe } from './file-size.pipe';
 
 // Import blah.  Include in dec and exports (https://angular.io/guide/ngmodule#shared-modules)
 
@@ -54,7 +55,8 @@ import { VisibleDirective } from './visible.directive';
     ListComponent,
     SceneListItemComponent,
     SecondsPipe,
-    VisibleDirective
+    VisibleDirective,
+    FileSizePipe
   ],
   exports: [
     CommonModule,
@@ -79,7 +81,8 @@ import { VisibleDirective } from './visible.directive';
     ListComponent,
     SceneListItemComponent,
     SecondsPipe,
-    VisibleDirective
+    VisibleDirective,
+    FileSizePipe
   ]
 })
 export class SharedModule { }

@@ -72,8 +72,8 @@
     popupTrigger="outsideClick">
     <i class="marker icon"></i> {{scene.scene_markers.length}}
   </button>
-  <div class="right floated">
-    <span>{{scene.file.width}} x {{scene.file.height}}</span>
+  <div style="display: inline-block">
+    <span>{{scene?.file.size | fileSize}} | {{scene.file.width}} x {{scene.file.height}}</span>
   </div>
 </div>
 <div class="extra content" style="background-color: rgba(0,0,0,0.1);">

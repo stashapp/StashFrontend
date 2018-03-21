@@ -87,6 +87,7 @@
     <h1 class="ui left floated marginless header">
       {{scene?.title || 'No Title'}}
       <div *ngIf="!!scene?.date" class="sub header">{{scene?.date | date:"MM/dd/yy"}}</div>
+      <div class="sub header">{{scene?.file.size | fileSize}}</div>
     </h1>
     <button (click)="onClickEdit()" class="ui right floated button">Edit</button>
 
