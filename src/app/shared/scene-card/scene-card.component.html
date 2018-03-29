@@ -76,7 +76,7 @@
     <i class="marker icon"></i> {{scene.scene_markers.length}}
   </button>
   <div style="display: inline-block">
-    <span>{{scene?.file.size | fileSize}} | {{scene.file.width}} x {{scene.file.height}}</span>
+    <span>{{scene?.file.size | fileSize}} | {{scene?.file.duration | seconds}} | {{scene.file.width}} x {{scene.file.height}}</span>
   </div>
 </div>
 <div class="extra content" style="background-color: rgba(0,0,0,0.1);">

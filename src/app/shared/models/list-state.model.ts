@@ -92,7 +92,7 @@ export class ListFilter {
     switch (filterMode) {
       case FilterMode.Scenes:
         if (!!this.sortBy === false) { this.sortBy = 'date'; }
-        this.sortByOptions = ['title', 'rating', 'date', 'filesize'];
+        this.sortByOptions = ['title', 'rating', 'date', 'filesize', 'duration'];
         this.criterions = [
           new CriteriaOption(CriteriaType.None),
           new CriteriaOption(CriteriaType.Rating),
