@@ -32,7 +32,9 @@
     <div class="ui labels">
       <a *ngFor="let performer of scene.performers"
         [routerLink]="['/performers', performer.id]"
-        class="ui label">
+        class="ui label"
+        [class.red]="performer.favorite">
+          <i *ngIf="performer.favorite" class="heart icon"></i>
           {{performer.name}}
         </a>
       <span *ngIf="!scene.performers || scene.performers.length == 0">No Performers</span>
@@ -59,6 +61,7 @@
   <button
     *ngIf="!!scene.performers && scene.performers.length > 0"
     class="ui mini basic icon button"
+    [class.red]="hasFavoritePerformer()"
     suiPopup
     [popupTemplate]="performersTemplate"
     popupTrigger="outsideClick">

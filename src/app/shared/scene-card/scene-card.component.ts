@@ -57,4 +57,8 @@ export class SceneCardComponent implements OnInit {
       this.video.pause();
     }
   }
+
+  hasFavoritePerformer(): boolean {
+    return this.scene.performers.filter(performer => performer.favorite === true).length > 0;
+  }
 }

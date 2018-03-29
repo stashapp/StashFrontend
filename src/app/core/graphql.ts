@@ -190,6 +190,7 @@ export const Fragment_SlimSceneData = gql`
     performers {
       id
       name
+      favorite
       image_path
     }
   }
