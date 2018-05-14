@@ -2,10 +2,8 @@ import { Component, OnInit, OnDestroy, Input, Output, ViewChild, EventEmitter, E
 import { Router } from '@angular/router';
 import { FormControl } from '@angular/forms';
 
-import { Observable } from 'rxjs/Observable';
-import 'rxjs/add/operator/filter';
-import 'rxjs/add/operator/debounceTime';
-import 'rxjs/add/operator/distinctUntilChanged';
+import { Observable } from 'rxjs';
+import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 
 import { StashService } from '../../core/stash.service';
 
@@ -30,8 +28,6 @@ export class SceneWallComponent implements OnInit {
   searchFormControl = new FormControl();
   mode: WallMode = WallMode.Markers;
 
-
-
   constructor(
     private router: Router,
     private el: ElementRef,
@@ -39,12 +35,12 @@ export class SceneWallComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.searchFormControl.valueChanges
-                      .debounceTime(1000)
-                      .distinctUntilChanged()
-                      .subscribe(term => {
-                        this.getScenes(term);
-                      });
+    this.searchFormControl.valueChanges.pipe(
+                            debounceTime(1000),
+                            distinctUntilChanged()
+                          ).subscribe(term => {
+                            this.getScenes(term);
+                          });
     this.stashService.markerStrings().valueChanges.subscribe(result => {
       this.markerOptions = result.data.markerStrings;
     });

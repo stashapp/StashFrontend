@@ -1,8 +1,5 @@
 import { Component, OnInit, OnDestroy, ViewChild, AfterViewInit } from '@angular/core';
 
-import { Observable } from 'rxjs/Observable';
-import 'rxjs/add/operator/filter';
-
 import { StashService } from '../../core/stash.service';
 import { ScenesService } from '../scenes.service';
 

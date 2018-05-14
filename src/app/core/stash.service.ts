@@ -89,8 +89,8 @@ export class StashService {
     const splitLink = ApolloLink.split(
       // split based on operation type
       ({ query }) => {
-        const { kind, operation } = getMainDefinition(query);
-        return kind === 'OperationDefinition' && operation === 'subscription';
+        const definition = getMainDefinition(query);
+        return definition.kind === 'OperationDefinition' && definition.operation === 'subscription';
       },
       actionCableLink,
       httpLinkHandler

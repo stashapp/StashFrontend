@@ -3,6 +3,9 @@ import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 
 import { StashService } from '../../core/stash.service';
 
+import { Observable } from 'rxjs';
+import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
+
 import { Scene } from '../../shared/models/scene.model';
 import { Performer } from '../../shared/models/performer.model';
 import { Tag } from '../../shared/models/tag.model';
@@ -52,10 +55,10 @@ export class PerformerFormComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.getPerformer();
 
-    this.searchFormControl.valueChanges
-                          .debounceTime(400)
-                          .distinctUntilChanged()
-                          .subscribe(term => {
+    this.searchFormControl.valueChanges.pipe(
+                            debounceTime(400),
+                            distinctUntilChanged()
+                          ).subscribe(term => {
                             this.getPerformerNames(term);
                           });
   }

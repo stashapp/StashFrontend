@@ -1,8 +1,7 @@
 import { Directive, ElementRef, Output, AfterViewInit, OnDestroy, EventEmitter, Inject } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
-import { Subscription } from 'rxjs/Subscription';
-import 'rxjs/add/observable/fromEvent';
-import 'rxjs/add/operator/startWith';
+
+import { Observable, Subscription, fromEvent } from 'rxjs';
+import { debounceTime, distinctUntilChanged, startWith } from 'rxjs/operators';
 
 import { DOCUMENT } from '@angular/platform-browser';
 
@@ -28,16 +27,16 @@ export class VisibleDirective implements AfterViewInit, OnDestroy {
   }
 
   subscribe() {
-    this.scrollSubscription = Observable.fromEvent(window, 'scroll')
-                                        .startWith(null)
-                                        .debounceTime(2000)
-                                        .subscribe(() => {
+    this.scrollSubscription = fromEvent(window, 'scroll').pipe(
+      startWith(null),
+      debounceTime(2000)
+    ).subscribe(() => {
       this.visibleEvent.emit(this.isInViewport());
     });
-    this.resizeSubscription = Observable.fromEvent(window, 'resize')
-                                        .startWith(null)
-                                        .debounceTime(2000)
-                                        .subscribe(() => {
+    this.resizeSubscription = fromEvent(window, 'resize').pipe(
+      startWith(null),
+      debounceTime(2000)
+    ).subscribe(() => {
       this.visibleEvent.emit(this.isInViewport());
     });
   }

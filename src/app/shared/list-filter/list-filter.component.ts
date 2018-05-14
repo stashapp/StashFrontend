@@ -1,9 +1,8 @@
 import { Component, OnInit, OnDestroy, Input, Output, ViewChild, EventEmitter } from '@angular/core';
 import { FormControl } from '@angular/forms';
 
-import { Observable } from 'rxjs/Observable';
-import 'rxjs/add/operator/debounceTime';
-import 'rxjs/add/operator/distinctUntilChanged';
+import { Observable } from 'rxjs';
+import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 
 import { StashService } from '../../core/stash.service';
 import { Scene } from '../models/scene.model';
@@ -32,12 +31,14 @@ export class ListFilterComponent implements OnInit, OnDestroy {
     // todo: save filter state?
     this.filter.configureForFilterMode(this.filter.filterMode);
     this.searchFormControl.valueChanges
-                          .debounceTime(400)
-                          .distinctUntilChanged()
-                          .subscribe(term => {
-                            this.filter.searchTerm = term;
-                            this.onFilterUpdate.emit(this.filter);
-                          });
+      .pipe(
+        debounceTime(400),
+        distinctUntilChanged()
+      )
+      .subscribe(term => {
+        this.filter.searchTerm = term;
+        this.onFilterUpdate.emit(this.filter);
+      });
   }
 
   ngOnDestroy() {
