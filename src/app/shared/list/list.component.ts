@@ -11,8 +11,10 @@ import {
   SceneListState,
   GalleryListState,
   PerformerListState,
-  StudioListState
+  StudioListState,
+  SceneMarkerListState
 } from '../../shared/models/list-state.model';
+import { Router, ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-list',
@@ -27,7 +29,7 @@ export class ListComponent implements OnInit, OnDestroy, AfterViewInit {
 
   loading = true;
 
-  constructor(private stashService: StashService) {}
+  constructor(private stashService: StashService, private router: Router, private activatedRoute: ActivatedRoute) {}
 
   ngOnInit() {}
 
@@ -60,6 +62,10 @@ export class ListComponent implements OnInit, OnDestroy, AfterViewInit {
       const result = await this.stashService.findStudios(this.state.currentPage, this.state.filter).result();
       this.state.data = result.data.findStudios.studios;
       this.state.totalCount = result.data.findStudios.count;
+    } else if (this.state instanceof SceneMarkerListState) {
+      const result = await this.stashService.findSceneMarkers(this.state.currentPage, this.state.filter).result();
+      this.state.data = result.data.findSceneMarkers.scene_markers;
+      this.state.totalCount = result.data.findSceneMarkers.count;
     }
 
     this.loading = false;
@@ -67,6 +73,8 @@ export class ListComponent implements OnInit, OnDestroy, AfterViewInit {
 
   onFilterUpdate(filter: ListFilter) {
     console.log('filter update', filter);
+    const options = Object.assign({relativeTo: this.activatedRoute, replaceUrl: true}, filter.makeQueryParameters());
+    this.router.navigate([], options);
     this.state.filter = filter;
     this.getData();
   }

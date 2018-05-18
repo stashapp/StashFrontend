@@ -3,7 +3,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 
 import { StashService } from '../../core/stash.service';
 
-import { Tag } from '../../shared/models/tag.model';
+import { TagDataFragment } from '../../core/graphql-generated';
+import { CriteriaType } from '../../shared/models/list-state.model';
 
 @Component({
   selector: 'app-tag-list',
@@ -11,8 +12,9 @@ import { Tag } from '../../shared/models/tag.model';
   styleUrls: ['./tag-list.component.css']
 })
 export class TagListComponent implements OnInit {
+  CriteriaType = CriteriaType;
 
-  tags: Tag[];
+  tags: TagDataFragment[];
 
   constructor(private stashService: StashService,
               private route: ActivatedRoute,
@@ -27,12 +29,12 @@ export class TagListComponent implements OnInit {
     this.tags = result.data.allTags;
   }
 
-  onClickTag(tag: Tag) {
-    this.router.navigate([tag.id], { relativeTo: this.route });
-  }
-
   onClickNew() {
     this.router.navigate(['new'], { relativeTo: this.route });
+  }
+
+  tagCount(tag: TagDataFragment) {
+    return tag.scene_count + tag.scene_marker_count;
   }
 
 }

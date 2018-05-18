@@ -13,6 +13,21 @@ export class SceneMarker {
   scene?: {
     id: string;
   };
+
+  primary_tag?: {
+    id: string;
+    name: string;
+  };
+
+  tags?: {
+    id: string;
+    name: string;
+  }[];
+}
+
+export class SceneMarkerTag {
+  tag: Tag;
+  scene_markers: SceneMarker[];
 }
 
 export class SceneSpriteItem {
@@ -54,6 +69,7 @@ export class Scene {
   is_streamable?: boolean;
 
   scene_markers: SceneMarker[];
+  scene_marker_tags?: SceneMarkerTag[];
   gallery: Gallery;
   studio: Studio;
   tags: Tag[];

@@ -4,7 +4,7 @@ import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { StashService } from '../../core/stash.service';
 
 import { Scene, SceneMarker } from '../../shared/models/scene.model';
-import { FindSceneQuery } from '../../core/graphql-generated';
+import { FindSceneQuery, SceneDataFragment } from '../../core/graphql-generated';
 import { QueryRef } from 'apollo-angular';
 
 @Component({
@@ -13,17 +13,13 @@ import { QueryRef } from 'apollo-angular';
   styleUrls: ['./scene-detail.component.css']
 })
 export class SceneDetailComponent implements OnInit {
-  scene: Scene;
-  isDeleteMarkerEnabled = false;
-  markerOptions: any[];
-  isMarkerOverlayOpen = false;
+  scene: SceneDataFragment;
 
   private lastTime = 0;
 
   private isPlayerSetup = false;
 
   @ViewChild('jwplayer') jwplayer: any;
-  @ViewChild('markerInput') markerInput: any;
   @ViewChild('scrubber') scrubber: any;
 
   constructor(private route: ActivatedRoute, private stashService: StashService, private router: Router) { }
@@ -37,6 +33,8 @@ export class SceneDetailComponent implements OnInit {
     const id = parseInt(this.route.snapshot.params['id'], 10);
 
     this.stashService.findScene(id).valueChanges.subscribe(result => {
+      // TODO
+      // this.scene = Object.assign({scene_marker_tags: result.data.sceneMarkerTags}, result.data.findScene);
       this.scene = result.data.findScene;
 
       // TODO: Check this, this didn't matter before...
@@ -47,13 +45,15 @@ export class SceneDetailComponent implements OnInit {
         const chaptersVttPath = this.scene.paths.chapters_vtt;
         this.jwplayer.setupPlayer(streamPath, screenshotPath, vttPath, chaptersVttPath);
         this.isPlayerSetup = true;
+
+        this.route.queryParams.subscribe(params => {
+          if (params['t'] != null) {
+            this.jwplayer.player.seek(params['t']);
+          }
+        });
       }
     }, error => {
       console.log(error);
-    });
-
-    this.stashService.markerStrings().valueChanges.subscribe(result => {
-      this.markerOptions = result.data.markerStrings;
     });
   }
 
@@ -74,32 +74,6 @@ export class SceneDetailComponent implements OnInit {
       this.lastTime = position;
       this.scrubber.scrollTo(position);
     }
-  }
-
-  onClickAddMarker() {
-    const title = this.markerInput.query;
-    const seconds = Math.round(this.jwplayer.player.getPosition());
-    const scene_id = Number(this.scene.id);
-    this.markerInput.query = null;
-
-    this.stashService.markerCreate(title, seconds, scene_id).subscribe(response => {
-      console.log(response);
-    }, error => {
-      console.log(error);
-    });
-  }
-
-  onClickMarker(marker: SceneMarker) {
-    if (this.isMarkerOverlayOpen) {
-      this.isMarkerOverlayOpen = false;
-    }
-    this.jwplayer.player.seek(marker.seconds);
-  }
-
-  onClickDeleteMarker(marker: SceneMarker) {
-    this.stashService.markerDestory(marker.id, this.scene.id).subscribe(response => {
-      console.log('Delete successfull:', response);
-    });
   }
 
   scrubberSeek(seconds) {

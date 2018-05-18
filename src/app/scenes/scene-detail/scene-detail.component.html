@@ -1,27 +1,11 @@
-<div *ngIf="isMarkerOverlayOpen" style="position: fixed; background: #000; top: 45px; left: 0; right: 0; bottom: 0; z-index: 1;">
-  <div class="ui six column grid" style="margin: 0;">
-    <a *ngFor="let marker of scene?.scene_markers" (click)="onClickMarker(marker)" class="wall column">
-      <video #videoTag
-        (mouseenter)="onMouseEnter(videoTag)"
-        (mouseleave)="onMouseLeave(videoTag)"
-        class="wall item"
-        loop
-        autoplay="true"
-        muted="true">
-        <source [src]="marker.stream" />
-      </video>
-      <div style="position: absolute; bottom: 1em; left: 1em; font-weight: 900; font-size: small; text-shadow: black 1px 1px;">{{marker.title}} - {{marker.seconds | seconds}}</div>
-    </a>
-  </div>
-</div>
+<app-jwplayer
+  (seeked)="onSeeked()"
+  (time)="onTime($event)"
+  #jwplayer>
+</app-jwplayer>
 
 <div class="ui container segments">
   <div class="ui top attached segment">
-    <app-jwplayer
-      (seeked)="onSeeked()"
-      (time)="onTime($event)"
-      #jwplayer>
-    </app-jwplayer>
 
     <app-scene-detail-scrubber
       #scrubber
@@ -30,57 +14,11 @@
       (scrolled)="scrubberScrolled()">
     </app-scene-detail-scrubber>
 
-    <sui-accordion class="fluid">
-      <sui-accordion-panel [isOpen]="false">
-        <div title>
-          <i class="dropdown icon"></i>
-          Markers
-        </div>
-        <div content>
-          <div class="ui form" style="margin-bottom: 30px;">
-            <div class="field">
-              <ng-template let-result let-query="query" #resultTemplate>
-                {{ result.title }} ({{ result.count }})
-              </ng-template>
-              <sui-search
-                style="width: 100%;"
-                [hasIcon]="false"
-                maxResults="15"
-                placeholder="Marker Title"
-                [options]="markerOptions"
-                optionsField="title"
-                [resultTemplate]="resultTemplate"
-                #markerInput>
-              </sui-search>
-            </div>
-            <button (click)="onClickAddMarker()" class="ui button">Create</button>
-            <button (click)="isDeleteMarkerEnabled = !isDeleteMarkerEnabled"
-                    class="ui basic button"
-                    [class.red]="isDeleteMarkerEnabled">Delete</button>
-          </div>
-
-          <!--style="overflow-y: auto; white-space: nowrap;"-->
-          <div class="ui large labels">
-            <div *ngFor="let marker of scene?.scene_markers" class="ui basic label">
-              <!--<video #videoTag
-                (mouseenter)="onMouseEnter(videoTag)"
-                (mouseleave)="onMouseLeave(videoTag)"
-                loop
-                autoplay="true"
-                muted="true">
-                <source [src]="markerStreamPath(marker)" type="video/mp4" />
-              </video>-->
-              <img [src]="marker.preview" />
-              <a (click)="onClickMarker(marker)">
-                {{marker.title}} - {{marker.seconds | seconds}}
-              </a>
-              <i *ngIf="isDeleteMarkerEnabled" (click)="onClickDeleteMarker(marker)" class="icon close"></i>
-            </div>
-          </div>
-          <button (click)="isMarkerOverlayOpen = !isMarkerOverlayOpen" class="ui button">Preview Markers</button>
-        </div>
-      </sui-accordion-panel>
-    </sui-accordion>
+    <app-scene-detail-marker-manager
+      #markerManager
+      [scene]="scene"
+      [player]="jwplayer.player">
+    </app-scene-detail-marker-manager>
   </div>
 
   <div class="ui attached clearing segment">

@@ -5,7 +5,7 @@ import gql from 'graphql-tag';
 // - Fragments
 
 export const Fragment_SceneMarkerData = gql`
-  fragment SceneMarkerData on SceneMarkerType {
+  fragment SceneMarkerData on SceneMarker {
     id
     title
     seconds
@@ -14,6 +14,16 @@ export const Fragment_SceneMarkerData = gql`
 
     scene {
       id
+    }
+
+    primary_tag {
+      id
+      name
+    }
+
+    tags {
+      id
+      name
     }
   }
 `;
@@ -59,6 +69,7 @@ export const Fragment_TagData = gql`
     id
     name
     scene_count
+    scene_marker_count
   }
 `;
 
@@ -113,6 +124,17 @@ export const Fragment_SceneData = gql`
 
     scene_markers {
       ...SceneMarkerData
+    }
+
+    # TODO: Remove this
+    scene_marker_tags {
+      tag {
+        id
+        name
+      }
+      scene_markers {
+        ...SceneMarkerData
+      }
     }
 
     is_streamable
@@ -215,10 +237,21 @@ export const FIND_SCENES = gql`
 
 export const FIND_SCENE = gql`
   ${Fragment_SceneData}
+  ${Fragment_SceneMarkerData}
 
   query FindScene($id: ID, $checksum: String) {
     findScene(id: $id, checksum: $checksum) {
       ...SceneData
+    }
+
+    sceneMarkerTags(scene_id: $id) {
+      tag {
+        id
+        name
+      }
+      scene_markers {
+        ...SceneMarkerData
+      }
     }
   }
 `;
@@ -252,6 +285,19 @@ export const FIND_SCENE_FOR_EDITING = gql`
     validGalleriesForScene(scene_id: $id) {
       id
       path
+    }
+  }
+`;
+
+export const FIND_SCENE_MARKERS = gql`
+  ${Fragment_SceneMarkerData}
+
+  query FindSceneMarkers($filter: FindFilterType, $scene_marker_filter: SceneMarkerFilterType) {
+    findSceneMarkers(filter: $filter, scene_marker_filter: $scene_marker_filter) {
+      count
+      scene_markers {
+        ...SceneMarkerData
+      }
     }
   }
 `;
@@ -345,6 +391,16 @@ export const FIND_GALLERY = gql`
   }
 `;
 
+export const FIND_TAG = gql`
+  ${Fragment_TagData}
+
+  query FindTag($id: ID!) {
+    findTag(id: $id) {
+      ...TagData
+    }
+  }
+`;
+
 export const MARKER_STRINGS = gql`
   query MarkerStrings($q: String, $sort: String) {
     markerStrings(q: $q, sort: $sort) {
@@ -409,6 +465,16 @@ export const ALL_TAGS = gql`
   query AllTags {
     allTags {
       ...TagData
+    }
+  }
+`;
+
+export const ALL_SCENE_MARKERS = gql`
+  ${Fragment_SceneMarkerData}
+
+  query AllSceneMarkers {
+    allSceneMarkers {
+      ...SceneMarkerData
     }
   }
 `;
@@ -607,13 +673,51 @@ export const TAG_CREATE = gql`
 `;
 
 export const MARKER_CREATE = gql`
-  mutation SceneMarkerCreate($title: String!, $seconds: Float!, $scene_id: ID!) {
-    sceneMarkerCreate(title: $title, seconds: $seconds, scene_id: $scene_id) {
-      id
-      seconds
-      title
-      stream
-      preview
+  ${Fragment_SceneMarkerData}
+
+  mutation SceneMarkerCreate(
+    $title: String!,
+    $seconds: Float!,
+    $scene_id: ID!,
+    $primary_tag_id: ID!,
+    $tag_ids: [ID] = []) {
+
+    sceneMarkerCreate(input: {
+                                title: $title,
+                                seconds: $seconds,
+                                scene_id: $scene_id,
+                                primary_tag_id: $primary_tag_id,
+                                tag_ids: $tag_ids
+                              }) {
+      scene_marker {
+        ...SceneMarkerData
+      }
+    }
+  }
+`;
+
+export const MARKER_UPDATE = gql`
+  ${Fragment_SceneMarkerData}
+
+  mutation SceneMarkerUpdate(
+    $id: ID!,
+    $title: String!,
+    $seconds: Float!,
+    $scene_id: ID!,
+    $primary_tag_id: ID!,
+    $tag_ids: [ID] = []) {
+
+    sceneMarkerUpdate(input: {
+                                id: $id,
+                                title: $title,
+                                seconds: $seconds,
+                                scene_id: $scene_id,
+                                primary_tag_id: $primary_tag_id,
+                                tag_ids: $tag_ids
+                              }) {
+      scene_marker {
+        ...SceneMarkerData
+      }
     }
   }
 `;

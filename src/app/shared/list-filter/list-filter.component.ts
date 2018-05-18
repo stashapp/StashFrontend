@@ -7,7 +7,8 @@ import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { StashService } from '../../core/stash.service';
 import { Scene } from '../models/scene.model';
 import { Performer } from '../models/performer.model';
-import { ListFilter, DisplayMode, FilterMode, Criteria, CriteriaType } from '../models/list-state.model';
+import { ListFilter, DisplayMode, FilterMode, Criteria, CriteriaType, CriteriaValueType } from '../models/list-state.model';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-list-filter',
@@ -16,19 +17,44 @@ import { ListFilter, DisplayMode, FilterMode, Criteria, CriteriaType } from '../
 export class ListFilterComponent implements OnInit, OnDestroy {
   DisplayMode = DisplayMode;
   CriteriaType = CriteriaType;
+  CriteriaValueType = CriteriaValueType;
 
   @Input() filter: ListFilter;
   @Output() onFilterUpdate = new EventEmitter<ListFilter>();
   @ViewChild('criteriaValueSelect') criteriaValueSelect: any;
+  @ViewChild('criteriaValuesSelect') criteriaValuesSelect: any;
 
   itemsPerPageOptions = [20, 40, 60, 120];
 
   searchFormControl = new FormControl();
 
-  constructor(private stashService: StashService) {}
+  constructor(private stashService: StashService, private route: ActivatedRoute) {}
 
   ngOnInit() {
-    // todo: save filter state?
+    this.route.queryParams.subscribe(params => {
+      this.filter.criteriaFilterOpen = true;
+      if (params['type'] != null) {
+        const type = Number(params['type']);
+        this.filter.configureCriteriaType(type, this.stashService);
+      }
+      if (params['value'] != null) {
+        this.filter.criteria.value = params['value'];
+      }
+      if (params['values'] != null) {
+        if (params['values'] instanceof Array) {
+          this.filter.criteria.values = params['values'];
+        } else {
+          this.filter.criteria.values = [params['values']];
+        }
+      }
+      if (params['sortby'] != null) {
+        this.filter.sortBy = params['sortby'];
+      }
+      if (params['sortdir'] != null) {
+        this.filter.sortDirection = params['sortdir'];
+      }
+    });
+
     this.filter.configureForFilterMode(this.filter.filterMode);
     this.searchFormControl.valueChanges
       .pipe(
@@ -46,7 +72,6 @@ export class ListFilterComponent implements OnInit, OnDestroy {
   }
 
   onPerPageChange(perPage: number) {
-    this.filter.itemsPerPage = perPage;
     this.onFilterUpdate.emit(this.filter);
   }
 
@@ -61,13 +86,17 @@ export class ListFilterComponent implements OnInit, OnDestroy {
   }
 
   onCriteriaTypeChange(criteriaType: CriteriaType) {
-    this.criteriaValueSelect.selectedOption = null;
-    this.filter.configureCriteriaType(criteriaType);
+    if (!!this.criteriaValueSelect) {
+      this.criteriaValueSelect.selectedOption = null;
+    }
+    // if (!!this.criteriaValuesSelect) {
+    //   this.criteriaValuesSelect.selectedOptions = null;
+    // }
+    this.filter.configureCriteriaType(criteriaType, this.stashService);
     this.onFilterUpdate.emit(this.filter);
   }
 
   onCriteriaValueChange(criteriaValue: string) {
-    this.filter.criteria.value = criteriaValue;
     this.onFilterUpdate.emit(this.filter);
   }
 

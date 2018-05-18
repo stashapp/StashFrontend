@@ -4,20 +4,30 @@
   </div>
 </div>
 
-<div style="text-align: center;" class="ui blue labels">
-  <a
-    *ngFor="let tag of tags"
-    (click)="onClickTag(tag)"
-    class="ui label"
-    [class.tiny]="tag.scene_count <= 5"
-    [class.large]="tag.scene_count > 5 && tag.scene_count <= 50"
-    [class.big]="tag.scene_count > 50 && tag.scene_count <= 100"
-    [class.huge]="tag.scene_count > 100 && tag.scene_count <= 200"
-    [class.massive]="tag.scene_count > 200">
-    {{tag.name}}
-    <div class="detail">
-      <i class="video play icon"></i>
-      {{tag.scene_count}}
+<div class="ui middle aligned relaxed divided list">
+  <div *ngFor="let tag of tags" class="item">
+    <div class="right floated content">
+      <a class="ui button" [routerLink]="['/tags', tag.id]" [queryParams]="{tag_list_type: 'markers', type: CriteriaType.Tags, values: [tag.id]}">Markers</a>
+      <a class="ui button" [routerLink]="['/tags', tag.id]" [queryParams]="{tag_list_type: 'scenes'}">Scenes</a>
     </div>
-  </a>
+    <div class="content">
+      <div class="ui big horizontal label"
+        [class.red]="tagCount(tag) <= 5"
+        [class.orange]="tagCount(tag) > 5 && tagCount(tag) <= 50"
+        [class.yellow]="tagCount(tag) > 50 && tagCount(tag) <= 100"
+        [class.olive]="tagCount(tag) > 100 && tagCount(tag) <= 200"
+        [class.green]="tagCount(tag) > 200">
+        {{tag.name}}
+        <div class="detail">
+          Scenes: {{tag.scene_count}}
+        </div>
+        <div class="detail">
+          Markers: {{tag.scene_marker_count}}
+        </div>
+        <div class="detail">
+          Total: {{tag.scene_count + tag.scene_marker_count}}
+        </div>
+      </div>
+    </div>
+  </div>
 </div>

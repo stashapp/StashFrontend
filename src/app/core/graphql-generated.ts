@@ -43,6 +43,13 @@ export enum ResolutionEnum {
 }
 
 
+export interface SceneMarkerFilterType {
+  // Filter to only include scene markers with this tag
+  tag_id?: string | null,
+  // Filter to only include scene markers with these tags
+  tags?: Array< string | null > | null,
+};
+
 export interface PerformerFilterType {
   // Filter by favorite
   filter_favorites?: boolean | null,
@@ -105,6 +112,7 @@ export interface FindScenesQuery {
       performers:  Array< {
         id: string,
         name: string | null,
+        favorite: boolean,
         image_path: string | null,
       } | null >,
     } | null >,
@@ -154,6 +162,40 @@ export interface FindSceneQuery {
       scene:  {
         id: string,
       },
+      primary_tag:  {
+        id: string,
+        name: string,
+      },
+      tags:  Array< {
+        id: string,
+        name: string,
+      } | null >,
+    } | null >,
+    scene_marker_tags:  Array< {
+      tag:  {
+        id: string,
+        name: string,
+      },
+      scene_markers:  Array< {
+        id: string,
+        title: string,
+        seconds: number,
+        // The path to stream this marker
+        stream: string,
+        // The path to the preview image for this marker
+        preview: string,
+        scene:  {
+          id: string,
+        },
+        primary_tag:  {
+          id: string,
+          name: string,
+        },
+        tags:  Array< {
+          id: string,
+          name: string,
+        } | null >,
+      } | null >,
     } | null >,
     is_streamable: boolean,
     gallery:  {
@@ -180,6 +222,7 @@ export interface FindSceneQuery {
       id: string,
       name: string,
       scene_count: number | null,
+      scene_marker_count: number | null,
     } | null >,
     performers:  Array< {
       id: string,
@@ -204,6 +247,33 @@ export interface FindSceneQuery {
       scene_count: number | null,
     } | null >,
   } | null,
+  // Organize scene markers by tag for a given scene ID
+  sceneMarkerTags:  Array< {
+    tag:  {
+      id: string,
+      name: string,
+    },
+    scene_markers:  Array< {
+      id: string,
+      title: string,
+      seconds: number,
+      // The path to stream this marker
+      stream: string,
+      // The path to the preview image for this marker
+      preview: string,
+      scene:  {
+        id: string,
+      },
+      primary_tag:  {
+        id: string,
+        name: string,
+      },
+      tags:  Array< {
+        id: string,
+        name: string,
+      } | null >,
+    } | null >,
+  } | null >,
 };
 
 export interface FindSceneForEditingQueryVariables {
@@ -248,6 +318,40 @@ export interface FindSceneForEditingQuery {
       scene:  {
         id: string,
       },
+      primary_tag:  {
+        id: string,
+        name: string,
+      },
+      tags:  Array< {
+        id: string,
+        name: string,
+      } | null >,
+    } | null >,
+    scene_marker_tags:  Array< {
+      tag:  {
+        id: string,
+        name: string,
+      },
+      scene_markers:  Array< {
+        id: string,
+        title: string,
+        seconds: number,
+        // The path to stream this marker
+        stream: string,
+        // The path to the preview image for this marker
+        preview: string,
+        scene:  {
+          id: string,
+        },
+        primary_tag:  {
+          id: string,
+          name: string,
+        },
+        tags:  Array< {
+          id: string,
+          name: string,
+        } | null >,
+      } | null >,
     } | null >,
     is_streamable: boolean,
     gallery:  {
@@ -274,6 +378,7 @@ export interface FindSceneForEditingQuery {
       id: string,
       name: string,
       scene_count: number | null,
+      scene_marker_count: number | null,
     } | null >,
     performers:  Array< {
       id: string,
@@ -319,6 +424,38 @@ export interface FindSceneForEditingQuery {
   } | null >,
 };
 
+export interface FindSceneMarkersQueryVariables {
+  filter?: FindFilterType | null,
+  scene_marker_filter?: SceneMarkerFilterType | null,
+};
+
+export interface FindSceneMarkersQuery {
+  // A function which queries SceneMarker objects
+  findSceneMarkers:  {
+    count: number,
+    scene_markers:  Array< {
+      id: string,
+      title: string,
+      seconds: number,
+      // The path to stream this marker
+      stream: string,
+      // The path to the preview image for this marker
+      preview: string,
+      scene:  {
+        id: string,
+      },
+      primary_tag:  {
+        id: string,
+        name: string,
+      },
+      tags:  Array< {
+        id: string,
+        name: string,
+      } | null >,
+    } | null >,
+  },
+};
+
 export interface SceneWallQueryVariables {
   q?: string | null,
 };
@@ -361,6 +498,40 @@ export interface SceneWallQuery {
       scene:  {
         id: string,
       },
+      primary_tag:  {
+        id: string,
+        name: string,
+      },
+      tags:  Array< {
+        id: string,
+        name: string,
+      } | null >,
+    } | null >,
+    scene_marker_tags:  Array< {
+      tag:  {
+        id: string,
+        name: string,
+      },
+      scene_markers:  Array< {
+        id: string,
+        title: string,
+        seconds: number,
+        // The path to stream this marker
+        stream: string,
+        // The path to the preview image for this marker
+        preview: string,
+        scene:  {
+          id: string,
+        },
+        primary_tag:  {
+          id: string,
+          name: string,
+        },
+        tags:  Array< {
+          id: string,
+          name: string,
+        } | null >,
+      } | null >,
     } | null >,
     is_streamable: boolean,
     gallery:  {
@@ -387,6 +558,7 @@ export interface SceneWallQuery {
       id: string,
       name: string,
       scene_count: number | null,
+      scene_marker_count: number | null,
     } | null >,
     performers:  Array< {
       id: string,
@@ -430,6 +602,14 @@ export interface MarkerWallQuery {
     scene:  {
       id: string,
     },
+    primary_tag:  {
+      id: string,
+      name: string,
+    },
+    tags:  Array< {
+      id: string,
+      name: string,
+    } | null >,
   } | null >,
 };
 
@@ -575,6 +755,20 @@ export interface FindGalleryQuery {
   } | null,
 };
 
+export interface FindTagQueryVariables {
+  id: string,
+};
+
+export interface FindTagQuery {
+  // Find a tag by ID
+  findTag:  {
+    id: string,
+    name: string,
+    scene_count: number | null,
+    scene_marker_count: number | null,
+  } | null,
+};
+
 export interface MarkerStringsQueryVariables {
   q?: string | null,
   sort?: string | null,
@@ -664,6 +858,30 @@ export interface AllTagsQuery {
     id: string,
     name: string,
     scene_count: number | null,
+    scene_marker_count: number | null,
+  } | null >,
+};
+
+export interface AllSceneMarkersQuery {
+  allSceneMarkers:  Array< {
+    id: string,
+    title: string,
+    seconds: number,
+    // The path to stream this marker
+    stream: string,
+    // The path to the preview image for this marker
+    preview: string,
+    scene:  {
+      id: string,
+    },
+    primary_tag:  {
+      id: string,
+      name: string,
+    },
+    tags:  Array< {
+      id: string,
+      name: string,
+    } | null >,
   } | null >,
 };
 
@@ -729,6 +947,40 @@ export interface SceneUpdateMutation {
         scene:  {
           id: string,
         },
+        primary_tag:  {
+          id: string,
+          name: string,
+        },
+        tags:  Array< {
+          id: string,
+          name: string,
+        } | null >,
+      } | null >,
+      scene_marker_tags:  Array< {
+        tag:  {
+          id: string,
+          name: string,
+        },
+        scene_markers:  Array< {
+          id: string,
+          title: string,
+          seconds: number,
+          // The path to stream this marker
+          stream: string,
+          // The path to the preview image for this marker
+          preview: string,
+          scene:  {
+            id: string,
+          },
+          primary_tag:  {
+            id: string,
+            name: string,
+          },
+          tags:  Array< {
+            id: string,
+            name: string,
+          } | null >,
+        } | null >,
       } | null >,
       is_streamable: boolean,
       gallery:  {
@@ -755,6 +1007,7 @@ export interface SceneUpdateMutation {
         id: string,
         name: string,
         scene_count: number | null,
+        scene_marker_count: number | null,
       } | null >,
       performers:  Array< {
         id: string,
@@ -926,6 +1179,7 @@ export interface TagCreateMutation {
       id: string,
       name: string,
       scene_count: number | null,
+      scene_marker_count: number | null,
     } | null,
   } | null,
 };
@@ -934,17 +1188,66 @@ export interface SceneMarkerCreateMutationVariables {
   title: string,
   seconds: number,
   scene_id: string,
+  primary_tag_id: string,
+  tag_ids?: Array< string | null > | null,
 };
 
 export interface SceneMarkerCreateMutation {
   sceneMarkerCreate:  {
-    id: string,
-    seconds: number,
-    title: string,
-    // The path to stream this marker
-    stream: string,
-    // The path to the preview image for this marker
-    preview: string,
+    scene_marker:  {
+      id: string,
+      title: string,
+      seconds: number,
+      // The path to stream this marker
+      stream: string,
+      // The path to the preview image for this marker
+      preview: string,
+      scene:  {
+        id: string,
+      },
+      primary_tag:  {
+        id: string,
+        name: string,
+      },
+      tags:  Array< {
+        id: string,
+        name: string,
+      } | null >,
+    } | null,
+  } | null,
+};
+
+export interface SceneMarkerUpdateMutationVariables {
+  id: string,
+  title: string,
+  seconds: number,
+  scene_id: string,
+  primary_tag_id: string,
+  tag_ids?: Array< string | null > | null,
+};
+
+export interface SceneMarkerUpdateMutation {
+  sceneMarkerUpdate:  {
+    scene_marker:  {
+      id: string,
+      title: string,
+      seconds: number,
+      // The path to stream this marker
+      stream: string,
+      // The path to the preview image for this marker
+      preview: string,
+      scene:  {
+        id: string,
+      },
+      primary_tag:  {
+        id: string,
+        name: string,
+      },
+      tags:  Array< {
+        id: string,
+        name: string,
+      } | null >,
+    } | null,
   } | null,
 };
 
@@ -997,6 +1300,14 @@ export interface SceneMarkerDataFragment {
   scene:  {
     id: string,
   },
+  primary_tag:  {
+    id: string,
+    name: string,
+  },
+  tags:  Array< {
+    id: string,
+    name: string,
+  } | null >,
 };
 
 export interface StudioDataFragment {
@@ -1035,6 +1346,7 @@ export interface TagDataFragment {
   id: string,
   name: string,
   scene_count: number | null,
+  scene_marker_count: number | null,
 };
 
 export interface GalleryDataFragment {
@@ -1086,6 +1398,40 @@ export interface SceneDataFragment {
     scene:  {
       id: string,
     },
+    primary_tag:  {
+      id: string,
+      name: string,
+    },
+    tags:  Array< {
+      id: string,
+      name: string,
+    } | null >,
+  } | null >,
+  scene_marker_tags:  Array< {
+    tag:  {
+      id: string,
+      name: string,
+    },
+    scene_markers:  Array< {
+      id: string,
+      title: string,
+      seconds: number,
+      // The path to stream this marker
+      stream: string,
+      // The path to the preview image for this marker
+      preview: string,
+      scene:  {
+        id: string,
+      },
+      primary_tag:  {
+        id: string,
+        name: string,
+      },
+      tags:  Array< {
+        id: string,
+        name: string,
+      } | null >,
+    } | null >,
   } | null >,
   is_streamable: boolean,
   gallery:  {
@@ -1112,6 +1458,7 @@ export interface SceneDataFragment {
     id: string,
     name: string,
     scene_count: number | null,
+    scene_marker_count: number | null,
   } | null >,
   performers:  Array< {
     id: string,
@@ -1184,6 +1531,7 @@ export interface SlimSceneDataFragment {
   performers:  Array< {
     id: string,
     name: string | null,
+    favorite: boolean,
     image_path: string | null,
   } | null >,
 };

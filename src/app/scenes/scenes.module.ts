@@ -11,6 +11,7 @@ import { SceneFormComponent } from './scene-form/scene-form.component';
 import { SceneWallComponent } from './scene-wall/scene-wall.component';
 import { SceneWallItemComponent } from './scene-wall-item/scene-wall-item.component';
 import { SceneDetailScrubberComponent } from './scene-detail-scrubber/scene-detail-scrubber.component';
+import { SceneDetailMarkerManagerComponent } from './scene-detail-marker-manager/scene-detail-marker-manager.component';
 
 @NgModule({
   imports: [
@@ -24,7 +25,8 @@ import { SceneDetailScrubberComponent } from './scene-detail-scrubber/scene-deta
     SceneFormComponent,
     SceneWallComponent,
     SceneWallItemComponent,
-    SceneDetailScrubberComponent
+    SceneDetailScrubberComponent,
+    SceneDetailMarkerManagerComponent
   ],
   providers: [
     ScenesService

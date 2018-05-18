@@ -58,6 +58,7 @@
         </div>
         <div class="twelve wide field">
           <sui-select
+            *ngIf="filter.criteria.valueType == CriteriaValueType.Single"
             class="selection"
             [(ngModel)]="filter.criteria.value"
             [options]="filter.criteria.options"
@@ -67,6 +68,19 @@
             #criteriaValueSelect>
             <sui-select-option *ngFor="let option of criteriaValueSelect.availableOptions" [value]="option"></sui-select-option>
           </sui-select>
+          <sui-multi-select
+            *ngIf="filter.criteria.valueType == CriteriaValueType.Multiple"
+            class="selection"
+            [(ngModel)]="filter.criteria.values"
+            [options]="filter.criteria.options"
+            (selectedOptionsChange)="onCriteriaValueChange($event)"
+            labelField="name"
+            valueField="id"
+            [isSearchable]="true"
+            placeholder="Criteria"
+            #criteriaValuesSelect>
+            <sui-select-option *ngFor="let option of criteriaValuesSelect.availableOptions" [value]="option"></sui-select-option>
+          </sui-multi-select>
         </div>
       </div>
     </div>

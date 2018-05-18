@@ -1,0 +1,94 @@
+<div class="wall-overlay" [ngClass]="showingMarkerModal === true ? 'visible-unanimated' : 'hidden-unanimated'"></div>
+<div class="simple-modal-container small" [style.display]="showingMarkerModal === true ? 'block' : 'none'">
+  <div class="simple-modal-content">
+    <div class="ui form">
+      <div class="field">
+        <label>Title</label>
+
+        <!-- TODO - do like performer form name? -->
+        <!-- <ng-template let-result let-query="query" #resultTemplate>
+          {{ result.title }} ({{ result.count }})
+        </ng-template>
+        <sui-search
+          style="width: 100%;"
+          [hasIcon]="false"
+          maxResults="20"
+          placeholder="Marker Title"
+          [options]="markerOptions"
+          optionsField="title"
+          [resultTemplate]="resultTemplate"
+          #markerInput>
+        </sui-search> -->
+
+        <input [(ngModel)]="title" type="text" placeholder="Title" />
+      </div>
+      <div class="equal width fields">
+        <div class="field">
+            <label>Seconds</label>
+            <input [(ngModel)]="seconds" type="number" placeholder="Title" />
+        </div>
+        <div class="field">
+          <label>Primary Tag</label>
+          <sui-select
+            class="selection"
+            [(ngModel)]="primary_tag_id"
+            [options]="tags"
+            labelField="name"
+            valueField="id"
+            [isSearchable]="true"
+            placeholder="Primary Tag"
+            #primaryTagSelect>
+            <sui-select-option *ngFor="let option of primaryTagSelect.availableOptions" [value]="option"></sui-select-option>
+          </sui-select>
+        </div>
+      </div>
+      <div class="field">
+        <label>Additional Tags</label>
+        <sui-multi-select
+          class="selection"
+          [(ngModel)]="tag_ids"
+          [options]="tags"
+          labelField="name"
+          valueField="id"
+          [isSearchable]="true"
+          placeholder="Tags"
+          #tagSelect>
+          <sui-select-option *ngFor="let option of tagSelect.availableOptions" [value]="option"></sui-select-option>
+        </sui-multi-select>
+      </div>
+      <button (click)="onSubmit()" class="ui primary submit button">Submit</button>
+      <button (click)="onCancel()" class="ui button">Cancel</button>
+      <button *ngIf="!!editingMarker" (click)="onDestroy()" class="ui right floated negative button">Delete</button>
+    </div>
+  </div>
+</div>
+
+<button style="margin: 5px;" (click)="onClickAddMarker()" class="ui button">Create Marker</button>
+
+<div *ngIf="!!scene" class="ui container" style="overflow-y: hidden; overflow-x: auto; white-space: nowrap;">
+  <div *ngFor="let primary_tag of scene.scene_marker_tags" class="ui card" style="max-height: 300px; height: 100vh; overflow-y: auto; overflow-x: hidden; display: inline-block; margin: 5px;">
+    <div class="content" style="white-space: normal;">
+      <div class="header">{{primary_tag.tag.name}}</div>
+      <div class="ui divided items">
+        <div *ngFor="let marker of primary_tag.scene_markers" class="item" style="padding: 0.5em 0;">
+          <div class="content">
+            <div class="header" style="font-size: 1em;">
+              <a (click)="onClickMarker(marker)">{{marker.title}}</a>
+            </div>
+            <i (click)="onClickEditMarker(marker)" class="ui right floated link icon edit"></i>
+            <div class="meta">
+              <span>{{marker.seconds | seconds}}</span>
+            </div>
+            <div class="extra">
+              <div class="ui tiny labels">
+                <div *ngFor="let tag of marker.tags" class="ui label">
+                  {{tag.name}}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

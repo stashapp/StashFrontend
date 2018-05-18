@@ -1,8 +1,9 @@
-import { Scene } from './scene.model';
+import { Scene, SceneMarker } from './scene.model';
 import { Performer } from './performer.model';
 import { Studio } from './studio.model';
 import { Gallery } from './gallery.model';
-import { SceneFilterType, ResolutionEnum, PerformerFilterType } from '../../core/graphql-generated';
+import { SceneFilterType, ResolutionEnum, PerformerFilterType, SceneMarkerFilterType } from '../../core/graphql-generated';
+import { StashService } from '../../core/stash.service';
 
 export enum DisplayMode {
   Grid,
@@ -13,7 +14,8 @@ export enum FilterMode {
   Scenes,
   Performers,
   Studios,
-  Galleries
+  Galleries,
+  SceneMarkers
 }
 
 export class CustomCriteria {
@@ -31,7 +33,13 @@ export enum CriteriaType {
   Resolution,
   Favorite,
   HasMarkers,
-  IsMissing
+  IsMissing,
+  Tags
+}
+
+export enum CriteriaValueType {
+  Single,
+  Multiple
 }
 
 export class CriteriaOption {
@@ -45,9 +53,11 @@ export class CriteriaOption {
 
 export class Criteria {
   type: CriteriaType;
-  options: any[];
+  valueType: CriteriaValueType;
+  options: any[] = [];
   parameterName: string;
   value: string;
+  values: string[];
 
   getSceneFilter(): SceneFilterType {
     switch (this.type) {
@@ -70,6 +80,12 @@ export class Criteria {
   getPerformerFilter(): PerformerFilterType {
     switch (this.type) {
       case CriteriaType.Favorite: return { filter_favorites: this.value === 'true' };
+    }
+  }
+
+  getSceneMarkerFilter(): SceneMarkerFilterType {
+    switch (this.type) {
+      case CriteriaType.Tags: return { tags: this.values };
     }
   }
 }
@@ -123,6 +139,14 @@ export class ListFilter {
           new CriteriaOption(CriteriaType.None)
         ];
         break;
+      case FilterMode.SceneMarkers:
+        if (!!this.sortBy === false) { this.sortBy = 'title'; }
+        this.sortByOptions = ['title', 'seconds', 'scene_id'];
+        this.criterions = [
+          new CriteriaOption(CriteriaType.None),
+          new CriteriaOption(CriteriaType.Tags)
+        ];
+        break;
       default:
         this.sortByOptions = [];
         this.criterions = [new CriteriaOption(CriteriaType.None)];
@@ -130,50 +154,80 @@ export class ListFilter {
     }
   }
 
-  configureCriteriaType(type: CriteriaType) {
+  async configureCriteriaType(type: CriteriaType, stashService: StashService) {
     switch (type) {
       case CriteriaType.None: {
         this.criteria.type = CriteriaType.None;
+        this.criteria.valueType = CriteriaValueType.Single;
         this.criteria.options = [];
         break;
       }
       case CriteriaType.Rating: {
         this.criteria.type = CriteriaType.Rating;
+        this.criteria.valueType = CriteriaValueType.Single;
         this.criteria.parameterName = 'rating';
         this.criteria.options = [1, 2, 3, 4, 5];
         break;
       }
       case CriteriaType.Resolution: {
         this.criteria.type = CriteriaType.Resolution;
+        this.criteria.valueType = CriteriaValueType.Single;
         this.criteria.parameterName = 'resolution';
         this.criteria.options = ['240p', '480p', '720p', '1080p', '4k'];
         break;
       }
       case CriteriaType.Favorite: {
         this.criteria.type = CriteriaType.Favorite;
+        this.criteria.valueType = CriteriaValueType.Single;
         this.criteria.parameterName = 'filter_favorites';
         this.criteria.options = ['true', 'false'];
         break;
       }
       case CriteriaType.HasMarkers: {
         this.criteria.type = CriteriaType.HasMarkers;
+        this.criteria.valueType = CriteriaValueType.Single;
         this.criteria.parameterName = 'has_markers';
         this.criteria.options = ['true', 'false'];
         break;
       }
       case CriteriaType.IsMissing: {
         this.criteria.type = CriteriaType.IsMissing;
+        this.criteria.valueType = CriteriaValueType.Single;
         this.criteria.parameterName = 'is_missing';
         this.criteria.options = ['title', 'url', 'date', 'gallery', 'studio', 'performers'];
         break;
       }
+      case CriteriaType.Tags: {
+        this.criteria.type = CriteriaType.Tags;
+        this.criteria.valueType = CriteriaValueType.Multiple;
+        this.criteria.parameterName = 'tags';
+        const result = await stashService.allTags().result();
+        this.criteria.options = result.data.allTags.map(item => {
+          return { id: item.id, name: item.name };
+        });
+        break;
+      }
       default: {
         this.criteria.type = CriteriaType.None;
+        this.criteria.valueType = CriteriaValueType.Single;
         this.criteria.options = [];
       }
     }
 
     this.criteria.value = null;
+  }
+
+  makeQueryParameters(): any {
+    return {
+      queryParams: {
+        type: this.criteria.type,
+        value: this.criteria.value,
+        values: this.criteria.values,
+        sortby: this.sortBy,
+        sortdir: this.sortDirection
+      },
+      queryParamsHandling: 'merge'
+    };
   }
 }
 
@@ -229,5 +283,12 @@ export class GalleryListState extends ListState<Gallery> {
   constructor() {
     super();
     this.filter.filterMode = FilterMode.Galleries;
+  }
+}
+
+export class SceneMarkerListState extends ListState<SceneMarker> {
+  constructor() {
+    super();
+    this.filter.filterMode = FilterMode.SceneMarkers;
   }
 }

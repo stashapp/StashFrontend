@@ -20,6 +20,7 @@ import {
   FIND_SCENE,
   MARKER_STRINGS,
   MARKER_CREATE,
+  MARKER_UPDATE,
   MARKER_DESTROY,
   FIND_SCENE_FOR_EDITING,
   FIND_PERFORMER,
@@ -47,7 +48,10 @@ import {
   METADATA_GENERATE,
   METADATA_CLEAN,
   SCRAPE_FREEONES,
-  SCRAPE_FREEONES_PERFORMERS
+  SCRAPE_FREEONES_PERFORMERS,
+  ALL_SCENE_MARKERS,
+  FIND_SCENE_MARKERS,
+  FIND_TAG
 } from './graphql';
 import * as GQL from './graphql-generated';
 
@@ -175,6 +179,32 @@ export class StashService {
     });
   }
 
+  findSceneMarkers(page?: number, filter?: ListFilter) {
+    let scene_marker_filter = {};
+    if (filter.criteriaFilterOpen && !!filter.criteria.values) {
+      scene_marker_filter = filter.criteria.getSceneMarkerFilter();
+    }
+    if (filter.customCriteria) {
+      filter.customCriteria.forEach(criteria => {
+        scene_marker_filter[criteria.key] = criteria.value;
+      });
+    }
+
+    return this.apollo.watchQuery<GQL.FindSceneMarkersQuery, GQL.FindSceneMarkersQueryVariables>({
+      query: FIND_SCENE_MARKERS,
+      variables: {
+        filter: {
+          q: filter.searchTerm,
+          page: page,
+          per_page: filter.itemsPerPage,
+          sort: filter.sortBy,
+          direction: filter.sortDirection === 'asc' ? GQL.SortDirectionEnum.ASC : GQL.SortDirectionEnum.DESC
+        },
+        scene_marker_filter: scene_marker_filter
+      }
+    });
+  }
+
   sceneWall(q?: string) {
     return this.apollo.watchQuery<GQL.SceneWallQuery, GQL.SceneWallQueryVariables>({
       fetchPolicy: 'network-only',
@@ -272,6 +302,15 @@ export class StashService {
   findGallery(id: any) {
     return this.apollo.watchQuery<GQL.FindGalleryQuery, GQL.FindGalleryQueryVariables>({
       query: FIND_GALLERY,
+      variables: {
+        id: id
+      }
+    });
+  }
+
+  findTag(id: any) {
+    return this.apollo.watchQuery<GQL.FindTagQuery, GQL.FindTagQueryVariables>({
+      query: FIND_TAG,
       variables: {
         id: id
       }
@@ -458,32 +497,56 @@ export class StashService {
     });
   }
 
-  markerCreate(title: string, seconds: number, scene_id: any) {
+  markerCreate(marker: GQL.SceneMarkerCreateMutationVariables) {
     return this.apollo.mutate<GQL.SceneMarkerCreateMutation, GQL.SceneMarkerCreateMutationVariables>({
       mutation: MARKER_CREATE,
       variables: {
-        title: title,
-        seconds: seconds,
-        scene_id: scene_id
-      },
-      updateQueries: {
-        FindScene: (record, mutation) => {
-          const updatedRecord = { ...record };
-          const newMarker = mutation.mutationResult.data.sceneMarkerCreate;
-          newMarker.scene = { __typename: 'Scene', id: updatedRecord.findScene.id };
-          updatedRecord.findScene.scene_markers.push(newMarker);
-          return updatedRecord;
-        },
+        title: marker.title,
+        seconds: marker.seconds,
+        scene_id: marker.scene_id,
+        primary_tag_id: marker.primary_tag_id,
+        tag_ids: marker.tag_ids
       },
       refetchQueries: [
         {
-          query: MARKER_STRINGS
+          query: ALL_SCENE_MARKERS
+        },
+        {
+          query: FIND_SCENE,
+          variables: {
+            id: marker.scene_id
+          }
         }
       ]
     });
   }
 
-  markerDestory(id: any, scene_id: any) {
+  markerUpdate(marker: GQL.SceneMarkerUpdateMutationVariables) {
+    return this.apollo.mutate<GQL.SceneMarkerUpdateMutation, GQL.SceneMarkerUpdateMutationVariables>({
+      mutation: MARKER_UPDATE,
+      variables: {
+        id: marker.id,
+        title: marker.title,
+        seconds: marker.seconds,
+        scene_id: marker.scene_id,
+        primary_tag_id: marker.primary_tag_id,
+        tag_ids: marker.tag_ids
+      },
+      refetchQueries: [
+        {
+          query: ALL_SCENE_MARKERS
+        },
+        {
+          query: FIND_SCENE,
+          variables: {
+            id: marker.scene_id
+          }
+        }
+      ]
+    });
+  }
+
+  markerDestroy(id: any, scene_id: any) {
     return this.apollo.mutate<GQL.SceneMarkerDestroyMutation, GQL.SceneMarkerDestroyMutationVariables>({
       mutation: MARKER_DESTROY,
       variables: {
@@ -491,13 +554,13 @@ export class StashService {
       },
       refetchQueries: [
         {
+          query: ALL_SCENE_MARKERS
+        },
+        {
           query: FIND_SCENE,
           variables: {
             id: scene_id
           }
-        },
-        {
-          query: MARKER_STRINGS
         }
       ],
     });
