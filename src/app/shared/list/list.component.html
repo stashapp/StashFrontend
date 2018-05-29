@@ -64,7 +64,7 @@
 </ng-template>
 
 <ng-template #sceneMarkerCards>
-  <div class="wall grid" style="top: 275px;">
+  <div class="wall grid" [style.top.px]="topMarkerPadding">
     <div class="ui four column grid" style="margin: 0;">
       <div
         *ngFor="let sceneMarker of state.data | paginate: { itemsPerPage: state.filter.itemsPerPage, currentPage: state.currentPage, totalItems: state.totalCount }"

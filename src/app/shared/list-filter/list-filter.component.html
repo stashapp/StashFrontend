@@ -42,13 +42,19 @@
 <div [suiCollapse]="!filter.criteriaFilterOpen">
   <div class="ui basic segment">
     <div class="ui form">
-      <div class="fields">
-        <div class="four wide field">
+      <div class="field">
+        <div class="ui button" (click)="onAddCriteria()">Add Criteria</div>
+      </div>
+      <div *ngFor="let criteria of filter.criterions" class="fields">
+        <div class="one wide field">
+          <div class="ui button" (click)="onDeleteCriteria(criteria)">X</div>
+        </div>
+        <div class="three wide field">
           <sui-select
             class="selection"
-            [(ngModel)]="filter.criteria.type"
-            [options]="filter.criterions"
-            (selectedOptionChange)="onCriteriaTypeChange($event)"
+            [(ngModel)]="criteria.type"
+            [options]="filter.criteriaOptions"
+            (selectedOptionChange)="onCriteriaTypeChange($event, criteria)"
             labelField="name"
             valueField="value"
             placeholder="Criteria"
@@ -58,21 +64,21 @@
         </div>
         <div class="twelve wide field">
           <sui-select
-            *ngIf="filter.criteria.valueType == CriteriaValueType.Single"
+            *ngIf="criteria.valueType == CriteriaValueType.Single"
             class="selection"
-            [(ngModel)]="filter.criteria.value"
-            [options]="filter.criteria.options"
+            [(ngModel)]="criteria.value"
+            [options]="criteria.options"
             (selectedOptionChange)="onCriteriaValueChange($event)"
-            [isDisabled]="filter.criteria?.type == CriteriaType.None"
+            [isDisabled]="criteria?.type == CriteriaType.None"
             placeholder="Criteria"
             #criteriaValueSelect>
             <sui-select-option *ngFor="let option of criteriaValueSelect.availableOptions" [value]="option"></sui-select-option>
           </sui-select>
           <sui-multi-select
-            *ngIf="filter.criteria.valueType == CriteriaValueType.Multiple"
+            *ngIf="criteria.valueType == CriteriaValueType.Multiple"
             class="selection"
-            [(ngModel)]="filter.criteria.values"
-            [options]="filter.criteria.options"
+            [(ngModel)]="criteria.values"
+            [options]="criteria.options"
             (selectedOptionsChange)="onCriteriaValueChange($event)"
             labelField="name"
             valueField="id"

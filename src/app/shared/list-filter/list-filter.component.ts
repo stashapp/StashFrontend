@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, Input, Output, ViewChild, EventEmitter } from '@angular/core';
+import { Component, OnInit, OnDestroy, Input, Output, ViewChildren, EventEmitter, ElementRef, QueryList } from '@angular/core';
 import { FormControl } from '@angular/forms';
 
 import { Observable } from 'rxjs';
@@ -21,8 +21,8 @@ export class ListFilterComponent implements OnInit, OnDestroy {
 
   @Input() filter: ListFilter;
   @Output() onFilterUpdate = new EventEmitter<ListFilter>();
-  @ViewChild('criteriaValueSelect') criteriaValueSelect: any;
-  @ViewChild('criteriaValuesSelect') criteriaValuesSelect: any;
+  @ViewChildren('criteriaValueSelect') criteriaValueSelectInputs: QueryList<ElementRef>;
+  @ViewChildren('criteriaValuesSelect') criteriaValuesSelectInputs: QueryList<ElementRef>;
 
   itemsPerPageOptions = [20, 40, 60, 120];
 
@@ -32,29 +32,8 @@ export class ListFilterComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.route.queryParams.subscribe(params => {
-      this.filter.criteriaFilterOpen = true;
-      if (params['type'] != null) {
-        const type = Number(params['type']);
-        this.filter.configureCriteriaType(type, this.stashService);
-      }
-      if (params['value'] != null) {
-        this.filter.criteria.value = params['value'];
-      }
-      if (params['values'] != null) {
-        if (params['values'] instanceof Array) {
-          this.filter.criteria.values = params['values'];
-        } else {
-          this.filter.criteria.values = [params['values']];
-        }
-      }
-      if (params['sortby'] != null) {
-        this.filter.sortBy = params['sortby'];
-      }
-      if (params['sortdir'] != null) {
-        this.filter.sortDirection = params['sortdir'];
-      }
+      this.filter.configureFromQueryParameters(params, this.stashService);
       if (params['q'] != null) {
-        this.filter.searchTerm = params['q'];
         this.searchFormControl.setValue(this.filter.searchTerm);
       }
     });
@@ -91,14 +70,25 @@ export class ListFilterComponent implements OnInit, OnDestroy {
     this.onFilterUpdate.emit(this.filter);
   }
 
-  onCriteriaTypeChange(criteriaType: CriteriaType) {
-    if (!!this.criteriaValueSelect) {
-      this.criteriaValueSelect.selectedOption = null;
-    }
+  onAddCriteria() {
+    const criteria = new Criteria();
+    this.filter.criterions.push(criteria);
+  }
+
+  onDeleteCriteria(criteria: Criteria) {
+    const idx = this.filter.criterions.indexOf(criteria);
+    this.filter.criterions.splice(idx, 1);
+    this.onFilterUpdate.emit(this.filter);
+  }
+
+  onCriteriaTypeChange(criteriaType: CriteriaType, criteria: Criteria) {
+    // if (!!this.criteriaValueSelect) {
+    //   this.criteriaValueSelect.selectedOption = null;
+    // }
     // if (!!this.criteriaValuesSelect) {
     //   this.criteriaValuesSelect.selectedOptions = null;
     // }
-    this.filter.configureCriteriaType(criteriaType, this.stashService);
+    criteria.configure(criteriaType, this.stashService);
     this.onFilterUpdate.emit(this.filter);
   }
 

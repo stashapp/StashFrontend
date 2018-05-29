@@ -33,6 +33,10 @@ export class TagListComponent implements OnInit {
     this.router.navigate(['new'], { relativeTo: this.route });
   }
 
+  makeJSONQueryString(tag): string {
+    return JSON.stringify({type: CriteriaType.Tags, values: [tag.id]});
+  }
+
   tagCount(tag: TagDataFragment) {
     return tag.scene_count + tag.scene_marker_count;
   }

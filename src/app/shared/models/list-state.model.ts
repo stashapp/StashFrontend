@@ -60,35 +60,78 @@ export class Criteria {
   value: string;
   values: string[];
 
-  getSceneFilter(): SceneFilterType {
-    switch (this.type) {
-      case CriteriaType.Rating: return { rating: Number(this.value) };
-      case CriteriaType.Resolution: {
-        switch (this.value) {
-          case '240p': return { resolution: ResolutionEnum.LOW };
-          case '480p': return { resolution: ResolutionEnum.STANDARD };
-          case '720p': return { resolution: ResolutionEnum.STANDARD_HD };
-          case '1080p': return { resolution: ResolutionEnum.FULL_HD };
-          case '4k': return { resolution: ResolutionEnum.FOUR_K };
-        }
-        return {};
+  async configure(type: CriteriaType, stashService: StashService) {
+    switch (type) {
+      case CriteriaType.None: {
+        this.type = CriteriaType.None;
+        this.valueType = CriteriaValueType.Single;
+        this.options = [];
+        break;
       }
-      case CriteriaType.HasMarkers: return { has_markers: this.value };
-      case CriteriaType.IsMissing: return { is_missing: this.value };
+      case CriteriaType.Rating: {
+        this.type = CriteriaType.Rating;
+        this.valueType = CriteriaValueType.Single;
+        this.parameterName = 'rating';
+        this.options = [1, 2, 3, 4, 5];
+        break;
+      }
+      case CriteriaType.Resolution: {
+        this.type = CriteriaType.Resolution;
+        this.valueType = CriteriaValueType.Single;
+        this.parameterName = 'resolution';
+        this.options = ['240p', '480p', '720p', '1080p', '4k'];
+        break;
+      }
+      case CriteriaType.Favorite: {
+        this.type = CriteriaType.Favorite;
+        this.valueType = CriteriaValueType.Single;
+        this.parameterName = 'filter_favorites';
+        this.options = ['true', 'false'];
+        break;
+      }
+      case CriteriaType.HasMarkers: {
+        this.type = CriteriaType.HasMarkers;
+        this.valueType = CriteriaValueType.Single;
+        this.parameterName = 'has_markers';
+        this.options = ['true', 'false'];
+        break;
+      }
+      case CriteriaType.IsMissing: {
+        this.type = CriteriaType.IsMissing;
+        this.valueType = CriteriaValueType.Single;
+        this.parameterName = 'is_missing';
+        this.options = ['title', 'url', 'date', 'gallery', 'studio', 'performers'];
+        break;
+      }
+      case CriteriaType.Tags: {
+        this.type = CriteriaType.Tags;
+        this.valueType = CriteriaValueType.Multiple;
+        this.parameterName = 'tags';
+        const result = await stashService.allTags().result();
+        this.options = result.data.allTags.map(item => {
+          return { id: item.id, name: item.name };
+        });
+        break;
+      }
+      case CriteriaType.SceneTags: {
+        this.type = CriteriaType.SceneTags;
+        this.valueType = CriteriaValueType.Multiple;
+        this.parameterName = 'scene_tags';
+        const result = await stashService.allTags().result();
+        this.options = result.data.allTags.map(item => {
+          return { id: item.id, name: item.name };
+        });
+        break;
+      }
+      default: {
+        this.type = CriteriaType.None;
+        this.valueType = CriteriaValueType.Single;
+        this.options = [];
+      }
     }
-  }
 
-  getPerformerFilter(): PerformerFilterType {
-    switch (this.type) {
-      case CriteriaType.Favorite: return { filter_favorites: this.value === 'true' };
-    }
-  }
-
-  getSceneMarkerFilter(): SceneMarkerFilterType {
-    switch (this.type) {
-      case CriteriaType.Tags: return { tags: this.values };
-      case CriteriaType.SceneTags: return { scene_tags: this.values };
-    }
+    this.value = ''; // Need this or else we send invalid value to the new filter
+    // this.values = []; // TODO this seems to break the "Multiple" filters
   }
 }
 
@@ -102,8 +145,8 @@ export class ListFilter {
   filterMode: FilterMode;
   sortByOptions: string[];
   criteriaFilterOpen = false;
-  criterions: CriteriaOption[];
-  criteria: Criteria = new Criteria();
+  criteriaOptions: CriteriaOption[];
+  criterions: Criteria[] = [];
   customCriteria: CustomCriteria[] = [];
 
   configureForFilterMode(filterMode: FilterMode) {
@@ -111,7 +154,7 @@ export class ListFilter {
       case FilterMode.Scenes:
         if (!!this.sortBy === false) { this.sortBy = 'date'; }
         this.sortByOptions = ['title', 'rating', 'date', 'filesize', 'duration'];
-        this.criterions = [
+        this.criteriaOptions = [
           new CriteriaOption(CriteriaType.None),
           new CriteriaOption(CriteriaType.Rating),
           new CriteriaOption(CriteriaType.Resolution),
@@ -122,7 +165,7 @@ export class ListFilter {
       case FilterMode.Performers:
         if (!!this.sortBy === false) { this.sortBy = 'name'; }
         this.sortByOptions = ['name', 'height', 'birthdate', 'scenes_count'];
-        this.criterions = [
+        this.criteriaOptions = [
           new CriteriaOption(CriteriaType.None),
           new CriteriaOption(CriteriaType.Favorite)
         ];
@@ -130,21 +173,21 @@ export class ListFilter {
       case FilterMode.Studios:
         if (!!this.sortBy === false) { this.sortBy = 'name'; }
         this.sortByOptions = ['name', 'scenes_count'];
-        this.criterions = [
+        this.criteriaOptions = [
           new CriteriaOption(CriteriaType.None)
         ];
         break;
       case FilterMode.Galleries:
         if (!!this.sortBy === false) { this.sortBy = 'title'; }
         this.sortByOptions = ['title', 'path'];
-        this.criterions = [
+        this.criteriaOptions = [
           new CriteriaOption(CriteriaType.None)
         ];
         break;
       case FilterMode.SceneMarkers:
         if (!!this.sortBy === false) { this.sortBy = 'title'; }
         this.sortByOptions = ['title', 'seconds', 'scene_id'];
-        this.criterions = [
+        this.criteriaOptions = [
           new CriteriaOption(CriteriaType.None),
           new CriteriaOption(CriteriaType.Tags),
           new CriteriaOption(CriteriaType.SceneTags)
@@ -152,96 +195,131 @@ export class ListFilter {
         break;
       default:
         this.sortByOptions = [];
-        this.criterions = [new CriteriaOption(CriteriaType.None)];
+        this.criteriaOptions = [new CriteriaOption(CriteriaType.None)];
         break;
     }
   }
 
-  async configureCriteriaType(type: CriteriaType, stashService: StashService) {
-    switch (type) {
-      case CriteriaType.None: {
-        this.criteria.type = CriteriaType.None;
-        this.criteria.valueType = CriteriaValueType.Single;
-        this.criteria.options = [];
-        break;
-      }
-      case CriteriaType.Rating: {
-        this.criteria.type = CriteriaType.Rating;
-        this.criteria.valueType = CriteriaValueType.Single;
-        this.criteria.parameterName = 'rating';
-        this.criteria.options = [1, 2, 3, 4, 5];
-        break;
-      }
-      case CriteriaType.Resolution: {
-        this.criteria.type = CriteriaType.Resolution;
-        this.criteria.valueType = CriteriaValueType.Single;
-        this.criteria.parameterName = 'resolution';
-        this.criteria.options = ['240p', '480p', '720p', '1080p', '4k'];
-        break;
-      }
-      case CriteriaType.Favorite: {
-        this.criteria.type = CriteriaType.Favorite;
-        this.criteria.valueType = CriteriaValueType.Single;
-        this.criteria.parameterName = 'filter_favorites';
-        this.criteria.options = ['true', 'false'];
-        break;
-      }
-      case CriteriaType.HasMarkers: {
-        this.criteria.type = CriteriaType.HasMarkers;
-        this.criteria.valueType = CriteriaValueType.Single;
-        this.criteria.parameterName = 'has_markers';
-        this.criteria.options = ['true', 'false'];
-        break;
-      }
-      case CriteriaType.IsMissing: {
-        this.criteria.type = CriteriaType.IsMissing;
-        this.criteria.valueType = CriteriaValueType.Single;
-        this.criteria.parameterName = 'is_missing';
-        this.criteria.options = ['title', 'url', 'date', 'gallery', 'studio', 'performers'];
-        break;
-      }
-      case CriteriaType.Tags: {
-        this.criteria.type = CriteriaType.Tags;
-        this.criteria.valueType = CriteriaValueType.Multiple;
-        this.criteria.parameterName = 'tags';
-        const result = await stashService.allTags().result();
-        this.criteria.options = result.data.allTags.map(item => {
-          return { id: item.id, name: item.name };
-        });
-        break;
-      }
-      case CriteriaType.SceneTags: {
-        this.criteria.type = CriteriaType.SceneTags;
-        this.criteria.valueType = CriteriaValueType.Multiple;
-        this.criteria.parameterName = 'scene_tags';
-        const result = await stashService.allTags().result();
-        this.criteria.options = result.data.allTags.map(item => {
-          return { id: item.id, name: item.name };
-        });
-        break;
-      }
-      default: {
-        this.criteria.type = CriteriaType.None;
-        this.criteria.valueType = CriteriaValueType.Single;
-        this.criteria.options = [];
-      }
+  configureFromQueryParameters(params, stashService: StashService) {
+    if (params['sortby'] != null) {
+      this.sortBy = params['sortby'];
+    }
+    if (params['sortdir'] != null) {
+      this.sortDirection = params['sortdir'];
+    }
+    if (params['q'] != null) {
+      this.searchTerm = params['q'];
     }
 
-    this.criteria.value = null;
+    if (params['c'] != null) {
+      this.criterions = [];
+
+      let jsonParameters: any[];
+      if (params['c'] instanceof Array) {
+        jsonParameters = params['c'];
+      } else {
+        jsonParameters = [params['c']];
+      }
+
+      if (jsonParameters.length !== 0) {
+        this.criteriaFilterOpen = true;
+      }
+
+      jsonParameters.forEach(jsonString => {
+        const encodedCriteria = JSON.parse(jsonString);
+        const criteria = new Criteria();
+        criteria.configure(encodedCriteria.type, stashService);
+        if (criteria.valueType === CriteriaValueType.Single) {
+          criteria.value = encodedCriteria.value;
+        } else {
+          criteria.values = encodedCriteria.values;
+        }
+        this.criterions.push(criteria);
+      });
+    }
   }
 
   makeQueryParameters(): any {
-    return {
+    const encodedCriterion = [];
+    this.criterions.forEach(criteria => {
+      const encodedCriteria: any = {};
+      encodedCriteria.type = criteria.type;
+      if (criteria.valueType === CriteriaValueType.Single) {
+        encodedCriteria.value = criteria.value;
+      } else {
+        encodedCriteria.values = criteria.values;
+      }
+      const jsonCriteria = JSON.stringify(encodedCriteria);
+      encodedCriterion.push(jsonCriteria);
+    });
+
+    const result = {
       queryParams: {
-        type: this.criteria.type,
-        value: this.criteria.value,
-        values: this.criteria.values,
         sortby: this.sortBy,
         sortdir: this.sortDirection,
-        q: this.searchTerm
+        q: this.searchTerm,
+        c: encodedCriterion
       },
       queryParamsHandling: 'merge'
     };
+    return result;
+  }
+
+  // TODO: These don't support multiple of the same criteria, only the last one set is used.
+
+  makeSceneFilter(): SceneFilterType {
+    const result: SceneFilterType = {};
+    this.criterions.forEach(criteria => {
+      switch (criteria.type) {
+        case CriteriaType.Rating:
+          result.rating = Number(criteria.value);
+          break;
+        case CriteriaType.Resolution: {
+          switch (criteria.value) {
+            case '240p': result.resolution = ResolutionEnum.LOW; break;
+            case '480p': result.resolution = ResolutionEnum.STANDARD; break;
+            case '720p': result.resolution = ResolutionEnum.STANDARD_HD; break;
+            case '1080p': result.resolution = ResolutionEnum.FULL_HD; break;
+            case '4k': result.resolution = ResolutionEnum.FOUR_K; break;
+          }
+          break;
+        }
+        case CriteriaType.HasMarkers:
+          result.has_markers = criteria.value;
+          break;
+        case CriteriaType.IsMissing:
+          result.is_missing = criteria.value;
+          break;
+      }
+    });
+    return result;
+  }
+
+  makePerformerFilter(): PerformerFilterType {
+    const result: PerformerFilterType = {};
+    this.criterions.forEach(criteria => {
+      switch (criteria.type) {
+        case CriteriaType.Favorite:
+          result.filter_favorites = criteria.value === 'true';
+          break;
+      }
+    });
+    return result;
+  }
+
+  makeSceneMarkerFilter(): SceneMarkerFilterType {
+    const result: SceneMarkerFilterType = {};
+    this.criterions.forEach(criteria => {
+      switch (criteria.type) {
+        case CriteriaType.Tags:
+          result.tags = criteria.values;
+          break;
+        case CriteriaType.SceneTags:
+          result.scene_tags = criteria.values;
+          break;
+      }
+    });
+    return result;
   }
 }
 

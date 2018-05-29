@@ -136,8 +136,8 @@ export class StashService {
 
   findScenes(page?: number, filter?: ListFilter): QueryRef<GQL.FindScenesQuery, Record<string, any>> {
     let scene_filter = {};
-    if (filter.criteriaFilterOpen && !!filter.criteria.value) {
-      scene_filter = filter.criteria.getSceneFilter();
+    if (filter.criteriaFilterOpen) {
+      scene_filter = filter.makeSceneFilter();
     }
     if (filter.customCriteria) {
       filter.customCriteria.forEach(criteria => {
@@ -181,8 +181,8 @@ export class StashService {
 
   findSceneMarkers(page?: number, filter?: ListFilter) {
     let scene_marker_filter = {};
-    if (filter.criteriaFilterOpen && !!filter.criteria.values) {
-      scene_marker_filter = filter.criteria.getSceneMarkerFilter();
+    if (filter.criteriaFilterOpen) {
+      scene_marker_filter = filter.makeSceneMarkerFilter();
     }
     if (filter.customCriteria) {
       filter.customCriteria.forEach(criteria => {
@@ -227,8 +227,8 @@ export class StashService {
 
   findPerformers(page?: number, filter?: ListFilter) {
     let performer_filter = {};
-    if (filter.criteriaFilterOpen && !!filter.criteria.value) {
-      performer_filter = filter.criteria.getPerformerFilter();
+    if (filter.criteriaFilterOpen) {
+      performer_filter = filter.makePerformerFilter();
     }
     // if (filter.customCriteria) {
     //   filter.customCriteria.forEach(criteria => {

@@ -7,7 +7,7 @@
 <div class="ui middle aligned relaxed divided list">
   <div *ngFor="let tag of tags" class="item">
     <div class="right floated content">
-      <a class="ui button" [routerLink]="['/tags', tag.id]" [queryParams]="{tag_list_type: 'markers', type: CriteriaType.Tags, values: [tag.id]}">Markers</a>
+      <a class="ui button" [routerLink]="['/tags', tag.id]" [queryParams]="{tag_list_type: 'markers', c: makeJSONQueryString(tag)}">Markers</a>
       <a class="ui button" [routerLink]="['/tags', tag.id]" [queryParams]="{tag_list_type: 'scenes'}">Scenes</a>
     </div>
     <div class="content">
