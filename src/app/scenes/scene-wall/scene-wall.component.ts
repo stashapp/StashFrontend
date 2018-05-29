@@ -44,6 +44,7 @@ export class SceneWallComponent implements OnInit {
     this.stashService.markerStrings().valueChanges.subscribe(result => {
       this.markerOptions = result.data.markerStrings;
     });
+    this.searchFormControl.setValue(this.searchTerm);
   }
 
   async getScenes(q: string) {
@@ -76,6 +77,7 @@ export class SceneWallComponent implements OnInit {
 
   onClickMarker(marker) {
     this.searchTerm = `"${marker.title}"`;
+    this.searchFormControl.setValue(this.searchTerm);
     this.showingMarkerList = false;
   }
 

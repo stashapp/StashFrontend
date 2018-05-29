@@ -59,6 +59,7 @@ export class PerformerFormComponent implements OnInit, OnDestroy {
                             debounceTime(400),
                             distinctUntilChanged()
                           ).subscribe(term => {
+                            this.name = term;
                             this.getPerformerNames(term);
                           });
   }
@@ -107,6 +108,7 @@ export class PerformerFormComponent implements OnInit, OnDestroy {
   onClickedPerformerName(name) {
     this.name = name;
     this.selectedName = name;
+    this.searchFormControl.setValue(this.name);
   }
 
   onImageChange(event) {

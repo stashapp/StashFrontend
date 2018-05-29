@@ -195,14 +195,16 @@ export class SceneDetailScrubberComponent implements OnInit, OnChanges {
   }
 
   getTagStyle(tag: HTMLDivElement, i: number) {
-    if (!this.slider || this.spriteItems.length === 0 || this.getBounds() === 0) { return; }
+    if (!this.slider || this.spriteItems.length === 0 || this.getBounds() === 0) { return {}; }
 
     const marker = this.scene.scene_markers[i];
     const duration = Number(this.scene.file.duration);
     const percentage = marker.seconds / duration;
 
+    // TODO: this doesn't seem necessary anymore.  Double check.
     // Need to offset from the left margin or the tags are slightly off.
-    const offset = Number(window.getComputedStyle(this.slider.offsetParent).marginLeft.replace('px', ''));
+    // const offset = Number(window.getComputedStyle(this.slider.offsetParent).marginLeft.replace('px', ''));
+    const offset = 0;
 
     const left = (this.slider.scrollWidth * percentage) - (tag.clientWidth / 2) + offset;
     return {

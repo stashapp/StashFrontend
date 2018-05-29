@@ -1,8 +1,13 @@
 import { Component, OnInit, OnChanges, SimpleChanges, ViewChild, Input, Output } from '@angular/core';
+import { FormControl } from '@angular/forms';
 
 import { StashService } from '../../core/stash.service';
 
+import { Observable } from 'rxjs';
+import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
+
 import { MarkerStringsQuery, SceneMarkerDataFragment, SceneDataFragment, TagDataFragment } from '../../core/graphql-generated';
+
 
 @Component({
   selector: 'app-scene-detail-marker-manager',
@@ -15,7 +20,12 @@ export class SceneDetailMarkerManagerComponent implements OnInit, OnChanges {
 
   showingMarkerModal = false;
   markerOptions: MarkerStringsQuery['markerStrings'];
+  filteredMarkerOptions: string[] = [];
+  hasFocus = false;
   editingMarker: SceneMarkerDataFragment;
+  deleteClickCount = 0;
+
+  searchFormControl = new FormControl();
 
   // Form input
   title: string;
@@ -35,6 +45,17 @@ export class SceneDetailMarkerManagerComponent implements OnInit, OnChanges {
 
     this.stashService.markerStrings().valueChanges.subscribe(result => {
       this.markerOptions = result.data.markerStrings;
+    });
+
+    this.searchFormControl.valueChanges.pipe(
+      debounceTime(400),
+      distinctUntilChanged()
+    ).subscribe(term => {
+      this.filteredMarkerOptions = this.markerOptions.filter(value => {
+        return value.title.toLowerCase().includes(term.toLowerCase());
+      }).map(value => {
+        return value.title;
+      }).slice(0, 15);
     });
   }
 
@@ -75,12 +96,14 @@ export class SceneDetailMarkerManagerComponent implements OnInit, OnChanges {
     this.hideModal();
   }
 
-  onDestroy() {
-    // TODO renable and add two steps to delete
-    // this.stashService.markerDestroy(this.editingMarker.id, this.scene.id).subscribe(response => {
-    //   console.log('Delete successfull:', response);
-    //   this.hideModal();
-    // });
+  onClickDelete() {
+    this.deleteClickCount += 1;
+    if (this.deleteClickCount > 2) {
+      this.stashService.markerDestroy(this.editingMarker.id, this.scene.id).subscribe(response => {
+        console.log('Delete successfull:', response);
+        this.hideModal();
+      });
+    }
   }
 
   onClickAddMarker() {
@@ -96,21 +119,39 @@ export class SceneDetailMarkerManagerComponent implements OnInit, OnChanges {
     this.showModal(marker);
   }
 
+  onClickMarkerTitle(title: string) {
+    this.setTitle(title);
+  }
+
+  setHasFocus(hasFocus: boolean) {
+    if (hasFocus === false) {
+      setTimeout(() => { this.hasFocus = false; }, 400);
+    } else {
+      this.hasFocus = hasFocus;
+    }
+  }
+
   private hideModal() {
     this.showingMarkerModal = false;
     this.editingMarker = null;
   }
 
   private showModal(marker: SceneMarkerDataFragment = null) {
+    this.deleteClickCount = 0;
     this.showingMarkerModal = true;
     this.seconds = Math.round(this.player.getPosition());
     if (marker == null) { return; }
 
     this.editingMarker = marker;
 
-    this.title = marker.title;
+    this.setTitle(marker.title);
     this.seconds = marker.seconds;
     this.primary_tag_id = marker.primary_tag.id;
     this.tag_ids = marker.tags.map(value => value.id);
+  }
+
+  private setTitle(title: string) {
+    this.title = title;
+    this.searchFormControl.setValue(title);
   }
 }

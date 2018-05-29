@@ -1,7 +1,7 @@
 <div class="ui text menu">
   <div class="ui massive category search item" style="width: 33vw;">
     <div class="ui transparent icon input" style="width: 100%; border-bottom: 1px rgba(0,0,0,0.1) solid;">
-      <input [(ngModel)]="filter.searchTerm" [formControl]="searchFormControl" (ngModelChange)="onChange($event)" placeholder="Search..." type="text">
+      <input [formControl]="searchFormControl" (ngModelChange)="onChange($event)" placeholder="Search..." type="text">
       <i class="search link icon"></i>
     </div>
   </div>

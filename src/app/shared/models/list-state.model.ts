@@ -34,7 +34,8 @@ export enum CriteriaType {
   Favorite,
   HasMarkers,
   IsMissing,
-  Tags
+  Tags,
+  SceneTags
 }
 
 export enum CriteriaValueType {
@@ -86,6 +87,7 @@ export class Criteria {
   getSceneMarkerFilter(): SceneMarkerFilterType {
     switch (this.type) {
       case CriteriaType.Tags: return { tags: this.values };
+      case CriteriaType.SceneTags: return { scene_tags: this.values };
     }
   }
 }
@@ -144,7 +146,8 @@ export class ListFilter {
         this.sortByOptions = ['title', 'seconds', 'scene_id'];
         this.criterions = [
           new CriteriaOption(CriteriaType.None),
-          new CriteriaOption(CriteriaType.Tags)
+          new CriteriaOption(CriteriaType.Tags),
+          new CriteriaOption(CriteriaType.SceneTags)
         ];
         break;
       default:
@@ -207,6 +210,16 @@ export class ListFilter {
         });
         break;
       }
+      case CriteriaType.SceneTags: {
+        this.criteria.type = CriteriaType.SceneTags;
+        this.criteria.valueType = CriteriaValueType.Multiple;
+        this.criteria.parameterName = 'scene_tags';
+        const result = await stashService.allTags().result();
+        this.criteria.options = result.data.allTags.map(item => {
+          return { id: item.id, name: item.name };
+        });
+        break;
+      }
       default: {
         this.criteria.type = CriteriaType.None;
         this.criteria.valueType = CriteriaValueType.Single;
@@ -224,7 +237,8 @@ export class ListFilter {
         value: this.criteria.value,
         values: this.criteria.values,
         sortby: this.sortBy,
-        sortdir: this.sortDirection
+        sortdir: this.sortDirection,
+        q: this.searchTerm
       },
       queryParamsHandling: 'merge'
     };
@@ -234,23 +248,9 @@ export class ListFilter {
 export class ListState<T> {
   currentPage = 1;
   totalCount: number;
-  errorMessage: string;
   scrollY: number;
   filter: ListFilter = new ListFilter();
   data: T[];
-
-  update(state: ListState<T>) {
-    // TODO: improve this...
-    this.currentPage = state.currentPage;
-    this.scrollY = state.scrollY;
-    this.filter.searchTerm = state.filter.searchTerm;
-    this.filter.itemsPerPage = state.filter.itemsPerPage;
-    this.filter.sortDirection = state.filter.sortDirection;
-    this.filter.sortBy = state.filter.sortBy;
-    this.filter.displayMode = state.filter.displayMode;
-    this.filter.criteriaFilterOpen = state.filter.criteriaFilterOpen;
-    this.filter.customCriteria = state.filter.customCriteria;
-  }
 
   reset() {
     this.data = null;

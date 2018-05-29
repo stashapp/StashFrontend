@@ -20,7 +20,7 @@
 <div class="wall grid">
   <form id="scene-filter" class="ui massive form">
     <div class="ui massive fluid transparent icon input">
-      <input [(ngModel)]="searchTerm" [formControl]="searchFormControl" name="q" placeholder="Search..." type="text">
+      <input [formControl]="searchFormControl" name="q" placeholder="Search..." type="text">
       <i class="search icon"></i>
       <button  (click)="refresh()" class="ui basic button" style="margin: 5px 5px;">Refresh</button>
       <button *ngIf="mode == WallMode.Markers" (click)="toggleMarkerList()" class="ui basic button" style="margin: 5px 5px;">List Markers</button>

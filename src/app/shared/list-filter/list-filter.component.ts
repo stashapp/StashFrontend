@@ -53,6 +53,10 @@ export class ListFilterComponent implements OnInit, OnDestroy {
       if (params['sortdir'] != null) {
         this.filter.sortDirection = params['sortdir'];
       }
+      if (params['q'] != null) {
+        this.filter.searchTerm = params['q'];
+        this.searchFormControl.setValue(this.filter.searchTerm);
+      }
     });
 
     this.filter.configureForFilterMode(this.filter.filterMode);
@@ -65,6 +69,8 @@ export class ListFilterComponent implements OnInit, OnDestroy {
         this.filter.searchTerm = term;
         this.onFilterUpdate.emit(this.filter);
       });
+
+    this.onFilterUpdate.emit(this.filter);
   }
 
   ngOnDestroy() {

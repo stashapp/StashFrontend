@@ -5,7 +5,7 @@
       <div class="fourteen wide field">
         <label>Name</label>
         <div class="ui search focus">
-          <input [(ngModel)]="name" [formControl]="searchFormControl" type="text" placeholder="Name" />
+          <input [formControl]="searchFormControl" type="text" placeholder="Name" />
           <div *ngIf="performerNameOptions.length > 0 && !selectedName" class="results transition visible">
               <a *ngFor="let name of performerNameOptions" (click)="onClickedPerformerName(name)" class="result">
                 <div class="content">
