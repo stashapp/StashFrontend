@@ -2,7 +2,9 @@ import { Component, OnInit, OnChanges, Input, Output, EventEmitter } from '@angu
 import { Router } from '@angular/router';
 
 import { StashService } from '../../core/stash.service';
-import { Gallery, GalleryImage } from '../../shared/models/gallery.model';
+
+import { GalleryImage } from '../../shared/models/gallery.model';
+import { GalleryDataFragment } from '../../core/graphql-generated';
 
 @Component({
   selector: 'app-gallery-preview',
@@ -10,7 +12,7 @@ import { Gallery, GalleryImage } from '../../shared/models/gallery.model';
   styleUrls: ['./gallery-preview.component.css']
 })
 export class GalleryPreviewComponent implements OnInit, OnChanges {
-  @Input() gallery: Gallery;
+  @Input() gallery: GalleryDataFragment;
   @Input() galleryId: number;
   @Input() type = 'random';
   @Input() numberOfRandomImages = 12;

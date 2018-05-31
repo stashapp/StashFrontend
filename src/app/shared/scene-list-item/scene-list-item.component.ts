@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, HostBinding, HostListener, ViewChild } from '@angular/core';
 
-import { Scene } from '../../shared/models/scene.model';
+import { SceneDataFragment } from '../../core/graphql-generated';
 
 @Component({
   selector: 'app-scene-list-item',
@@ -8,7 +8,7 @@ import { Scene } from '../../shared/models/scene.model';
   styleUrls: ['./scene-list-item.component.css']
 })
 export class SceneListItemComponent implements OnInit {
-  @Input() scene: Scene;
+  @Input() scene: SceneDataFragment;
 
   // The host class needs to be card
   @HostBinding('class') class = 'item';

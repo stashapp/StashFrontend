@@ -4,7 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { StashService } from '../../core/stash.service';
 import { StudiosService } from '../studios.service';
 
-import { Studio } from '../../shared/models/studio.model';
+import { StudioDataFragment } from '../../core/graphql-generated';
 
 import { SceneListState, CustomCriteria } from '../../shared/models/list-state.model';
 
@@ -14,7 +14,7 @@ import { SceneListState, CustomCriteria } from '../../shared/models/list-state.m
   styleUrls: ['./studio-detail.component.scss']
 })
 export class StudioDetailComponent implements OnInit, OnDestroy {
-  studio: Studio;
+  studio: StudioDataFragment;
   sceneListState: SceneListState;
 
   constructor(

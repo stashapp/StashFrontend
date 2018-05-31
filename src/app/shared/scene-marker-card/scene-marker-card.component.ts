@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, HostListener, ElementRef, ViewChild } from '@angular/core';
 
-import { SceneMarker } from '../../shared/models/scene.model';
+import { SceneMarkerDataFragment } from '../../core/graphql-generated';
 
 @Component({
   selector: 'app-scene-marker-card',
@@ -8,7 +8,7 @@ import { SceneMarker } from '../../shared/models/scene.model';
   styleUrls: ['./scene-marker-card.component.css']
 })
 export class SceneMarkerCardComponent implements OnInit {
-  @Input() sceneMarker: SceneMarker;
+  @Input() sceneMarker: SceneMarkerDataFragment;
 
   private video: any;
   private hoverTimeout: any = null;

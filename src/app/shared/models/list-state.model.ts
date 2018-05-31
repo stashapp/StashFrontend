@@ -1,8 +1,15 @@
-import { Scene, SceneMarker } from './scene.model';
-import { Performer } from './performer.model';
-import { Studio } from './studio.model';
-import { Gallery } from './gallery.model';
-import { SceneFilterType, ResolutionEnum, PerformerFilterType, SceneMarkerFilterType } from '../../core/graphql-generated';
+import {
+  SceneFilterType,
+  ResolutionEnum,
+  PerformerFilterType,
+  SceneMarkerFilterType,
+  SlimSceneDataFragment,
+  PerformerDataFragment,
+  StudioDataFragment,
+  GalleryDataFragment,
+  SceneMarkerDataFragment
+} from '../../core/graphql-generated';
+
 import { StashService } from '../../core/stash.service';
 
 export enum DisplayMode {
@@ -336,35 +343,35 @@ export class ListState<T> {
   }
 }
 
-export class SceneListState extends ListState<Scene> {
+export class SceneListState extends ListState<SlimSceneDataFragment> {
   constructor() {
     super();
     this.filter.filterMode = FilterMode.Scenes;
   }
 }
 
-export class PerformerListState extends ListState<Performer> {
+export class PerformerListState extends ListState<PerformerDataFragment> {
   constructor() {
     super();
     this.filter.filterMode = FilterMode.Performers;
   }
 }
 
-export class StudioListState extends ListState<Studio> {
+export class StudioListState extends ListState<StudioDataFragment> {
   constructor() {
     super();
     this.filter.filterMode = FilterMode.Studios;
   }
 }
 
-export class GalleryListState extends ListState<Gallery> {
+export class GalleryListState extends ListState<GalleryDataFragment> {
   constructor() {
     super();
     this.filter.filterMode = FilterMode.Galleries;
   }
 }
 
-export class SceneMarkerListState extends ListState<SceneMarker> {
+export class SceneMarkerListState extends ListState<SceneMarkerDataFragment> {
   constructor() {
     super();
     this.filter.filterMode = FilterMode.SceneMarkers;

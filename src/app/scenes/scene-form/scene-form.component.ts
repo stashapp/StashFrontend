@@ -3,10 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 
 import { StashService } from '../../core/stash.service';
 
-import { Performer } from '../../shared/models/performer.model';
-import { Tag } from '../../shared/models/tag.model';
-import { Studio } from '../../shared/models/studio.model';
-import { Gallery } from '../../shared/models/gallery.model';
+import { FindSceneForEditingQuery } from '../../core/graphql-generated';
 
 @Component({
   selector: 'app-scene-form',
@@ -26,11 +23,10 @@ export class SceneFormComponent implements OnInit {
   performer_ids: string[] = [];
   tag_ids: string[] = [];
 
-  performers: Performer[];
-  tags: Tag[];
-  studios: Studio[];
-  galleries: Gallery[];
-
+  performers: FindSceneForEditingQuery['allPerformers'];
+  tags: FindSceneForEditingQuery['allTags'];
+  studios: FindSceneForEditingQuery['allStudios'];
+  galleries: FindSceneForEditingQuery['validGalleriesForScene'];
 
   constructor(
     private route: ActivatedRoute,

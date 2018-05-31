@@ -1,7 +1,7 @@
 import { Component, OnInit, Input, HostListener, ElementRef, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 
-import { Scene, SceneMarker } from '../../shared/models/scene.model';
+import { SceneDataFragment, SceneMarkerDataFragment } from '../../core/graphql-generated';
 
 @Component({
   selector: 'app-scene-wall-item',
@@ -17,8 +17,8 @@ export class SceneWallItemComponent implements OnInit {
   title = '';
   imagePath = '';
   videoPath = '';
-  @Input() scene: Scene;
-  @Input() marker: SceneMarker;
+  @Input() scene: SceneDataFragment;
+  @Input() marker: SceneMarkerDataFragment;
 
   @ViewChild('videoTag')
   set videoTag(videoTag: ElementRef) {

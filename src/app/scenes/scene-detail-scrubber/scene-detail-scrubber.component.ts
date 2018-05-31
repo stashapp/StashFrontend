@@ -12,7 +12,16 @@ import {
 
 import { HttpClient } from '@angular/common/http';
 
-import { Scene, SceneSpriteItem } from '../../shared/models/scene.model';
+import { SceneDataFragment } from '../../core/graphql-generated';
+
+class SceneSpriteItem {
+  start: number;
+  end: number;
+  x: number;
+  y: number;
+  w: number;
+  h: number;
+}
 
 @Component({
   selector: 'app-scene-detail-scrubber',
@@ -20,7 +29,7 @@ import { Scene, SceneSpriteItem } from '../../shared/models/scene.model';
   styleUrls: ['./scene-detail-scrubber.component.css']
 })
 export class SceneDetailScrubberComponent implements OnInit, OnChanges {
-  @Input() scene: Scene;
+  @Input() scene: SceneDataFragment;
   @Output() seek: EventEmitter<number> = new EventEmitter();
   @Output() scrolled: EventEmitter<any> = new EventEmitter();
 

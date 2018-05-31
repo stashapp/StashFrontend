@@ -4,7 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { StashService } from '../../core/stash.service';
 import { PerformersService } from '../performers.service';
 
-import { Performer } from '../../shared/models/performer.model';
+import { PerformerDataFragment } from '../../core/graphql-generated';
 
 import { SceneListState, CustomCriteria } from '../../shared/models/list-state.model';
 
@@ -14,7 +14,7 @@ import { SceneListState, CustomCriteria } from '../../shared/models/list-state.m
   styleUrls: ['./performer-detail.component.css']
 })
 export class PerformerDetailComponent implements OnInit {
-  performer: Performer;
+  performer: PerformerDataFragment;
   sceneListState: SceneListState;
 
   constructor(

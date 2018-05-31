@@ -1,7 +1,7 @@
 import { Component, OnInit, Input, HostBinding } from '@angular/core';
 import { Router } from '@angular/router';
 
-import { Studio } from '../../shared/models/studio.model';
+import { StudioDataFragment } from '../../core/graphql-generated';
 
 @Component({
   selector: 'app-studio-card',
@@ -9,7 +9,7 @@ import { Studio } from '../../shared/models/studio.model';
   styleUrls: ['./studio-card.component.css']
 })
 export class StudioCardComponent implements OnInit {
-  @Input() studio: Studio;
+  @Input() studio: StudioDataFragment;
 
   // The host class needs to be card
   @HostBinding('class') class = 'card';

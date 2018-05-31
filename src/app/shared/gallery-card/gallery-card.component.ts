@@ -1,7 +1,7 @@
 import { Component, OnInit, Input, HostBinding } from '@angular/core';
 import { Router } from '@angular/router';
 
-import { Gallery } from '../../shared/models/gallery.model';
+import { GalleryDataFragment } from '../../core/graphql-generated';
 
 @Component({
   selector: 'app-gallery-card',
@@ -9,7 +9,7 @@ import { Gallery } from '../../shared/models/gallery.model';
   styleUrls: ['./gallery-card.component.css']
 })
 export class GalleryCardComponent implements OnInit {
-  @Input() gallery: Gallery;
+  @Input() gallery: GalleryDataFragment;
 
   // The host class needs to be card
   @HostBinding('class') class = 'card';
