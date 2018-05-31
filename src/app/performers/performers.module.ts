@@ -26,4 +26,4 @@ import { PerformerFormComponent } from './performer-form/performer-form.componen
     PerformersService
   ]
 })
-export class PerformersModule { }
+export class PerformersModule {}

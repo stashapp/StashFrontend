@@ -11,7 +11,7 @@ import { SceneListState, CustomCriteria } from '../../shared/models/list-state.m
 @Component({
   selector: 'app-studio-detail',
   templateUrl: './studio-detail.component.html',
-  styleUrls: ['./studio-detail.component.css']
+  styleUrls: ['./studio-detail.component.scss']
 })
 export class StudioDetailComponent implements OnInit, OnDestroy {
   studio: Studio;
@@ -22,7 +22,7 @@ export class StudioDetailComponent implements OnInit, OnDestroy {
     private stashService: StashService,
     private studioService: StudiosService,
     private router: Router
-  ) { }
+  ) {}
 
   ngOnInit() {
     const id = parseInt(this.route.snapshot.params['id'], 10);

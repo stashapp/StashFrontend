@@ -24,4 +24,4 @@ import { StudioFormComponent } from './studio-form/studio-form.component';
     StudiosService
   ]
 })
-export class StudiosModule { }
+export class StudiosModule {}

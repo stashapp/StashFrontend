@@ -19,4 +19,4 @@ import { TagDetailComponent } from './tag-detail/tag-detail.component';
     TagDetailComponent
   ]
 })
-export class TagsModule { }
+export class TagsModule {}

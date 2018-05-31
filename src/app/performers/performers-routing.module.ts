@@ -26,4 +26,4 @@ const performersRoutes: Routes = [
     RouterModule
   ]
 })
-export class PerformersRoutingModule { }
+export class PerformersRoutingModule {}

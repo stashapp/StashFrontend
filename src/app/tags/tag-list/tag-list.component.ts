@@ -9,7 +9,7 @@ import { CriteriaType } from '../../shared/models/list-state.model';
 @Component({
   selector: 'app-tag-list',
   templateUrl: './tag-list.component.html',
-  styleUrls: ['./tag-list.component.css']
+  styleUrls: ['./tag-list.component.scss']
 })
 export class TagListComponent implements OnInit {
   CriteriaType = CriteriaType;

@@ -27,4 +27,4 @@ const scenesRoutes: Routes = [
     RouterModule
   ]
 })
-export class ScenesRoutingModule { }
+export class ScenesRoutingModule {}

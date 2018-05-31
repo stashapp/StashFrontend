@@ -7,6 +7,5 @@ export class StudiosService {
   listState: StudioListState = new StudioListState();
   detailsSceneListState: SceneListState = new SceneListState();
 
-  constructor() { }
-
+  constructor() {}
 }

@@ -7,7 +7,7 @@ import { Scene, SceneMarker } from '../../shared/models/scene.model';
 @Component({
   selector: 'app-scene-wall-item',
   templateUrl: './scene-wall-item.component.html',
-  styleUrls: ['./scene-wall-item.component.css']
+  styleUrls: ['./scene-wall-item.component.scss']
 })
 export class SceneWallItemComponent implements OnInit {
 

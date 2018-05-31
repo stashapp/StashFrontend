@@ -8,8 +8,7 @@ import { TagDataFragment } from '../../core/graphql-generated';
 
 @Component({
   selector: 'app-tag-detail',
-  templateUrl: './tag-detail.component.html',
-  styleUrls: ['./tag-detail.component.css']
+  template: '<app-list [state]="getState()"></app-list>'
 })
 export class TagDetailComponent implements OnInit {
   sceneListState: SceneListState;

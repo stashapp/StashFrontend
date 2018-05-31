@@ -8,5 +8,4 @@ export class PerformersService {
   detailsSceneListState: SceneListState = new SceneListState();
 
   constructor() {}
-
 }

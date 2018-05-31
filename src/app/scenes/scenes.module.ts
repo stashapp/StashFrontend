@@ -32,4 +32,4 @@ import { SceneDetailMarkerManagerComponent } from './scene-detail-marker-manager
     ScenesService
   ]
 })
-export class ScenesModule { }
+export class ScenesModule {}

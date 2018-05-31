@@ -13,7 +13,7 @@ import { Gallery } from '../../shared/models/gallery.model';
 @Component({
   selector: 'app-tag-form',
   templateUrl: './tag-form.component.html',
-  styleUrls: ['./tag-form.component.css']
+  styleUrls: ['./tag-form.component.scss']
 })
 export class TagFormComponent implements OnInit {
   name: string;

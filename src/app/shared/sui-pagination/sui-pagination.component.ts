@@ -34,6 +34,6 @@ export class SuiPaginationComponent {
   private _directionLinks = true;
   private _autoHide = false;
 
-  constructor() { }
+  constructor() {}
 
 }

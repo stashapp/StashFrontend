@@ -2,14 +2,12 @@ import { Component, OnInit } from '@angular/core';
 
 @Component({
   selector: 'app-performers',
-  templateUrl: './performers.component.html',
-  styleUrls: ['./performers.component.css']
+  template: '<router-outlet></router-outlet>'
 })
 export class PerformersComponent implements OnInit {
 
-  constructor() { }
+  constructor() {}
 
-  ngOnInit() {
-  }
+  ngOnInit() {}
 
 }

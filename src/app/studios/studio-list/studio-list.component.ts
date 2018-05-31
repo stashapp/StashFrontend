@@ -24,5 +24,4 @@ export class StudioListComponent implements OnInit {
   onClickNew() {
     this.router.navigate(['new'], { relativeTo: this.route });
   }
-
 }

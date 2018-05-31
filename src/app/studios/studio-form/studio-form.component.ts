@@ -1,6 +1,5 @@
 import { Component, OnInit, OnDestroy, ViewChild, AfterViewInit } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
-import { Headers, RequestOptions } from '@angular/http';
 
 import { StashService } from '../../core/stash.service';
 
@@ -12,8 +11,7 @@ import { Gallery } from '../../shared/models/gallery.model';
 
 @Component({
   selector: 'app-studio-form',
-  templateUrl: './studio-form.component.html',
-  styleUrls: ['./studio-form.component.css']
+  templateUrl: './studio-form.component.html'
 })
 export class StudioFormComponent implements OnInit, OnDestroy {
   name: string;
