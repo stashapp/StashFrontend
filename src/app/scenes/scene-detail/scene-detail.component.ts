@@ -1,11 +1,9 @@
-import { Component, OnInit, OnDestroy, ViewChild, AfterViewInit } from '@angular/core';
-import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 
 import { StashService } from '../../core/stash.service';
 
-import { Scene, SceneMarker } from '../../shared/models/scene.model';
-import { FindSceneQuery, SceneDataFragment } from '../../core/graphql-generated';
-import { QueryRef } from 'apollo-angular';
+import { SceneDataFragment } from '../../core/graphql-generated';
 
 @Component({
   selector: 'app-scene-detail',

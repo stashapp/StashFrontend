@@ -1,13 +1,9 @@
-import { Component, OnInit, OnDestroy, Input, Output, ViewChild, EventEmitter, ElementRef } from '@angular/core';
-import { Router } from '@angular/router';
+import { Component, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 
-import { Observable } from 'rxjs';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 
 import { StashService } from '../../core/stash.service';
-
-import { Scene, SceneMarker } from '../../shared/models/scene.model';
 
 export enum WallMode {
   Scenes,
@@ -29,8 +25,6 @@ export class SceneWallComponent implements OnInit {
   mode: WallMode = WallMode.Markers;
 
   constructor(
-    private router: Router,
-    private el: ElementRef,
     private stashService: StashService
   ) {}
 

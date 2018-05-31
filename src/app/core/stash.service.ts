@@ -1,16 +1,14 @@
 import { Injectable } from '@angular/core';
 import { PlatformLocation } from '@angular/common';
-import { HttpClient, HttpResponse, HttpHeaders, HttpParams } from '@angular/common/http';
 
-import { ListFilter, CriteriaType, CustomCriteria } from '../shared/models/list-state.model';
+import { ListFilter } from '../shared/models/list-state.model';
 
-import { ApolloModule, Apollo, QueryRef } from 'apollo-angular';
-import { HttpLinkModule, HttpLink } from 'apollo-angular-link-http';
+import { Apollo, QueryRef } from 'apollo-angular';
+import { HttpLink } from 'apollo-angular-link-http';
 import { InMemoryCache } from 'apollo-cache-inmemory';
 import { onError } from 'apollo-link-error';
 import { ApolloLink } from 'apollo-link';
 import { getMainDefinition } from 'apollo-utilities';
-import gql from 'graphql-tag';
 
 import * as ActionCable from 'actioncable';
 import * as ActionCableLink from 'graphql-ruby-client/subscriptions/ActionCableLink';
@@ -55,14 +53,11 @@ import {
 } from './graphql';
 import * as GQL from './graphql-generated';
 
-import { toIdValue } from 'apollo-utilities';
-
 @Injectable()
 export class StashService {
   url = 'http://192.168.1.200:4000';
 
-  constructor(private http: HttpClient,
-              private platformLocation: PlatformLocation,
+  constructor(private platformLocation: PlatformLocation,
               private apollo: Apollo,
               private httpLink: HttpLink) {
     const platform: any = this.platformLocation;
@@ -88,7 +83,7 @@ export class StashService {
       }
     });
 
-    const httpLinkHandler = httpLink.create({uri: `${this.url}/graphql`});
+    const httpLinkHandler = this.httpLink.create({uri: `${this.url}/graphql`});
 
     const splitLink = ApolloLink.split(
       // split based on operation type
@@ -120,13 +115,6 @@ export class StashService {
           Query: {
             findScene: (rootValue, args, context) => {
               return context.getCacheKey({__typename: 'Scene', id: args.id});
-            }
-          },
-          Mutation: {
-            sceneMarkerCreate: (rootValue, args, context) => {
-              // return toIdValue(client.dataIdFromObject({__typename: 'SceneMarker', id: args.id}))
-              debugger;
-              return context.getCacheKey({__typename: 'SceneMarker', id: args.id});
             }
           }
         }

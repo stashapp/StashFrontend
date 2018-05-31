@@ -1,11 +1,7 @@
-import { Component, OnInit, OnDestroy, ViewChild, AfterViewInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
-import { StashService } from '../../core/stash.service';
 import { StudiosService } from '../studios.service';
-
-import { Scene } from '../../shared/models/scene.model';
-import { DisplayMode, ListFilter, SceneListState } from '../../shared/models/list-state.model';
 
 @Component({
   selector: 'app-studio-list',
@@ -14,8 +10,7 @@ import { DisplayMode, ListFilter, SceneListState } from '../../shared/models/lis
 export class StudioListComponent implements OnInit {
   state = this.studiosService.listState;
 
-  constructor(private stashService: StashService,
-              private studiosService: StudiosService,
+  constructor(private studiosService: StudiosService,
               private route: ActivatedRoute,
               private router: Router) {}
 

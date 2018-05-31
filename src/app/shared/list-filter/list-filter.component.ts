@@ -1,13 +1,10 @@
 import { Component, OnInit, OnDestroy, Input, Output, ViewChildren, EventEmitter, ElementRef, QueryList } from '@angular/core';
 import { FormControl } from '@angular/forms';
 
-import { Observable } from 'rxjs';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 
 import { StashService } from '../../core/stash.service';
-import { Scene } from '../models/scene.model';
-import { Performer } from '../models/performer.model';
-import { ListFilter, DisplayMode, FilterMode, Criteria, CriteriaType, CriteriaValueType } from '../models/list-state.model';
+import { ListFilter, DisplayMode, Criteria, CriteriaType, CriteriaValueType } from '../models/list-state.model';
 import { ActivatedRoute } from '@angular/router';
 
 @Component({
@@ -20,7 +17,7 @@ export class ListFilterComponent implements OnInit, OnDestroy {
   CriteriaValueType = CriteriaValueType;
 
   @Input() filter: ListFilter;
-  @Output() onFilterUpdate = new EventEmitter<ListFilter>();
+  @Output() filterUpdated = new EventEmitter<ListFilter>();
   @ViewChildren('criteriaValueSelect') criteriaValueSelectInputs: QueryList<ElementRef>;
   @ViewChildren('criteriaValuesSelect') criteriaValuesSelectInputs: QueryList<ElementRef>;
 
@@ -46,10 +43,10 @@ export class ListFilterComponent implements OnInit, OnDestroy {
       )
       .subscribe(term => {
         this.filter.searchTerm = term;
-        this.onFilterUpdate.emit(this.filter);
+        this.filterUpdated.emit(this.filter);
       });
 
-    this.onFilterUpdate.emit(this.filter);
+    this.filterUpdated.emit(this.filter);
   }
 
   ngOnDestroy() {
@@ -57,17 +54,17 @@ export class ListFilterComponent implements OnInit, OnDestroy {
   }
 
   onPerPageChange(perPage: number) {
-    this.onFilterUpdate.emit(this.filter);
+    this.filterUpdated.emit(this.filter);
   }
 
   onSortChange() {
     this.filter.sortDirection = this.filter.sortDirection === 'asc' ? 'desc' : 'asc';
-    this.onFilterUpdate.emit(this.filter);
+    this.filterUpdated.emit(this.filter);
   }
 
   onSortByChange(sortBy: string) {
     this.filter.sortBy = sortBy;
-    this.onFilterUpdate.emit(this.filter);
+    this.filterUpdated.emit(this.filter);
   }
 
   onAddCriteria() {
@@ -78,7 +75,7 @@ export class ListFilterComponent implements OnInit, OnDestroy {
   onDeleteCriteria(criteria: Criteria) {
     const idx = this.filter.criterions.indexOf(criteria);
     this.filter.criterions.splice(idx, 1);
-    this.onFilterUpdate.emit(this.filter);
+    this.filterUpdated.emit(this.filter);
   }
 
   onCriteriaTypeChange(criteriaType: CriteriaType, criteria: Criteria) {
@@ -89,16 +86,16 @@ export class ListFilterComponent implements OnInit, OnDestroy {
     //   this.criteriaValuesSelect.selectedOptions = null;
     // }
     criteria.configure(criteriaType, this.stashService);
-    this.onFilterUpdate.emit(this.filter);
+    this.filterUpdated.emit(this.filter);
   }
 
   onCriteriaValueChange(criteriaValue: string) {
-    this.onFilterUpdate.emit(this.filter);
+    this.filterUpdated.emit(this.filter);
   }
 
   onModeChange(mode: DisplayMode) {
     this.filter.displayMode = mode;
-    this.onFilterUpdate.emit(this.filter);
+    this.filterUpdated.emit(this.filter);
   }
 
   onChange(event) {

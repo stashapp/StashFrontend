@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { StashService } from '../stash.service';
-import { StatsQuery } from '../graphql-generated';
 
 @Component({
   selector: 'app-dashboard',

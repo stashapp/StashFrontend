@@ -1,4 +1,3 @@
-import { Scene } from './scene.model';
 
 export class Performer {
   id: any;

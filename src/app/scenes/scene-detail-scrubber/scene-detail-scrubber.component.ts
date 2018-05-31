@@ -5,19 +5,14 @@ import {
   SimpleChanges,
   Input,
   Output,
-  HostBinding,
   HostListener,
-  ElementRef,
   ViewChild,
   EventEmitter
 } from '@angular/core';
 
-import { Router } from '@angular/router';
-import { HttpClient, HttpResponse, HttpHeaders, HttpParams } from '@angular/common/http';
-import { takeUntil } from 'rxjs/operators';
+import { HttpClient } from '@angular/common/http';
 
-import { StashService } from '../../core/stash.service';
-import { Scene, SceneMarker, SceneSpriteItem } from '../../shared/models/scene.model';
+import { Scene, SceneSpriteItem } from '../../shared/models/scene.model';
 
 @Component({
   selector: 'app-scene-detail-scrubber',
@@ -119,12 +114,7 @@ export class SceneDetailScrubberComponent implements OnInit, OnChanges {
     this.last = event;
   }
 
-  constructor(
-    private router: Router,
-    private el: ElementRef,
-    private stashService: StashService,
-    private http: HttpClient
-  ) {}
+  constructor(private http: HttpClient) {}
 
   ngOnInit() {
     this.slider = this.sliderTag.nativeElement;

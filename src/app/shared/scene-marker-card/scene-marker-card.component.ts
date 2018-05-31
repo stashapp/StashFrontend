@@ -1,7 +1,5 @@
-import { Component, OnInit, Input, HostBinding, HostListener, ElementRef, ViewChild } from '@angular/core';
-import { Router } from '@angular/router';
+import { Component, OnInit, Input, HostListener, ElementRef, ViewChild } from '@angular/core';
 
-import { StashService } from '../../core/stash.service';
 import { SceneMarker } from '../../shared/models/scene.model';
 
 @Component({
@@ -20,11 +18,7 @@ export class SceneMarkerCardComponent implements OnInit {
   imagePath = '';
   videoPath = '';
 
-  constructor(
-    private router: Router,
-    private el: ElementRef,
-    private stashService: StashService
-  ) {}
+  constructor() {}
 
   ngOnInit() {
     if (!!this.sceneMarker) {

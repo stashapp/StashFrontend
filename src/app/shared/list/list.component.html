@@ -1,5 +1,5 @@
 <div class="ui segement">
-  <app-list-filter (onFilterUpdate)="onFilterUpdate($event)" [filter]="state.filter"></app-list-filter>
+  <app-list-filter (filterUpdated)="onFilterUpdate($event)" [filter]="state.filter"></app-list-filter>
 
   <div *ngIf="state.filter.displayMode == DisplayMode.Grid" class="ui four doubling cards">
     <div *ngIf="state.filter.filterMode == FilterMode.Scenes; then sceneCards"></div>

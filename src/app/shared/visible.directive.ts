@@ -1,9 +1,8 @@
 import { Directive, ElementRef, Output, AfterViewInit, OnDestroy, EventEmitter, Inject } from '@angular/core';
+import { DOCUMENT } from '@angular/common';
 
-import { Observable, Subscription, fromEvent } from 'rxjs';
-import { debounceTime, distinctUntilChanged, startWith } from 'rxjs/operators';
-
-import { DOCUMENT } from '@angular/platform-browser';
+import { Subscription, fromEvent } from 'rxjs';
+import { debounceTime, startWith } from 'rxjs/operators';
 
 @Directive({
   // tslint:disable-next-line:directive-selector

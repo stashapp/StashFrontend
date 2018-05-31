@@ -1,9 +1,8 @@
-import { Component, OnInit, OnChanges, SimpleChanges, ViewChild, Input, Output } from '@angular/core';
+import { Component, OnInit, OnChanges, SimpleChanges, Input } from '@angular/core';
 import { FormControl } from '@angular/forms';
 
 import { StashService } from '../../core/stash.service';
 
-import { Observable } from 'rxjs';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 
 import { MarkerStringsQuery, SceneMarkerDataFragment, SceneDataFragment, TagDataFragment } from '../../core/graphql-generated';

@@ -1,7 +1,5 @@
-import { Component, OnInit, Input, HostBinding, HostListener, ElementRef, ViewChild } from '@angular/core';
-import { Router } from '@angular/router';
+import { Component, OnInit, Input, HostBinding, HostListener, ViewChild } from '@angular/core';
 
-import { StashService } from '../../core/stash.service';
 import { Scene } from '../../shared/models/scene.model';
 
 @Component({
@@ -16,11 +14,7 @@ export class SceneListItemComponent implements OnInit {
   @HostBinding('class') class = 'item';
   @ViewChild('videoTag') videoTag: any;
 
-  constructor(
-    private router: Router,
-    private el: ElementRef,
-    private stashService: StashService
-  ) { }
+  constructor() {}
 
   ngOnInit() {
     this.videoTag.nativeElement.volume = 0.05;

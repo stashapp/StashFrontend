@@ -16,7 +16,6 @@ import { ListFilterComponent } from './list-filter/list-filter.component';
 import { TruncatePipe } from './truncate.pipe';
 import { CapitalizePipe } from './capitalize.pipe';
 import { AgePipe } from './age.pipe';
-import { GalleryImageCardComponent } from './gallery-image-card/gallery-image-card.component';
 import { StudioCardComponent } from './studio-card/studio-card.component';
 import { GalleryPreviewComponent } from './gallery-preview/gallery-preview.component';
 import { GalleryCardComponent } from './gallery-card/gallery-card.component';
@@ -49,7 +48,6 @@ import { SceneMarkerCardComponent } from './scene-marker-card/scene-marker-card.
     ListFilterComponent,
     CapitalizePipe,
     AgePipe,
-    GalleryImageCardComponent,
     StudioCardComponent,
     GalleryPreviewComponent,
     GalleryCardComponent,
@@ -76,7 +74,6 @@ import { SceneMarkerCardComponent } from './scene-marker-card/scene-marker-card.
     TruncatePipe,
     CapitalizePipe,
     AgePipe,
-    GalleryImageCardComponent,
     StudioCardComponent,
     GalleryPreviewComponent,
     GalleryCardComponent,

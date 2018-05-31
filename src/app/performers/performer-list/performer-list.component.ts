@@ -1,9 +1,7 @@
-import { Component, OnInit, OnDestroy, ViewChild, AfterViewInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { PerformersService } from '../performers.service';
-
-import { DisplayMode, ListFilter, PerformerListState } from '../../shared/models/list-state.model';
 
 @Component({
   selector: 'app-performer-list',

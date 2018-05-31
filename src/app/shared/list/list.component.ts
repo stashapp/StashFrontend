@@ -1,8 +1,7 @@
-import { Component, OnInit, OnDestroy, Input, ViewChild, AfterViewInit, ElementRef, HostListener } from '@angular/core';
+import { Component, OnInit, OnDestroy, Input, AfterViewInit, ElementRef, HostListener } from '@angular/core';
 
 import { StashService } from '../../core/stash.service';
 
-import { Scene } from '../../shared/models/scene.model';
 import {
   DisplayMode,
   FilterMode,

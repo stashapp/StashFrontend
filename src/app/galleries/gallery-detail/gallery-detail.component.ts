@@ -1,5 +1,5 @@
-import { Component, OnInit, OnDestroy, ViewChild, AfterViewInit, HostListener } from '@angular/core';
-import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
+import { Component, OnInit, HostListener } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 
 import { StashService } from '../../core/stash.service';
 
@@ -15,8 +15,7 @@ export class GalleryDetailComponent implements OnInit {
   displayedImage: GalleryImage = null;
 
   constructor(private route: ActivatedRoute,
-              private stashService: StashService,
-              private router: Router) {}
+              private stashService: StashService) {}
 
   ngOnInit() {
     this.getGallery();

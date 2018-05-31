@@ -1,6 +1,6 @@
-import { NgModule, ModuleWithProviders, Optional, SkipSelf } from '@angular/core';
+import { NgModule, Optional, SkipSelf } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule, RouteReuseStrategy } from '@angular/router';
+import { RouterModule } from '@angular/router';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { ApolloModule } from 'apollo-angular';

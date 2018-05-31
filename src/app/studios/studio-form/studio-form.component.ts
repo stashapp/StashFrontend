@@ -1,13 +1,7 @@
-import { Component, OnInit, OnDestroy, ViewChild, AfterViewInit } from '@angular/core';
-import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 
 import { StashService } from '../../core/stash.service';
-
-import { Scene } from '../../shared/models/scene.model';
-import { Performer } from '../../shared/models/performer.model';
-import { Tag } from '../../shared/models/tag.model';
-import { Studio } from '../../shared/models/studio.model';
-import { Gallery } from '../../shared/models/gallery.model';
 
 @Component({
   selector: 'app-studio-form',

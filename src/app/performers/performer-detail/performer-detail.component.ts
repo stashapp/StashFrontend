@@ -1,11 +1,10 @@
-import { Component, OnInit, OnDestroy, ViewChild, AfterViewInit } from '@angular/core';
-import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
+import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 
 import { StashService } from '../../core/stash.service';
 import { PerformersService } from '../performers.service';
 
 import { Performer } from '../../shared/models/performer.model';
-import { Scene } from '../../shared/models/scene.model';
 
 import { SceneListState, CustomCriteria } from '../../shared/models/list-state.model';
 

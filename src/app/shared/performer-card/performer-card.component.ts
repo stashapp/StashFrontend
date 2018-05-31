@@ -1,7 +1,5 @@
-import { Component, OnInit, Input, HostBinding, HostListener, ElementRef, ViewChild } from '@angular/core';
-import { Router } from '@angular/router';
+import { Component, OnInit, Input, HostBinding } from '@angular/core';
 
-import { StashService } from '../../core/stash.service';
 import { Performer } from '../../shared/models/performer.model';
 
 @Component({
@@ -16,11 +14,7 @@ export class PerformerCardComponent implements OnInit {
   // The host class needs to be card
   @HostBinding('class') class = 'card';
 
-  constructor(
-    private router: Router,
-    private el: ElementRef,
-    private stashService: StashService
-  ) {}
+  constructor() {}
 
   ngOnInit() {}
 

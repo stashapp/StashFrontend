@@ -1,5 +1,3 @@
-import { Scene, SceneMarker } from '../shared/models/scene.model';
-
 import gql from 'graphql-tag';
 
 // - Fragments

@@ -1,7 +1,6 @@
-import { Component, OnInit, Input, HostBinding, HostListener, ElementRef, ViewChild } from '@angular/core';
+import { Component, OnInit, Input, HostListener, ElementRef, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 
-import { StashService } from '../../core/stash.service';
 import { Scene, SceneMarker } from '../../shared/models/scene.model';
 
 @Component({
@@ -32,11 +31,7 @@ export class SceneWallItemComponent implements OnInit {
     };
   }
 
-  constructor(
-    private router: Router,
-    private el: ElementRef,
-    private stashService: StashService
-  ) { }
+  constructor(private router: Router) {}
 
   ngOnInit() {
     if (!!this.marker) {

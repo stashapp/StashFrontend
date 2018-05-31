@@ -1,4 +1,4 @@
-import { Component, OnInit, OnChanges, Input, Output, EventEmitter, HostBinding, HostListener, ElementRef, ViewChild } from '@angular/core';
+import { Component, OnInit, OnChanges, Input, Output, EventEmitter } from '@angular/core';
 import { Router } from '@angular/router';
 
 import { StashService } from '../../core/stash.service';
@@ -16,12 +16,11 @@ export class GalleryPreviewComponent implements OnInit, OnChanges {
   @Input() numberOfRandomImages = 12;
   @Input() showTitles = true;
   @Input() numberPerRow = 4;
-  @Output() onClick: EventEmitter<GalleryImage> = new EventEmitter();
+  @Output() clicked: EventEmitter<GalleryImage> = new EventEmitter();
   files: GalleryImage[];
 
   constructor(
     private router: Router,
-    private el: ElementRef,
     private stashService: StashService
   ) {}
 
@@ -56,7 +55,7 @@ export class GalleryPreviewComponent implements OnInit, OnChanges {
 
   onClickImage(image) {
     if (this.type === 'full') {
-      this.onClick.emit(image);
+      this.clicked.emit(image);
     }
   }
 

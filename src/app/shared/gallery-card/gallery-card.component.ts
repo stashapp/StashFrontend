@@ -1,7 +1,6 @@
-import { Component, OnInit, Input, HostBinding, HostListener, ElementRef, ViewChild } from '@angular/core';
+import { Component, OnInit, Input, HostBinding } from '@angular/core';
 import { Router } from '@angular/router';
 
-import { StashService } from '../../core/stash.service';
 import { Gallery } from '../../shared/models/gallery.model';
 
 @Component({
@@ -16,9 +15,7 @@ export class GalleryCardComponent implements OnInit {
   @HostBinding('class') class = 'card';
 
   constructor(
-    private router: Router,
-    private el: ElementRef,
-    private stashService: StashService
+    private router: Router
   ) {}
 
   ngOnInit() {
