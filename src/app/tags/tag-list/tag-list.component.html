@@ -7,8 +7,8 @@
 <div class="ui middle aligned relaxed divided list">
   <div *ngFor="let tag of tags" class="item">
     <div class="right floated content">
-      <a class="ui button" [routerLink]="['/tags', tag.id]" [queryParams]="{tag_list_type: 'markers', c: makeJSONQueryString(tag)}">Markers</a>
-      <a class="ui button" [routerLink]="['/tags', tag.id]" [queryParams]="{tag_list_type: 'scenes'}">Scenes</a>
+      <a class="ui button" [routerLink]="['/scenes/markers']" [queryParams]="{c: makeJSONQueryString(tag)}">Markers</a>
+      <a class="ui button" [routerLink]="['/scenes']" [queryParams]="{c: makeJSONQueryString(tag)}">Scenes</a>
     </div>
     <div class="content">
       <div class="ui big horizontal label"
@@ -17,7 +17,9 @@
         [class.yellow]="tagCount(tag) > 50 && tagCount(tag) <= 100"
         [class.olive]="tagCount(tag) > 100 && tagCount(tag) <= 200"
         [class.green]="tagCount(tag) > 200">
-        {{tag.name}}
+        <a [routerLink]="['/tags', tag.id]">
+          {{tag.name}}
+        </a>
         <div class="detail">
           Scenes: {{tag.scene_count}}
         </div>

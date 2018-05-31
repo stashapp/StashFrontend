@@ -6,14 +6,15 @@
     <div *ngIf="state.filter.filterMode == FilterMode.Galleries; then galleryCards"></div>
     <div *ngIf="state.filter.filterMode == FilterMode.Performers; then performerCards"></div>
     <div *ngIf="state.filter.filterMode == FilterMode.Studios; then studioCards"></div>
-    <div *ngIf="state.filter.filterMode == FilterMode.SceneMarkers; then sceneMarkerCards"></div>
   </div>
   <div *ngIf="state.filter.displayMode == DisplayMode.List" class="ui divided items">
     <div *ngIf="state.filter.filterMode == FilterMode.Scenes; then sceneListItems"></div>
     <div *ngIf="state.filter.filterMode == FilterMode.Galleries; then galleryListItems"></div>
     <div *ngIf="state.filter.filterMode == FilterMode.Performers; then performerListItems"></div>
     <div *ngIf="state.filter.filterMode == FilterMode.Studios; then studioListItems"></div>
-    <div *ngIf="state.filter.filterMode == FilterMode.SceneMarkers; then sceneMarkerListItems"></div>
+  </div>
+  <div *ngIf="state.filter.displayMode == DisplayMode.Custom">
+    <div *ngIf="state.filter.filterMode == FilterMode.SceneMarkers; then sceneMarkerItems"></div>
   </div>
 
   <app-sui-pagination #pagination id="main-pagination" (pageChange)="getPage($event)"></app-sui-pagination>
@@ -63,7 +64,7 @@
   </app-studio-list-item>-->
 </ng-template>
 
-<ng-template #sceneMarkerCards>
+<ng-template #sceneMarkerItems>
   <div class="wall grid" [style.top.px]="topMarkerPadding">
     <div class="ui four column grid" style="margin: 0;">
       <div
@@ -75,6 +76,4 @@
       </div>
     </div>
   </div>
-</ng-template>
-<ng-template #sceneMarkerListItems>
 </ng-template>

@@ -14,7 +14,8 @@ import { StashService } from '../../core/stash.service';
 
 export enum DisplayMode {
   Grid,
-  List
+  List,
+  Custom
 }
 
 export enum FilterMode {
@@ -199,6 +200,7 @@ export class ListFilter {
           new CriteriaOption(CriteriaType.Tags),
           new CriteriaOption(CriteriaType.SceneTags)
         ];
+        this.displayMode = DisplayMode.Custom;
         break;
       default:
         this.sortByOptions = [];

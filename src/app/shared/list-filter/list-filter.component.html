@@ -31,7 +31,7 @@
     <div class="ui item">
       <button (click)="filter.criteriaFilterOpen = !filter.criteriaFilterOpen" class="ui icon button" [class.active]="filter.criteriaFilterOpen"><i class="filter icon"></i></button>
     </div>
-    <div class="ui item">
+    <div *ngIf="filter.displayMode !== DisplayMode.Custom" class="ui item">
       <div class="ui icon buttons">
         <button (click)="onModeChange(DisplayMode.Grid)" class="ui button" [class.active]="filter.displayMode == DisplayMode.Grid"><i class="grid layout icon"></i></button>
         <button (click)="onModeChange(DisplayMode.List)" class="ui button" [class.active]="filter.displayMode == DisplayMode.List"><i class="list layout icon"></i></button>

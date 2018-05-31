@@ -14,7 +14,9 @@ export class NavigationBarComponent implements OnInit {
   }
 
   isScenesActiveHack(rla) {
-    return rla.isActive && this.router.url !== '/scenes/wall';
+    return rla.isActive &&
+           this.router.url !== '/scenes/wall' &&
+           !this.router.url.includes('/scenes/markers');
   }
 
 }
