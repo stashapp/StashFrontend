@@ -60,6 +60,12 @@ export class CriteriaOption {
   }
 }
 
+interface CriteriaConfig {
+  valueType: CriteriaValueType;
+  parameterName: string;
+  options: any[];
+}
+
 export class Criteria {
   type: CriteriaType;
   valueType: CriteriaValueType;
@@ -68,78 +74,66 @@ export class Criteria {
   value: string;
   values: string[];
 
+  private stashService: StashService;
+
   async configure(type: CriteriaType, stashService: StashService) {
+    this.stashService = stashService;
+
+    let config: CriteriaConfig = {
+      valueType: CriteriaValueType.Single,
+      parameterName: '',
+      options: []
+    };
+
     switch (type) {
-      case CriteriaType.None: {
-        this.type = CriteriaType.None;
-        this.valueType = CriteriaValueType.Single;
-        this.options = [];
+      case CriteriaType.Rating:
+        config.parameterName = 'rating';
+        config.options = [1, 2, 3, 4, 5];
         break;
-      }
-      case CriteriaType.Rating: {
-        this.type = CriteriaType.Rating;
-        this.valueType = CriteriaValueType.Single;
-        this.parameterName = 'rating';
-        this.options = [1, 2, 3, 4, 5];
+      case CriteriaType.Resolution:
+        config.parameterName = 'resolution';
+        config.options = ['240p', '480p', '720p', '1080p', '4k'];
         break;
-      }
-      case CriteriaType.Resolution: {
-        this.type = CriteriaType.Resolution;
-        this.valueType = CriteriaValueType.Single;
-        this.parameterName = 'resolution';
-        this.options = ['240p', '480p', '720p', '1080p', '4k'];
+      case CriteriaType.Favorite:
+        config.parameterName = 'filter_favorites';
+        config.options = ['true', 'false'];
         break;
-      }
-      case CriteriaType.Favorite: {
-        this.type = CriteriaType.Favorite;
-        this.valueType = CriteriaValueType.Single;
-        this.parameterName = 'filter_favorites';
-        this.options = ['true', 'false'];
+      case CriteriaType.HasMarkers:
+        config.parameterName = 'has_markers';
+        config.options = ['true', 'false'];
         break;
-      }
-      case CriteriaType.HasMarkers: {
-        this.type = CriteriaType.HasMarkers;
-        this.valueType = CriteriaValueType.Single;
-        this.parameterName = 'has_markers';
-        this.options = ['true', 'false'];
+      case CriteriaType.IsMissing:
+        config.parameterName = 'is_missing';
+        config.options = ['title', 'url', 'date', 'gallery', 'studio', 'performers'];
         break;
-      }
-      case CriteriaType.IsMissing: {
-        this.type = CriteriaType.IsMissing;
-        this.valueType = CriteriaValueType.Single;
-        this.parameterName = 'is_missing';
-        this.options = ['title', 'url', 'date', 'gallery', 'studio', 'performers'];
+      case CriteriaType.Tags:
+        config = await this.configureTags('tags');
         break;
-      }
-      case CriteriaType.Tags: {
-        this.type = CriteriaType.Tags;
-        this.valueType = CriteriaValueType.Multiple;
-        this.parameterName = 'tags';
-        const result = await stashService.allTags().result();
-        this.options = result.data.allTags.map(item => {
-          return { id: item.id, name: item.name };
-        });
+      case CriteriaType.SceneTags:
+        config = await this.configureTags('scene_tags');
         break;
-      }
-      case CriteriaType.SceneTags: {
-        this.type = CriteriaType.SceneTags;
-        this.valueType = CriteriaValueType.Multiple;
-        this.parameterName = 'scene_tags';
-        const result = await stashService.allTags().result();
-        this.options = result.data.allTags.map(item => {
-          return { id: item.id, name: item.name };
-        });
-        break;
-      }
-      default: {
-        this.type = CriteriaType.None;
-        this.valueType = CriteriaValueType.Single;
-        this.options = [];
-      }
+      case CriteriaType.None:
+      default: break;
     }
+
+    this.type = type;
+    this.valueType = config.valueType;
+    this.parameterName = config.parameterName;
+    this.options = config.options;
 
     this.value = ''; // Need this or else we send invalid value to the new filter
     // this.values = []; // TODO this seems to break the "Multiple" filters
+  }
+
+  private async configureTags(name: string) {
+    const result = await this.stashService.allTags().result();
+    return {
+      valueType: CriteriaValueType.Multiple,
+      parameterName: name,
+      options: result.data.allTags.map(item => {
+        return { id: item.id, name: item.name };
+      })
+    };
   }
 }
 
@@ -162,7 +156,7 @@ export class ListFilter {
     switch (filterMode) {
       case FilterMode.Scenes:
         if (!!this.sortBy === false) { this.sortBy = 'date'; }
-        this.sortByOptions = ['title', 'rating', 'date', 'filesize', 'duration'];
+        this.sortByOptions = ['title', 'rating', 'date', 'filesize', 'duration', 'random'];
         this.displayModeOptions = [
           DisplayMode.Grid,
           DisplayMode.List,
@@ -210,7 +204,7 @@ export class ListFilter {
         break;
       case FilterMode.SceneMarkers:
         if (!!this.sortBy === false) { this.sortBy = 'title'; }
-        this.sortByOptions = ['title', 'seconds', 'scene_id'];
+        this.sortByOptions = ['title', 'seconds', 'scene_id', 'random'];
         this.displayModeOptions = [
           DisplayMode.Wall
         ];

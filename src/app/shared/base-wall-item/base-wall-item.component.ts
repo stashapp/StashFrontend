@@ -1,15 +1,10 @@
-import { Component, OnInit, Input, HostListener, ElementRef, ViewChild } from '@angular/core';
-
-import { SceneMarkerDataFragment } from '../../core/graphql-generated';
+import { Component, OnInit, ViewChild, ElementRef, HostListener } from '@angular/core';
 
 @Component({
-  selector: 'app-scene-marker-card',
-  templateUrl: './scene-marker-card.component.html',
-  styleUrls: ['./scene-marker-card.component.css']
+  selector: 'app-base-wall-item',
+  template: ''
 })
-export class SceneMarkerCardComponent implements OnInit {
-  @Input() sceneMarker: SceneMarkerDataFragment;
-
+export class BaseWallItemComponent implements OnInit {
   private video: any;
   private hoverTimeout: any = null;
   isHovering = false;
@@ -17,19 +12,6 @@ export class SceneMarkerCardComponent implements OnInit {
   title = '';
   imagePath = '';
   videoPath = '';
-
-  constructor() {}
-
-  ngOnInit() {
-    if (!!this.sceneMarker) {
-      this.title = this.sceneMarker.title;
-      this.imagePath = this.sceneMarker.preview;
-      this.videoPath = this.sceneMarker.stream;
-    } else {
-      this.title = '';
-      this.imagePath = '';
-    }
-  }
 
   @ViewChild('videoTag')
   set videoTag(videoTag: ElementRef) {
@@ -41,6 +23,10 @@ export class SceneMarkerCardComponent implements OnInit {
       this.video.play();
     };
   }
+
+  constructor() {}
+
+  ngOnInit() {}
 
   @HostListener('mouseenter', ['$event'])
   onMouseEnter(e) {

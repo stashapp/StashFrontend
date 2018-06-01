@@ -1,37 +1,18 @@
-import { Component, OnInit, Input, HostListener, ElementRef, ViewChild } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { Router } from '@angular/router';
 
 import { SceneDataFragment, SceneMarkerDataFragment } from '../../core/graphql-generated';
+import { BaseWallItemComponent } from '../base-wall-item/base-wall-item.component';
 
 @Component({
   selector: 'app-scene-wall-item',
-  templateUrl: './scene-wall-item.component.html',
-  styleUrls: ['./scene-wall-item.component.scss']
+  templateUrl: './scene-wall-item.component.html'
 })
-export class SceneWallItemComponent implements OnInit {
-
-  private video: any;
-  private hoverTimeout: any = null;
-  isHovering = false;
-
-  title = '';
-  imagePath = '';
-  videoPath = '';
+export class SceneWallItemComponent extends BaseWallItemComponent implements OnInit {
   @Input() scene: SceneDataFragment;
   @Input() marker: SceneMarkerDataFragment;
 
-  @ViewChild('videoTag')
-  set videoTag(videoTag: ElementRef) {
-    if (videoTag === undefined) { return; }
-    this.video = videoTag.nativeElement;
-    this.video.volume = 0.05;
-    this.video.loop = true;
-    this.video.oncanplay = () => {
-      this.video.play();
-    };
-  }
-
-  constructor(private router: Router) {}
+  constructor(private router: Router) { super(); }
 
   ngOnInit() {
     if (!!this.marker) {
@@ -48,40 +29,8 @@ export class SceneWallItemComponent implements OnInit {
     }
   }
 
-  @HostListener('mouseenter')
-  onMouseEnter() {
-    if (!!this.hoverTimeout) { return; }
-
-    const that = this;
-    this.hoverTimeout = setTimeout(function() {
-      that.isHovering = true;
-    }, 1000);
-  }
-
-  @HostListener('mouseleave')
-  onMouseLeave() {
-    if (!!this.hoverTimeout) {
-      clearTimeout(this.hoverTimeout);
-      this.hoverTimeout = null;
-    }
-    if (this.video !== undefined) {
-      this.video.pause();
-      this.video.src = '';
-    }
-    this.isHovering = false;
-  }
-
-  transitionEnd(event) {
-    if (event.target.classList.contains('double-scale')) {
-      event.target.style.zIndex = 2;
-    } else {
-      event.target.style.zIndex = null;
-    }
-  }
-
   onClick(): void {
     const id = this.marker !== undefined ? this.marker.scene.id : this.scene.id;
     this.router.navigate(['/scenes', id]);
   }
-
 }

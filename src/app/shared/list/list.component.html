@@ -78,8 +78,8 @@
   <div
     *ngFor="let sceneMarker of state.data | paginate: { itemsPerPage: state.filter.itemsPerPage, currentPage: state.currentPage, totalItems: state.totalCount }"
     class="wall column">
-    <app-scene-marker-card
+    <app-scene-marker-wall-item
       [sceneMarker]="sceneMarker">
-    </app-scene-marker-card>
+    </app-scene-marker-wall-item>
   </div>
 </ng-template>

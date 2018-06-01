@@ -18,7 +18,15 @@
     </div>
     <div class="ui item">
       <div class="ui buttons">
-        <button (click)="onSortChange()" class="ui icon button"><i [class.up]="filter.sortDirection == 'asc'" [class.down]="filter.sortDirection == 'desc'" class="arrow icon"></i></button>
+        <button
+          *ngIf="filter.sortBy !== 'random'"
+          (click)="onSortChange()"
+          class="ui icon button">
+            <i
+              [class.up]="filter.sortDirection == 'asc'"
+              [class.down]="filter.sortDirection == 'desc'"
+              class="arrow icon"></i>
+        </button>
         <div class="ui dropdown button" suiDropdown>
           <span class="text">{{filter.sortBy | capitalize}}</span>
           <i class="dropdown icon"></i>

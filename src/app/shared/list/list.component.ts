@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, Input, AfterViewInit, ElementRef, HostListener } from '@angular/core';
+import { Component, OnInit, OnDestroy, Input, AfterViewInit } from '@angular/core';
 
 import { StashService } from '../../core/stash.service';
 
@@ -30,8 +30,7 @@ export class ListComponent implements OnInit, OnDestroy, AfterViewInit {
 
   constructor(private stashService: StashService,
               private router: Router,
-              private activatedRoute: ActivatedRoute,
-              private elRef: ElementRef) {}
+              private activatedRoute: ActivatedRoute) {}
 
   ngOnInit() {}
 
