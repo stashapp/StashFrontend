@@ -13,8 +13,11 @@
     <div *ngIf="state.filter.filterMode == FilterMode.Performers; then performerListItems"></div>
     <div *ngIf="state.filter.filterMode == FilterMode.Studios; then studioListItems"></div>
   </div>
-  <div *ngIf="state.filter.displayMode == DisplayMode.Custom">
-    <div *ngIf="state.filter.filterMode == FilterMode.SceneMarkers; then sceneMarkerItems"></div>
+  <div *ngIf="state.filter.displayMode == DisplayMode.Wall" style="position: relative; left: calc(-50vw + 50%); width: 100vw;">
+    <div class="ui four column grid" style="margin: 0;">
+      <div *ngIf="state.filter.filterMode == FilterMode.Scenes; then sceneWallItems"></div>
+      <div *ngIf="state.filter.filterMode == FilterMode.SceneMarkers; then sceneMarkerWallItems"></div>
+    </div>
   </div>
 
   <app-sui-pagination #pagination id="main-pagination" (pageChange)="getPage($event)"></app-sui-pagination>
@@ -32,6 +35,13 @@
 <ng-template #sceneListItems>
   <app-scene-list-item *ngFor="let scene of state.data | paginate: { itemsPerPage: state.filter.itemsPerPage, currentPage: state.currentPage, totalItems: state.totalCount }" [scene]="scene">
   </app-scene-list-item>
+</ng-template>
+<ng-template #sceneWallItems>
+  <div
+    *ngFor="let scene of state.data | paginate: { itemsPerPage: state.filter.itemsPerPage, currentPage: state.currentPage, totalItems: state.totalCount }"
+    class="wall column">
+    <app-scene-wall-item [scene]="scene"></app-scene-wall-item>
+  </div>
 </ng-template>
 
 <ng-template #galleryCards>
@@ -64,16 +74,12 @@
   </app-studio-list-item>-->
 </ng-template>
 
-<ng-template #sceneMarkerItems>
-  <div class="wall grid" [style.top.px]="topMarkerPadding">
-    <div class="ui four column grid" style="margin: 0;">
-      <div
-        *ngFor="let sceneMarker of state.data | paginate: { itemsPerPage: state.filter.itemsPerPage, currentPage: state.currentPage, totalItems: state.totalCount }"
-        class="wall column">
-        <app-scene-marker-card
-          [sceneMarker]="sceneMarker">
-        </app-scene-marker-card>
-      </div>
-    </div>
+<ng-template #sceneMarkerWallItems>
+  <div
+    *ngFor="let sceneMarker of state.data | paginate: { itemsPerPage: state.filter.itemsPerPage, currentPage: state.currentPage, totalItems: state.totalCount }"
+    class="wall column">
+    <app-scene-marker-card
+      [sceneMarker]="sceneMarker">
+    </app-scene-marker-card>
   </div>
 </ng-template>

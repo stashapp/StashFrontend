@@ -15,7 +15,7 @@ import { StashService } from '../../core/stash.service';
 export enum DisplayMode {
   Grid,
   List,
-  Custom
+  Wall
 }
 
 export enum FilterMode {
@@ -54,8 +54,8 @@ export enum CriteriaValueType {
 export class CriteriaOption {
   name: string;
   value: CriteriaType;
-  constructor(type: CriteriaType) {
-    this.name = CriteriaType[type];
+  constructor(type: CriteriaType, name: string = CriteriaType[type]) {
+    this.name = name;
     this.value = type;
   }
 }
@@ -149,7 +149,8 @@ export class ListFilter {
   itemsPerPage = 40;
   sortDirection = 'asc';
   sortBy: string;
-  displayMode = DisplayMode.Grid;
+  displayModeOptions: DisplayMode[] = [];
+  displayMode: DisplayMode;
   filterMode: FilterMode;
   sortByOptions: string[];
   criteriaFilterOpen = false;
@@ -162,17 +163,26 @@ export class ListFilter {
       case FilterMode.Scenes:
         if (!!this.sortBy === false) { this.sortBy = 'date'; }
         this.sortByOptions = ['title', 'rating', 'date', 'filesize', 'duration'];
+        this.displayModeOptions = [
+          DisplayMode.Grid,
+          DisplayMode.List,
+          DisplayMode.Wall
+        ];
         this.criteriaOptions = [
           new CriteriaOption(CriteriaType.None),
           new CriteriaOption(CriteriaType.Rating),
           new CriteriaOption(CriteriaType.Resolution),
           new CriteriaOption(CriteriaType.HasMarkers),
-          new CriteriaOption(CriteriaType.IsMissing)
+          new CriteriaOption(CriteriaType.IsMissing),
+          new CriteriaOption(CriteriaType.Tags)
         ];
         break;
       case FilterMode.Performers:
         if (!!this.sortBy === false) { this.sortBy = 'name'; }
         this.sortByOptions = ['name', 'height', 'birthdate', 'scenes_count'];
+        this.displayModeOptions = [
+          DisplayMode.Grid
+        ];
         this.criteriaOptions = [
           new CriteriaOption(CriteriaType.None),
           new CriteriaOption(CriteriaType.Favorite)
@@ -181,6 +191,9 @@ export class ListFilter {
       case FilterMode.Studios:
         if (!!this.sortBy === false) { this.sortBy = 'name'; }
         this.sortByOptions = ['name', 'scenes_count'];
+        this.displayModeOptions = [
+          DisplayMode.Grid
+        ];
         this.criteriaOptions = [
           new CriteriaOption(CriteriaType.None)
         ];
@@ -188,6 +201,9 @@ export class ListFilter {
       case FilterMode.Galleries:
         if (!!this.sortBy === false) { this.sortBy = 'title'; }
         this.sortByOptions = ['title', 'path'];
+        this.displayModeOptions = [
+          DisplayMode.Grid
+        ];
         this.criteriaOptions = [
           new CriteriaOption(CriteriaType.None)
         ];
@@ -195,18 +211,22 @@ export class ListFilter {
       case FilterMode.SceneMarkers:
         if (!!this.sortBy === false) { this.sortBy = 'title'; }
         this.sortByOptions = ['title', 'seconds', 'scene_id'];
+        this.displayModeOptions = [
+          DisplayMode.Wall
+        ];
         this.criteriaOptions = [
           new CriteriaOption(CriteriaType.None),
           new CriteriaOption(CriteriaType.Tags),
           new CriteriaOption(CriteriaType.SceneTags)
         ];
-        this.displayMode = DisplayMode.Custom;
         break;
       default:
         this.sortByOptions = [];
+        this.displayModeOptions = [];
         this.criteriaOptions = [new CriteriaOption(CriteriaType.None)];
         break;
     }
+    if (!!this.displayMode === false) { this.displayMode = this.displayModeOptions[0]; }
   }
 
   configureFromQueryParameters(params, stashService: StashService) {
@@ -215,6 +235,9 @@ export class ListFilter {
     }
     if (params['sortdir'] != null) {
       this.sortDirection = params['sortdir'];
+    }
+    if (params['disp'] != null) {
+      this.displayMode = params['disp'];
     }
     if (params['q'] != null) {
       this.searchTerm = params['q'];
@@ -266,6 +289,7 @@ export class ListFilter {
       queryParams: {
         sortby: this.sortBy,
         sortdir: this.sortDirection,
+        disp: this.displayMode,
         q: this.searchTerm,
         c: encodedCriterion
       },
@@ -298,6 +322,9 @@ export class ListFilter {
           break;
         case CriteriaType.IsMissing:
           result.is_missing = criteria.value;
+          break;
+        case CriteriaType.Tags:
+          result.tags = criteria.values;
           break;
       }
     });

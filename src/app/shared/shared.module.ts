@@ -25,6 +25,7 @@ import { SecondsPipe } from './seconds.pipe';
 import { VisibleDirective } from './visible.directive';
 import { FileSizePipe } from './file-size.pipe';
 import { SceneMarkerCardComponent } from './scene-marker-card/scene-marker-card.component';
+import { SceneWallItemComponent } from './scene-wall-item/scene-wall-item.component';
 
 // Import blah.  Include in dec and exports (https://angular.io/guide/ngmodule#shared-modules)
 
@@ -56,7 +57,8 @@ import { SceneMarkerCardComponent } from './scene-marker-card/scene-marker-card.
     SecondsPipe,
     VisibleDirective,
     FileSizePipe,
-    SceneMarkerCardComponent
+    SceneMarkerCardComponent,
+    SceneWallItemComponent
   ],
   exports: [
     CommonModule,
@@ -81,7 +83,9 @@ import { SceneMarkerCardComponent } from './scene-marker-card/scene-marker-card.
     SceneListItemComponent,
     SecondsPipe,
     VisibleDirective,
-    FileSizePipe
+    FileSizePipe,
+    SceneMarkerCardComponent,
+    SceneWallItemComponent
   ]
 })
 export class SharedModule { }

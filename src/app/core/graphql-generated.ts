@@ -27,8 +27,8 @@ export interface SceneFilterType {
   is_missing?: string | null,
   // Filter to only include scenes with this studio
   studio_id?: string | null,
-  // Filter to only include scenes with this tag
-  tag_id?: string | null,
+  // Filter to only include scenes with these tags
+  tags?: Array< string | null > | null,
   // Filter to only include scenes with this performer
   performer_id?: string | null,
 };

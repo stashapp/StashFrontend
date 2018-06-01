@@ -27,7 +27,6 @@ export class ListComponent implements OnInit, OnDestroy, AfterViewInit {
   @Input() state: ListState<any>;
 
   loading = true;
-  topMarkerPadding = 0;
 
   constructor(private stashService: StashService,
               private router: Router,
@@ -44,7 +43,6 @@ export class ListComponent implements OnInit, OnDestroy, AfterViewInit {
 
   ngAfterViewInit() {
     window.scroll(0, this.state.scrollY);
-    this.topMarkerPadding = this.calculateMarkerTopPadding();
   }
 
   async getData() {
@@ -87,22 +85,6 @@ export class ListComponent implements OnInit, OnDestroy, AfterViewInit {
     this.state.currentPage = page;
     this.getData();
     window.scroll(0, 0);
-  }
-
-  // TODO: This isn't the best, clean this up
-
-  @HostListener('window:click')
-  onMouseClick() {
-    this.topMarkerPadding = this.calculateMarkerTopPadding();
-  }
-
-  calculateMarkerTopPadding(): number {
-    const filter = this.elRef.nativeElement.querySelector('app-list-filter');
-    let result = 150;
-    filter.childNodes.forEach(child => {
-      result += child.offsetHeight;
-    });
-    return result;
   }
 
 }

@@ -31,10 +31,29 @@
     <div class="ui item">
       <button (click)="filter.criteriaFilterOpen = !filter.criteriaFilterOpen" class="ui icon button" [class.active]="filter.criteriaFilterOpen"><i class="filter icon"></i></button>
     </div>
-    <div *ngIf="filter.displayMode !== DisplayMode.Custom" class="ui item">
+    <div *ngIf="filter.displayModeOptions.length > 1" class="ui item">
       <div class="ui icon buttons">
-        <button (click)="onModeChange(DisplayMode.Grid)" class="ui button" [class.active]="filter.displayMode == DisplayMode.Grid"><i class="grid layout icon"></i></button>
-        <button (click)="onModeChange(DisplayMode.List)" class="ui button" [class.active]="filter.displayMode == DisplayMode.List"><i class="list layout icon"></i></button>
+        <button
+          *ngIf="filter.displayModeOptions.includes(DisplayMode.Grid)"
+          (click)="onModeChange(DisplayMode.Grid)"
+          class="ui button"
+          [class.active]="filter.displayMode == DisplayMode.Grid">
+            <i class="grid layout icon"></i>
+        </button>
+        <button
+          *ngIf="filter.displayModeOptions.includes(DisplayMode.List)"
+          (click)="onModeChange(DisplayMode.List)"
+          class="ui button"
+          [class.active]="filter.displayMode == DisplayMode.List">
+            <i class="list layout icon"></i>
+        </button>
+        <button
+          *ngIf="filter.displayModeOptions.includes(DisplayMode.Wall)"
+          (click)="onModeChange(DisplayMode.Wall)"
+          class="ui button"
+          [class.active]="filter.displayMode == DisplayMode.Wall">
+            <i class="square full icon"></i>
+        </button>
       </div>
     </div>
   </div>
