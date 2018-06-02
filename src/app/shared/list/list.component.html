@@ -28,29 +28,29 @@
 </div>
 
 <ng-template #sceneCards>
-  <app-scene-card *ngFor="let scene of state.data | paginate: { itemsPerPage: state.filter.itemsPerPage, currentPage: state.currentPage, totalItems: state.totalCount }"
+  <app-scene-card *ngFor="let scene of state.data | paginate: { itemsPerPage: state.filter.itemsPerPage, currentPage: state.filter.currentPage, totalItems: state.totalCount }"
       [scene]="scene">
   </app-scene-card>
 </ng-template>
 <ng-template #sceneListItems>
-  <app-scene-list-item *ngFor="let scene of state.data | paginate: { itemsPerPage: state.filter.itemsPerPage, currentPage: state.currentPage, totalItems: state.totalCount }" [scene]="scene">
+  <app-scene-list-item *ngFor="let scene of state.data | paginate: { itemsPerPage: state.filter.itemsPerPage, currentPage: state.filter.currentPage, totalItems: state.totalCount }" [scene]="scene">
   </app-scene-list-item>
 </ng-template>
 <ng-template #sceneWallItems>
   <div
-    *ngFor="let scene of state.data | paginate: { itemsPerPage: state.filter.itemsPerPage, currentPage: state.currentPage, totalItems: state.totalCount }"
+    *ngFor="let scene of state.data | paginate: { itemsPerPage: state.filter.itemsPerPage, currentPage: state.filter.currentPage, totalItems: state.totalCount }"
     class="wall column">
     <app-scene-wall-item [scene]="scene"></app-scene-wall-item>
   </div>
 </ng-template>
 
 <ng-template #galleryCards>
-  <app-gallery-card *ngFor="let gallery of state.data | paginate: { itemsPerPage: state.filter.itemsPerPage, currentPage: state.currentPage, totalItems: state.totalCount }"
+  <app-gallery-card *ngFor="let gallery of state.data | paginate: { itemsPerPage: state.filter.itemsPerPage, currentPage: state.filter.currentPage, totalItems: state.totalCount }"
       [gallery]="gallery">
   </app-gallery-card>
 </ng-template>
 <ng-template #galleryListItems>
-  <!--<app-gallery-list-item *ngFor="let gallery of state.data | paginate: { itemsPerPage: state.filter.itemsPerPage, currentPage: state.currentPage, totalItems: state.totalCount }" [scene]="scene">
+  <!--<app-gallery-list-item *ngFor="let gallery of state.data | paginate: { itemsPerPage: state.filter.itemsPerPage, currentPage: state.filter.currentPage, totalItems: state.totalCount }" [scene]="scene">
   </app-gallery-list-item>-->
 </ng-template>
 
@@ -60,23 +60,23 @@
   </app-performer-card>
 </ng-template>
 <ng-template #performerListItems>
-  <!--<app-performer-list-item *ngFor="let performer of state.data | paginate: { itemsPerPage: state.filter.itemsPerPage, currentPage: state.currentPage, totalItems: state.totalCount }" [scene]="scene">
+  <!--<app-performer-list-item *ngFor="let performer of state.data | paginate: { itemsPerPage: state.filter.itemsPerPage, currentPage: state.filter.currentPage, totalItems: state.totalCount }" [scene]="scene">
   </app-performer-list-item>-->
 </ng-template>
 
 <ng-template #studioCards>
-  <app-studio-card *ngFor="let studio of state.data | paginate: { itemsPerPage: state.filter.itemsPerPage, currentPage: state.currentPage, totalItems: state.totalCount }"
+  <app-studio-card *ngFor="let studio of state.data | paginate: { itemsPerPage: state.filter.itemsPerPage, currentPage: state.filter.currentPage, totalItems: state.totalCount }"
       [studio]="studio">
   </app-studio-card>
 </ng-template>
 <ng-template #studioListItems>
-  <!--<app-studio-list-item *ngFor="let studio of state.data | paginate: { itemsPerPage: state.filter.itemsPerPage, currentPage: state.currentPage, totalItems: state.totalCount }" [scene]="scene">
+  <!--<app-studio-list-item *ngFor="let studio of state.data | paginate: { itemsPerPage: state.filter.itemsPerPage, currentPage: state.filter.currentPage, totalItems: state.totalCount }" [scene]="scene">
   </app-studio-list-item>-->
 </ng-template>
 
 <ng-template #sceneMarkerWallItems>
   <div
-    *ngFor="let sceneMarker of state.data | paginate: { itemsPerPage: state.filter.itemsPerPage, currentPage: state.currentPage, totalItems: state.totalCount }"
+    *ngFor="let sceneMarker of state.data | paginate: { itemsPerPage: state.filter.itemsPerPage, currentPage: state.filter.currentPage, totalItems: state.totalCount }"
     class="wall column">
     <app-scene-marker-wall-item
       [sceneMarker]="sceneMarker">

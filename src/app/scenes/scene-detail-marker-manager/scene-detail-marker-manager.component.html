@@ -1,6 +1,8 @@
-<div class="wall-overlay" [ngClass]="showingMarkerModal === true ? 'visible-unanimated' : 'hidden-unanimated'"></div>
-<div class="simple-modal-container small" [style.display]="showingMarkerModal === true ? 'block' : 'none'">
-  <div class="simple-modal-content">
+<button style="margin: 5px;" (click)="onClickAddMarker()" class="ui button">Create Marker</button>
+
+<div [suiCollapse]="!showingMarkerModal">
+  <div class="ui segment">
+    <h4 class="ui header">{{!!editingMarker ? 'Edit' : 'Create'}} Marker</h4>
     <div class="ui form">
       <div class="field">
         <label>Title</label>
@@ -55,8 +57,6 @@
     </div>
   </div>
 </div>
-
-<button style="margin: 5px;" (click)="onClickAddMarker()" class="ui button">Create Marker</button>
 
 <div *ngIf="!!scene" class="ui container" style="overflow-y: hidden; overflow-x: auto; white-space: nowrap;">
   <div *ngFor="let primary_tag of scene.scene_marker_tags" class="ui card" style="max-height: 300px; height: 100vh; overflow-y: auto; overflow-x: hidden; display: inline-block; margin: 5px;">

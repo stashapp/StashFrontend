@@ -48,23 +48,23 @@ export class ListComponent implements OnInit, OnDestroy, AfterViewInit {
     this.loading = true;
 
     if (this.state instanceof SceneListState) {
-      const result = await this.stashService.findScenes(this.state.currentPage, this.state.filter).result();
+      const result = await this.stashService.findScenes(this.state.filter.currentPage, this.state.filter).result();
       this.state.data = result.data.findScenes.scenes;
       this.state.totalCount = result.data.findScenes.count;
     } else if (this.state instanceof GalleryListState) {
-      const result = await this.stashService.findGalleries(this.state.currentPage, this.state.filter).result();
+      const result = await this.stashService.findGalleries(this.state.filter.currentPage, this.state.filter).result();
       this.state.data = result.data.findGalleries.galleries;
       this.state.totalCount = result.data.findGalleries.count;
     } else if (this.state instanceof PerformerListState) {
-      const result = await this.stashService.findPerformers(this.state.currentPage, this.state.filter).result();
+      const result = await this.stashService.findPerformers(this.state.filter.currentPage, this.state.filter).result();
       this.state.data = result.data.findPerformers.performers;
       this.state.totalCount = result.data.findPerformers.count;
     } else if (this.state instanceof StudioListState) {
-      const result = await this.stashService.findStudios(this.state.currentPage, this.state.filter).result();
+      const result = await this.stashService.findStudios(this.state.filter.currentPage, this.state.filter).result();
       this.state.data = result.data.findStudios.studios;
       this.state.totalCount = result.data.findStudios.count;
     } else if (this.state instanceof SceneMarkerListState) {
-      const result = await this.stashService.findSceneMarkers(this.state.currentPage, this.state.filter).result();
+      const result = await this.stashService.findSceneMarkers(this.state.filter.currentPage, this.state.filter).result();
       this.state.data = result.data.findSceneMarkers.scene_markers;
       this.state.totalCount = result.data.findSceneMarkers.count;
     }
@@ -81,8 +81,8 @@ export class ListComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   getPage(page: number) {
-    this.state.currentPage = page;
-    this.getData();
+    this.state.filter.currentPage = page;
+    this.onFilterUpdate(this.state.filter);
     window.scroll(0, 0);
   }
 

@@ -140,6 +140,7 @@ export class Criteria {
 export class ListFilter {
   searchTerm?: string;
   performers?: number[];
+  currentPage = 1;
   itemsPerPage = 40;
   sortDirection = 'asc';
   sortBy: string;
@@ -236,6 +237,9 @@ export class ListFilter {
     if (params['q'] != null) {
       this.searchTerm = params['q'];
     }
+    if (params['p'] != null) {
+      this.currentPage = Number(params['p']);
+    }
 
     if (params['c'] != null) {
       this.criterions = [];
@@ -285,6 +289,7 @@ export class ListFilter {
         sortdir: this.sortDirection,
         disp: this.displayMode,
         q: this.searchTerm,
+        p: this.currentPage,
         c: encodedCriterion
       },
       queryParamsHandling: 'merge'
@@ -354,7 +359,6 @@ export class ListFilter {
 }
 
 export class ListState<T> {
-  currentPage = 1;
   totalCount: number;
   scrollY: number;
   filter: ListFilter = new ListFilter();

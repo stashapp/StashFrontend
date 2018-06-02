@@ -64,6 +64,7 @@ export class SceneDetailMarkerManagerComponent implements OnInit, OnChanges {
   }
 
   onSubmit() {
+    this.title = this.searchFormControl.value;
     const input = {
       id: null,
       title: this.title,
@@ -138,7 +139,12 @@ export class SceneDetailMarkerManagerComponent implements OnInit, OnChanges {
   private showModal(marker: SceneMarkerDataFragment = null) {
     this.deleteClickCount = 0;
     this.showingMarkerModal = true;
+
+    this.setTitle('');
+    this.primary_tag_id = null;
+    this.tag_ids = [];
     this.seconds = Math.round(this.player.getPosition());
+
     if (marker == null) { return; }
 
     this.editingMarker = marker;
