@@ -9,7 +9,7 @@ import { TagDataFragment } from '../../core/graphql-generated';
   selector: 'app-tag-detail',
   template: `
   <!-- TODO: New tag detail screen... -->
-  {{tag.name}}
+  {{tag?.name}}
   `
 })
 export class TagDetailComponent implements OnInit {

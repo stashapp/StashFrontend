@@ -77,6 +77,7 @@ export class Criteria {
   private stashService: StashService;
 
   async configure(type: CriteriaType, stashService: StashService) {
+    this.type = type;
     this.stashService = stashService;
 
     let config: CriteriaConfig = {
@@ -116,7 +117,6 @@ export class Criteria {
       default: break;
     }
 
-    this.type = type;
     this.valueType = config.valueType;
     this.parameterName = config.parameterName;
     this.options = config.options;
