@@ -162,17 +162,17 @@ video.preview {
 .wall.column:nth-child(1) app-scene-wall-item div { transform-origin: top left !important; }
 
 /* The first and last rows (excluding the corners) */
-.wall.column:nth-last-child(n+1):nth-last-child(-n+3):not(:nth-child(4n+5)):not(:nth-child(4n+0)) app-scene-marker-card div { transform-origin: bottom; }
-.wall.column:nth-child(n+1):nth-child(-n+3):not(:nth-child(4n+5)):not(:nth-child(4n+0)) app-scene-marker-card div { transform-origin: top; }
+.wall.column:nth-last-child(n+1):nth-last-child(-n+3):not(:nth-child(4n+5)):not(:nth-child(4n+0)) app-scene-marker-wall-item div { transform-origin: bottom; }
+.wall.column:nth-child(n+1):nth-child(-n+3):not(:nth-child(4n+5)):not(:nth-child(4n+0)) app-scene-marker-wall-item div { transform-origin: top; }
 /* The middle */
-.wall.column:nth-child(4n+0) app-scene-marker-card div { transform-origin: center right; }
-.wall.column:nth-child(4n+5) app-scene-marker-card div { transform-origin: center left; }
+.wall.column:nth-child(4n+0) app-scene-marker-wall-item div { transform-origin: center right; }
+.wall.column:nth-child(4n+5) app-scene-marker-wall-item div { transform-origin: center left; }
 /* The bottom left and bottom right corners */
-.wall.column:nth-last-child(1):nth-child(4n+0) app-scene-marker-card div { transform-origin: bottom right; }
-.wall.column:nth-last-child(4):nth-child(4n+5) app-scene-marker-card div { transform-origin: bottom left; }
+.wall.column:nth-last-child(1):nth-child(4n+0) app-scene-marker-wall-item div { transform-origin: bottom right; }
+.wall.column:nth-last-child(4):nth-child(4n+5) app-scene-marker-wall-item div { transform-origin: bottom left; }
 /* The top left and top right corners */
-.wall.column:nth-child(4) app-scene-marker-card div { transform-origin: top right !important; }
-.wall.column:nth-child(1) app-scene-marker-card div { transform-origin: top left !important; }
+.wall.column:nth-child(4) app-scene-marker-wall-item div { transform-origin: top right !important; }
+.wall.column:nth-child(1) app-scene-marker-wall-item div { transform-origin: top left !important; }
 
 video.wall.item, img.wall.item {
   width: 100%;
