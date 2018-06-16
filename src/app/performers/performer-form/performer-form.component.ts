@@ -72,6 +72,7 @@ export class PerformerFormComponent implements OnInit, OnDestroy {
     this.loading = result.loading;
 
     this.name = result.data.findPerformer.name;
+    this.searchFormControl.setValue(this.name);
     this.favorite = result.data.findPerformer.favorite;
     this.aliases = result.data.findPerformer.aliases;
     this.country = result.data.findPerformer.country;
@@ -184,6 +185,7 @@ export class PerformerFormComponent implements OnInit, OnDestroy {
 
     this.url           = result.data.scrapeFreeones.url;
     this.name          = result.data.scrapeFreeones.name;
+    this.searchFormControl.setValue(this.name);
     this.aliases       = result.data.scrapeFreeones.aliases;
     this.country       = result.data.scrapeFreeones.country;
     this.birthdate     = result.data.scrapeFreeones.birthdate ? result.data.scrapeFreeones.birthdate : this.birthdate;
