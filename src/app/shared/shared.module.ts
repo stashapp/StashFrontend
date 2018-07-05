@@ -27,6 +27,7 @@ import { FileSizePipe } from './file-size.pipe';
 import { SceneMarkerWallItemComponent } from './scene-marker-wall-item/scene-marker-wall-item.component';
 import { SceneWallItemComponent } from './scene-wall-item/scene-wall-item.component';
 import { BaseWallItemComponent } from './base-wall-item/base-wall-item.component';
+import { ShufflePipe } from './shuffle.pipe';
 
 // Import blah.  Include in dec and exports (https://angular.io/guide/ngmodule#shared-modules)
 
@@ -60,7 +61,8 @@ import { BaseWallItemComponent } from './base-wall-item/base-wall-item.component
     FileSizePipe,
     SceneMarkerWallItemComponent,
     SceneWallItemComponent,
-    BaseWallItemComponent
+    BaseWallItemComponent,
+    ShufflePipe
   ],
   exports: [
     CommonModule,
@@ -87,7 +89,9 @@ import { BaseWallItemComponent } from './base-wall-item/base-wall-item.component
     VisibleDirective,
     FileSizePipe,
     SceneMarkerWallItemComponent,
-    SceneWallItemComponent
+    SceneWallItemComponent,
+    BaseWallItemComponent,
+    ShufflePipe
   ]
 })
 export class SharedModule { }
