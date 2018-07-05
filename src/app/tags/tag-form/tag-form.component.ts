@@ -35,6 +35,10 @@ export class TagFormComponent implements OnInit {
     this.name = result.data.findTag.name;
   }
 
+  hasId() {
+    return !!this.route.snapshot.params['id'];
+  }
+
   onSubmit() {
     const id = this.route.snapshot.params['id'];
 
