@@ -41,7 +41,13 @@ export class ListComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   ngAfterViewInit() {
-    window.scroll(0, this.state.scrollY);
+    if (!!this.state.scrollY) {
+      setTimeout(() => {
+        window.scroll(0, this.state.scrollY);
+      }, 1);
+    } else {
+      window.scroll(0, 0);
+    }
   }
 
   async getData() {

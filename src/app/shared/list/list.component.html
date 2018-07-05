@@ -55,7 +55,7 @@
 </ng-template>
 
 <ng-template #performerCards>
-  <app-performer-card *ngFor="let performer of state.data | paginate: { itemsPerPage: state.filter.itemsPerPage, currentPage: state.currentPage, totalItems: state.totalCount }"
+  <app-performer-card *ngFor="let performer of state.data | paginate: { itemsPerPage: state.filter.itemsPerPage, currentPage: state.filter.currentPage, totalItems: state.totalCount }"
       [performer]="performer">
   </app-performer-card>
 </ng-template>
