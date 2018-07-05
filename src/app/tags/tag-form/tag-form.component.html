@@ -9,4 +9,5 @@
     </div>
   </div>
   <button (click)="onSubmit()" class="ui primary submit button">Submit</button>
+  <button *ngIf="!!route.snapshot.params['id']" (click)="onDestroy()" class="ui right floated negative button">Destroy</button>
 </div>

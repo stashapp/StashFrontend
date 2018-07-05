@@ -19,7 +19,7 @@ export class TagFormComponent implements OnInit {
     this.getTag();
   }
 
-  getTag() {
+  async getTag() {
     const id = parseInt(this.route.snapshot.params['id'], 10);
     if (!!id === false) {
       console.log('new tag');
@@ -27,14 +27,24 @@ export class TagFormComponent implements OnInit {
       return;
     }
 
-    // TODO: Fetch tag for editing
+    const result = await this.stashService.findTag(id).result();
+    this.loading = result.loading;
+
+    if (!result.data.findTag) { this.router.navigate(['/tags']); }
+
+    this.name = result.data.findTag.name;
   }
 
   onSubmit() {
     const id = this.route.snapshot.params['id'];
 
     if (!!id) {
-      // TODO: Edit the tag
+      this.stashService.tagUpdate({
+        id: id,
+        name: this.name
+      }).subscribe(result => {
+        this.router.navigate(['/tags', id]);
+      });
     } else {
       this.stashService.tagCreate({
         name: this.name
@@ -42,6 +52,16 @@ export class TagFormComponent implements OnInit {
         this.router.navigate(['/tags', result.data.tagCreate.tag.id]);
       });
     }
+  }
+
+  onDestroy() {
+    const id = this.route.snapshot.params['id'];
+
+    this.stashService.tagDestroy({
+      id: id
+    }).subscribe(result => {
+      this.router.navigate(['/tags']);
+    });
   }
 
 }

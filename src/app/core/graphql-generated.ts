@@ -1186,6 +1186,32 @@ export interface TagCreateMutation {
   } | null,
 };
 
+export interface TagDestroyMutationVariables {
+  id: string,
+};
+
+export interface TagDestroyMutation {
+  tagDestroy:  {
+    success: boolean,
+  } | null,
+};
+
+export interface TagUpdateMutationVariables {
+  id: string,
+  name?: string | null,
+};
+
+export interface TagUpdateMutation {
+  tagUpdate:  {
+    tag:  {
+      id: string,
+      name: string,
+      scene_count: number | null,
+      scene_marker_count: number | null,
+    } | null,
+  } | null,
+};
+
 export interface SceneMarkerCreateMutationVariables {
   title: string,
   seconds: number,

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 import { StashService } from '../../core/stash.service';
 
@@ -8,6 +8,11 @@ import { TagDataFragment } from '../../core/graphql-generated';
 @Component({
   selector: 'app-tag-detail',
   template: `
+  <div class="ui text menu">
+    <div class="right menu">
+      <button (click)="onClickEdit()" class="ui button">Edit</button>
+    </div>
+  </div>
   <!-- TODO: New tag detail screen... -->
   {{tag?.name}}
   `
@@ -17,6 +22,7 @@ export class TagDetailComponent implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
+    private router: Router,
     private stashService: StashService
   ) {}
 
@@ -33,5 +39,9 @@ export class TagDetailComponent implements OnInit {
 
     const result = await this.stashService.findTag(id).result();
     this.tag = result.data.findTag;
+  }
+
+  onClickEdit() {
+    this.router.navigate(['edit'], { relativeTo: this.route });
   }
 }

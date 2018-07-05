@@ -670,6 +670,26 @@ export const TAG_CREATE = gql`
   }
 `;
 
+export const TAG_DESTROY = gql`
+  mutation TagDestroy($id: ID!) {
+    tagDestroy(input: { id: $id }) {
+      success
+    }
+  }
+`;
+
+export const TAG_UPDATE = gql`
+  ${Fragment_TagData}
+
+  mutation TagUpdate($id: ID!, $name: String) {
+    tagUpdate(input: { id: $id, name: $name }) {
+      tag {
+        ...TagData
+      }
+    }
+  }
+`;
+
 export const MARKER_CREATE = gql`
   ${Fragment_SceneMarkerData}
 

@@ -49,7 +49,9 @@ import {
   SCRAPE_FREEONES_PERFORMERS,
   ALL_SCENE_MARKERS,
   FIND_SCENE_MARKERS,
-  FIND_TAG
+  FIND_TAG,
+  TAG_UPDATE,
+  TAG_DESTROY
 } from './graphql';
 import * as GQL from './graphql-generated';
 
@@ -480,6 +482,38 @@ export class StashService {
       refetchQueries: [
         {
           query: ALL_TAGS
+        }
+      ],
+    });
+  }
+
+  tagDestroy(tag: GQL.TagDestroyMutationVariables) {
+    return this.apollo.mutate<GQL.TagDestroyMutation, GQL.TagDestroyMutationVariables>({
+      mutation: TAG_DESTROY,
+      variables: {
+        id: tag.id
+      },
+      refetchQueries: [
+        {
+          query: ALL_TAGS
+        }
+      ],
+    });
+  }
+
+  tagUpdate(tag: GQL.TagUpdateMutationVariables) {
+    return this.apollo.mutate<GQL.TagUpdateMutation, GQL.TagUpdateMutationVariables>({
+      mutation: TAG_UPDATE,
+      variables: {
+        id: tag.id,
+        name: tag.name
+      },
+      refetchQueries: [
+        {
+          query: FIND_TAG,
+          variables: {
+            id: tag.id
+          }
         }
       ],
     });
