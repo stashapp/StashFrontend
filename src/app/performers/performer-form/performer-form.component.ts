@@ -72,6 +72,7 @@ export class PerformerFormComponent implements OnInit, OnDestroy {
     this.loading = result.loading;
 
     this.name = result.data.findPerformer.name;
+    this.selectedName = this.name;
     this.searchFormControl.setValue(this.name);
     this.favorite = result.data.findPerformer.favorite;
     this.aliases = result.data.findPerformer.aliases;
