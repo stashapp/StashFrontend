@@ -50,6 +50,8 @@ export interface SceneMarkerFilterType {
   tags?: Array< string | null > | null,
   // Filter to only include scene markers attached to a scene with these tags
   scene_tags?: Array< string | null > | null,
+  // Filter to only include scene markers with these performers
+  performers?: Array< string | null > | null,
 };
 
 export interface PerformerFilterType {

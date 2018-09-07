@@ -341,6 +341,12 @@ export class StashService {
     });
   }
 
+  allPerformers() {
+    return this.apollo.watchQuery<GQL.AllPerformersQuery>({
+      query: ALL_PERFORMERS
+    });
+  }
+
   stats() {
     return this.apollo.watchQuery<GQL.StatsQuery>({
       query: STATS

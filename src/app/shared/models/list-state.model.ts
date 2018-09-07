@@ -43,7 +43,8 @@ export enum CriteriaType {
   HasMarkers,
   IsMissing,
   Tags,
-  SceneTags
+  SceneTags,
+  Performers
 }
 
 export enum CriteriaValueType {
@@ -113,6 +114,9 @@ export class Criteria {
       case CriteriaType.SceneTags:
         config = await this.configureTags('scene_tags');
         break;
+      case CriteriaType.Performers:
+        config = await this.configurePerformers('performers');
+        break;
       case CriteriaType.None:
       default: break;
     }
@@ -132,6 +136,17 @@ export class Criteria {
       parameterName: name,
       options: result.data.allTags.map(item => {
         return { id: item.id, name: item.name };
+      })
+    };
+  }
+
+  private async configurePerformers(name: string) {
+    const result = await this.stashService.allPerformers().result();
+    return {
+      valueType: CriteriaValueType.Multiple,
+      parameterName: name,
+      options: result.data.allPerformers.map(item => {
+        return { id: item.id, name: item.name, image_path: item.image_path };
       })
     };
   }
@@ -212,7 +227,8 @@ export class ListFilter {
         this.criteriaOptions = [
           new CriteriaOption(CriteriaType.None),
           new CriteriaOption(CriteriaType.Tags),
-          new CriteriaOption(CriteriaType.SceneTags)
+          new CriteriaOption(CriteriaType.SceneTags),
+          new CriteriaOption(CriteriaType.Performers)
         ];
         break;
       default:
@@ -351,6 +367,9 @@ export class ListFilter {
           break;
         case CriteriaType.SceneTags:
           result.scene_tags = criteria.values;
+          break;
+        case CriteriaType.Performers:
+          result.performers = criteria.values;
           break;
       }
     });
