@@ -60,8 +60,8 @@
   </app-performer-card>
 </ng-template>
 <ng-template #performerListItems>
-  <!--<app-performer-list-item *ngFor="let performer of state.data | paginate: { itemsPerPage: state.filter.itemsPerPage, currentPage: state.filter.currentPage, totalItems: state.totalCount }" [scene]="scene">
-  </app-performer-list-item>-->
+  <app-performer-list-item *ngFor="let performer of state.data | paginate: { itemsPerPage: state.filter.itemsPerPage, currentPage: state.filter.currentPage, totalItems: state.totalCount }" [performer]="performer">
+  </app-performer-list-item>
 </ng-template>
 
 <ng-template #studioCards>

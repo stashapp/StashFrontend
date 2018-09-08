@@ -191,7 +191,8 @@ export class ListFilter {
         if (!!this.sortBy === false) { this.sortBy = 'name'; }
         this.sortByOptions = ['name', 'height', 'birthdate', 'scenes_count'];
         this.displayModeOptions = [
-          DisplayMode.Grid
+          DisplayMode.Grid,
+          DisplayMode.List
         ];
         this.criteriaOptions = [
           new CriteriaOption(CriteriaType.None),
