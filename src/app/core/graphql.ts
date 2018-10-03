@@ -109,6 +109,8 @@ export const Fragment_SceneData = gql`
       audio_codec
       width
       height
+      framerate
+      bitrate
     }
 
     paths {
@@ -173,6 +175,8 @@ export const Fragment_SlimSceneData = gql`
       audio_codec
       width
       height
+      framerate
+      bitrate
     }
 
     paths {

@@ -85,6 +85,8 @@ export interface FindScenesQuery {
         audio_codec: string | null,
         width: number | null,
         height: number | null,
+        framerate: number | null,
+        bitrate: number | null,
       },
       paths:  {
         screenshot: string | null,
@@ -146,6 +148,8 @@ export interface FindSceneQuery {
       audio_codec: string | null,
       width: number | null,
       height: number | null,
+      framerate: number | null,
+      bitrate: number | null,
     },
     paths:  {
       screenshot: string | null,
@@ -302,6 +306,8 @@ export interface FindSceneForEditingQuery {
       audio_codec: string | null,
       width: number | null,
       height: number | null,
+      framerate: number | null,
+      bitrate: number | null,
     },
     paths:  {
       screenshot: string | null,
@@ -482,6 +488,8 @@ export interface SceneWallQuery {
       audio_codec: string | null,
       width: number | null,
       height: number | null,
+      framerate: number | null,
+      bitrate: number | null,
     },
     paths:  {
       screenshot: string | null,
@@ -931,6 +939,8 @@ export interface SceneUpdateMutation {
         audio_codec: string | null,
         width: number | null,
         height: number | null,
+        framerate: number | null,
+        bitrate: number | null,
       },
       paths:  {
         screenshot: string | null,
@@ -1408,6 +1418,8 @@ export interface SceneDataFragment {
     audio_codec: string | null,
     width: number | null,
     height: number | null,
+    framerate: number | null,
+    bitrate: number | null,
   },
   paths:  {
     screenshot: string | null,
@@ -1530,6 +1542,8 @@ export interface SlimSceneDataFragment {
     audio_codec: string | null,
     width: number | null,
     height: number | null,
+    framerate: number | null,
+    bitrate: number | null,
   },
   paths:  {
     screenshot: string | null,

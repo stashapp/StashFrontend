@@ -10,7 +10,7 @@
     <sui-rating *ngIf="scene.rating" class="ui tiny rating" [(ngModel)]="scene.rating" [maximum]="5" [isReadonly]="true"></sui-rating>
   </div>
   <div class="meta">{{scene?.file.size | fileSize}}</div>
-  <div class="meta">{{scene.file.width}} x {{scene.file.height}}</div>
+  <div class="meta">{{scene.file.width}} x {{scene.file.height}} | {{scene?.file.framerate || '?'}} fps | {{(scene?.file.bitrate / 1000000) | number:'1.0-2'}} megabits per second</div><!-- TODO make bitrate a pipe -->
   <div *ngIf="scene.details; else descriptionEmptyBlock" class="description">
     <p class="pre">{{scene.details | truncate : 1000 : '... (continued)'}}</p>
   </div>

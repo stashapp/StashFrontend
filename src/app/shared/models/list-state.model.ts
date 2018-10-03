@@ -172,7 +172,7 @@ export class ListFilter {
     switch (filterMode) {
       case FilterMode.Scenes:
         if (!!this.sortBy === false) { this.sortBy = 'date'; }
-        this.sortByOptions = ['title', 'rating', 'date', 'filesize', 'duration', 'random'];
+        this.sortByOptions = ['title', 'rating', 'date', 'filesize', 'duration', 'framerate', 'bitrate', 'random'];
         this.displayModeOptions = [
           DisplayMode.Grid,
           DisplayMode.List,
@@ -221,7 +221,7 @@ export class ListFilter {
         break;
       case FilterMode.SceneMarkers:
         if (!!this.sortBy === false) { this.sortBy = 'title'; }
-        this.sortByOptions = ['title', 'seconds', 'scene_id', 'random'];
+        this.sortByOptions = ['title', 'seconds', 'scene_id', 'random', 'scenes_updated_at'];
         this.displayModeOptions = [
           DisplayMode.Wall
         ];
