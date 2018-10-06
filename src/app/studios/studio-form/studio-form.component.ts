@@ -48,7 +48,7 @@ export class StudioFormComponent implements OnInit, OnDestroy {
     const reader: FileReader = new FileReader();
 
     reader.onloadend = (e) => {
-      this.image = reader.result;
+      this.image = reader.result as string;
       this.imagePreview = this.image;
     };
     reader.readAsDataURL(file);
