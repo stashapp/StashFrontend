@@ -1,6 +1,11 @@
 <a [routerLink]="['/performers', performer.id]" class="performer image" [style.background-image]="'url(' + performer.image_path + ')'"></a>
 <div class="content">
-  <div class="header">{{performer.name}}</div>
+  <div class="header">
+    <div class="ui heart rating">
+      <i class="icon" [class.active]="performer.favorite"></i>
+    </div>
+    {{performer.name}}
+  </div>
   <div class="meta">
     <div *ngIf="!!performer.birthdate" class="item">
       <span *ngIf="!!ageFromDate" class="date">{{performer.birthdate | age: ageFromDate}} years old in this scene.</span>
@@ -10,11 +15,4 @@
       <span>Stars in {{performer.scene_count}} scenes.</span>
     </div>
   </div>
-</div>
-<div class="extra content">
-  <span>
-    <div class="ui heart rating">
-      <i class="icon" [class.active]="performer.favorite"></i>
-    </div>
-  </span>
 </div>
