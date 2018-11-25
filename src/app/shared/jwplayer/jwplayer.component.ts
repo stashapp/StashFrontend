@@ -106,4 +106,34 @@ export class JwplayerComponent {
     position: number,
     viewable: boolean
   }) => this.time.emit(options)
+
+  onKey(event) {
+    const currentPlaybackRate = this._player.getPlaybackRate();
+    switch (event.key) {
+
+      case '0': {
+        this._player.setPlaybackRate(1);
+        console.log(`Playback rate: 1`);
+        event.preventDefault();
+        break;
+      }
+
+      case '2': {
+        this._player.setPlaybackRate(currentPlaybackRate + 0.5);
+        console.log(`Playback rate: ${currentPlaybackRate + 0.5}`);
+        event.preventDefault();
+        break;
+      }
+
+      case '1': {
+        this._player.setPlaybackRate(currentPlaybackRate - 0.5);
+        console.log(`Playback rate: ${currentPlaybackRate - 0.5}`);
+        event.preventDefault();
+        break;
+      }
+
+      default:
+        break;
+    }
+  }
 }
